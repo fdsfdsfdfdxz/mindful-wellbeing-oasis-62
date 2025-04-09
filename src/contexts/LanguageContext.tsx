@@ -16,8 +16,13 @@ const LanguageContext = createContext<LanguageContextType>({
 });
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en');
-  const [isRTL, setIsRTL] = useState<boolean>(false);
+  // Try to get the stored language from localStorage or default to 'en'
+  const savedLanguage = typeof window !== 'undefined' 
+    ? (localStorage.getItem('language') as Language) || 'en'
+    : 'en';
+    
+  const [language, setLanguage] = useState<Language>(savedLanguage);
+  const [isRTL, setIsRTL] = useState<boolean>(savedLanguage === 'ar');
 
   useEffect(() => {
     // Set RTL status based on language
@@ -25,6 +30,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     
     // Set dir attribute on html element
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
     
     // Add appropriate language class to body
     if (language === 'ar') {
@@ -34,6 +40,12 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
       document.body.classList.add('ltr');
       document.body.classList.remove('rtl');
     }
+    
+    // Save language preference to localStorage
+    localStorage.setItem('language', language);
+    
+    console.log(`Language switched to ${language}, RTL: ${language === 'ar'}`);
+    
   }, [language]);
 
   const switchLanguage = (lang: Language) => {

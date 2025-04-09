@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { 
   Menu, 
@@ -15,19 +15,38 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { translate } from '@/utils/translations';
+import { useToast } from "@/components/ui/use-toast";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, switchLanguage, isRTL } = useLanguage();
+  const { toast } = useToast();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleLanguageChange = (newLanguage: 'en' | 'ar') => {
-    switchLanguage(newLanguage);
+    if (newLanguage !== language) {
+      switchLanguage(newLanguage);
+      
+      // Show toast notification for language change
+      toast({
+        title: newLanguage === 'en' ? "Language Changed" : "تم تغيير اللغة",
+        description: newLanguage === 'en' 
+          ? "The site language has been changed to English" 
+          : "تم تغيير لغة الموقع إلى العربية",
+        duration: 3000
+      });
+    }
+    
     setIsMenuOpen(false);
   };
+
+  // Force a re-render when language changes to ensure all components update
+  useEffect(() => {
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  }, [language, isRTL]);
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -41,7 +60,7 @@ const Navbar = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-8`}>
             <a href="#services" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
               {translate('navbar', 'services', language)}
             </a>
@@ -57,18 +76,25 @@ const Navbar = () => {
           </div>
 
           {/* Language Selector & Auth Buttons - Desktop */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-4`}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-full">
-                  <Globe className="h-4 w-4 mr-1" /> {language.toUpperCase()}
+                  <Globe className={`h-4 w-4 ${isRTL ? 'ml-1' : 'mr-1'}`} /> 
+                  {language === 'en' ? 'EN' : 'عربي'}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
+              <DropdownMenuContent align={isRTL ? "start" : "end"}>
+                <DropdownMenuItem 
+                  onClick={() => handleLanguageChange('en')}
+                  className={language === 'en' ? "bg-muted" : ""}
+                >
                   English
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleLanguageChange('ar')}>
+                <DropdownMenuItem 
+                  onClick={() => handleLanguageChange('ar')}
+                  className={language === 'ar' ? "bg-muted" : ""}
+                >
                   العربية
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -98,7 +124,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 animate-fade-in">
+          <div className={`md:hidden py-4 animate-fade-in ${isRTL ? 'rtl' : ''}`}>
             <div className="flex flex-col space-y-4">
               <a 
                 href="#services" 
@@ -129,13 +155,15 @@ const Navbar = () => {
                 {translate('navbar', 'plans', language)}
               </a>
 
-              <div className="flex items-center space-x-2 py-2 px-4">
+              <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : ''} py-2 px-4`}>
                 <Globe className="h-4 w-4" />
-                <span>Select Language:</span>
+                <span className={`${isRTL ? 'mr-2' : 'ml-2'}`}>
+                  {isRTL ? 'اختر اللغة:' : 'Select Language:'}
+                </span>
               </div>
-              <div className="flex space-x-2 px-4">
+              <div className={`flex ${isRTL ? 'flex-row-reverse' : ''} space-x-2 ${isRTL ? 'space-x-reverse' : ''} px-4`}>
                 <Button 
-                  variant="outline" 
+                  variant={language === 'en' ? "default" : "outline"}
                   size="sm" 
                   className="w-full" 
                   onClick={() => handleLanguageChange('en')}
@@ -143,7 +171,7 @@ const Navbar = () => {
                   English
                 </Button>
                 <Button 
-                  variant="outline" 
+                  variant={language === 'ar' ? "default" : "outline"}
                   size="sm" 
                   className="w-full" 
                   onClick={() => handleLanguageChange('ar')}
@@ -154,7 +182,7 @@ const Navbar = () => {
 
               <div className="border-t border-gray-200 my-2"></div>
 
-              <div className="flex space-x-2 px-4">
+              <div className={`flex ${isRTL ? 'flex-row-reverse' : ''} space-x-2 ${isRTL ? 'space-x-reverse' : ''} px-4`}>
                 <Button variant="outline" size="sm" className="w-1/2">
                   {translate('navbar', 'login', language)}
                 </Button>

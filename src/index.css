@@ -76,6 +76,20 @@
   body {
     @apply bg-background text-foreground antialiased;
   }
+  
+  /* RTL specific overrides */
+  body.rtl {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  body.rtl .ltr-only {
+    display: none;
+  }
+  
+  body.ltr .rtl-only {
+    display: none;
+  }
 }
 
 @layer components {
@@ -106,4 +120,32 @@
   .section-subtitle {
     @apply text-xl text-gray-600 mb-12 max-w-3xl mx-auto;
   }
+  
+  /* RTL layout adjustments */
+  .rtl-flip {
+    @apply rtl:-scale-x-100;
+  }
+  
+  .rtl-space-reverse {
+    @apply rtl:space-x-reverse;
+  }
+  
+  /* Animation classes */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-in-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
