@@ -1,26 +1,31 @@
 
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MessageSquare } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translate } from "@/utils/translations";
 
 const Hero = () => {
+  const { language } = useLanguage();
+
   return (
     <section className="hero-gradient py-20 md:py-28">
       <div className="container-custom">
-        <div className="flex flex-col lg:flex-row items-center">
+        <div className="flex flex-col lg:flex-row items-center" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           <div className="lg:w-1/2 lg:pr-12 mb-12 lg:mb-0 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight animate-fade-in">
-              Professional Mental Health Support at Your Fingertips
+              {translate('hero', 'title', language)}
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              Connect with licensed therapists and counselors online, from the comfort of your home. 
-              Get the support you need, when you need it, with complete privacy and confidentiality.
+              {translate('hero', 'description', language)}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in" style={{ animationDelay: "0.4s" }}>
               <Button className="button-primary w-full sm:w-auto" size="lg">
-                <CalendarDays className="mr-2 h-5 w-5" /> Book Consultation
+                <CalendarDays className="mr-2 h-5 w-5" /> 
+                {translate('hero', 'bookConsultation', language)}
               </Button>
               <Button className="button-secondary w-full sm:w-auto" size="lg">
-                <MessageSquare className="mr-2 h-5 w-5" /> Free Assessment
+                <MessageSquare className="mr-2 h-5 w-5" /> 
+                {translate('hero', 'freeAssessment', language)}
               </Button>
             </div>
           </div>

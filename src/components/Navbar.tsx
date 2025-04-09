@@ -13,17 +13,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translate } from '@/utils/translations';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { language, switchLanguage } = useLanguage();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLanguageChange = (newLanguage: 'en' | 'ar') => {
+    switchLanguage(newLanguage);
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container-custom py-4">
+      <div className="container-custom py-4" dir={language === 'ar' ? 'rtl' : 'ltr'}>
         <div className="flex justify-between items-center">
           {/* Logo */}
           <a href="#" className="flex items-center">
@@ -35,16 +43,16 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <a href="#services" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
-              Services
+              {translate('navbar', 'services', language)}
             </a>
             <a href="#how-it-works" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
-              How It Works
+              {translate('navbar', 'howItWorks', language)}
             </a>
             <a href="#specialists" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
-              Specialists
+              {translate('navbar', 'specialists', language)}
             </a>
             <a href="#plans" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
-              Plans
+              {translate('navbar', 'plans', language)}
             </a>
           </div>
 
@@ -53,21 +61,25 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="rounded-full">
-                  <Globe className="h-4 w-4 mr-1" /> EN
+                  <Globe className="h-4 w-4 mr-1" /> {language.toUpperCase()}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>English</DropdownMenuItem>
-                <DropdownMenuItem>العربية</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
+                  English
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLanguageChange('ar')}>
+                  العربية
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             
             <Button variant="outline" size="sm">
-              Login
+              {translate('navbar', 'login', language)}
             </Button>
             
             <Button className="bg-calmBlue-500 hover:bg-calmBlue-600">
-              Register
+              {translate('navbar', 'register', language)}
             </Button>
           </div>
 
@@ -93,28 +105,28 @@ const Navbar = () => {
                 className="text-gray-700 hover:text-calmBlue-600 transition-colors py-2 px-4 rounded-md hover:bg-gray-50"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Services
+                {translate('navbar', 'services', language)}
               </a>
               <a 
                 href="#how-it-works" 
                 className="text-gray-700 hover:text-calmBlue-600 transition-colors py-2 px-4 rounded-md hover:bg-gray-50"
                 onClick={() => setIsMenuOpen(false)}
               >
-                How It Works
+                {translate('navbar', 'howItWorks', language)}
               </a>
               <a 
                 href="#specialists" 
                 className="text-gray-700 hover:text-calmBlue-600 transition-colors py-2 px-4 rounded-md hover:bg-gray-50"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Specialists
+                {translate('navbar', 'specialists', language)}
               </a>
               <a 
                 href="#plans" 
                 className="text-gray-700 hover:text-calmBlue-600 transition-colors py-2 px-4 rounded-md hover:bg-gray-50"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Plans
+                {translate('navbar', 'plans', language)}
               </a>
 
               <div className="flex items-center space-x-2 py-2 px-4">
@@ -122,18 +134,32 @@ const Navbar = () => {
                 <span>Select Language:</span>
               </div>
               <div className="flex space-x-2 px-4">
-                <Button variant="outline" size="sm" className="w-full">English</Button>
-                <Button variant="outline" size="sm" className="w-full">العربية</Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full" 
+                  onClick={() => handleLanguageChange('en')}
+                >
+                  English
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full" 
+                  onClick={() => handleLanguageChange('ar')}
+                >
+                  العربية
+                </Button>
               </div>
 
               <div className="border-t border-gray-200 my-2"></div>
 
               <div className="flex space-x-2 px-4">
                 <Button variant="outline" size="sm" className="w-1/2">
-                  Login
+                  {translate('navbar', 'login', language)}
                 </Button>
                 <Button className="bg-calmBlue-500 hover:bg-calmBlue-600 w-1/2">
-                  Register
+                  {translate('navbar', 'register', language)}
                 </Button>
               </div>
             </div>
