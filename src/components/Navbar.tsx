@@ -18,7 +18,7 @@ import { translate } from '@/utils/translations';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { language, switchLanguage } = useLanguage();
+  const { language, switchLanguage, isRTL } = useLanguage();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -31,7 +31,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container-custom py-4" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="container-custom py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <a href="#" className="flex items-center">
