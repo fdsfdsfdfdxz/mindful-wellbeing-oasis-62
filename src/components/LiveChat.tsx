@@ -2,9 +2,12 @@
 import { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translate } from "@/utils/translations";
 
 const LiveChat = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { language, isRTL } = useLanguage();
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -15,7 +18,7 @@ const LiveChat = () => {
       {isOpen ? (
         <div className="bg-white rounded-lg shadow-xl w-72 sm:w-80 overflow-hidden animate-scale-in">
           <div className="bg-calmBlue-600 text-white p-4 flex items-center justify-between">
-            <h3 className="font-medium">Live Support</h3>
+            <h3 className="font-medium">{translate('liveChat', 'title', language)}</h3>
             <Button 
               variant="ghost" 
               size="sm"
@@ -29,13 +32,13 @@ const LiveChat = () => {
           <div className="h-80 p-4 bg-gray-50 overflow-y-auto">
             <div className="flex flex-col space-y-4">
               <div className="bg-calmBlue-100 text-calmBlue-800 p-3 rounded-lg rounded-tl-none max-w-[85%] self-start">
-                <p className="text-sm">Hello! How can I help you today?</p>
-                <p className="text-xs text-calmBlue-500 mt-1">Support Team • Just now</p>
+                <p className="text-sm">{translate('liveChat', 'greeting', language)}</p>
+                <p className="text-xs text-calmBlue-500 mt-1">{translate('liveChat', 'supportTeam', language)} • {translate('liveChat', 'justNow', language)}</p>
               </div>
               
               <div className="text-center my-2">
                 <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">
-                  This is a live chat preview
+                  {translate('liveChat', 'preview', language)}
                 </span>
               </div>
             </div>
@@ -45,18 +48,16 @@ const LiveChat = () => {
             <div className="flex">
               <input 
                 type="text" 
-                placeholder="Type your message..." 
+                placeholder={translate('liveChat', 'typePlaceholder', language)}
                 className="flex-1 border border-gray-300 rounded-l-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-calmBlue-500 focus:border-transparent"
               />
-              <Button 
-                className="bg-calmBlue-500 hover:bg-calmBlue-600 rounded-l-none"
-              >
-                Send
+              <Button className="bg-calmBlue-500 hover:bg-calmBlue-600 rounded-l-none">
+                {translate('liveChat', 'send', language)}
               </Button>
             </div>
             <div className="mt-2 text-xs text-gray-500 text-center">
-              For emergencies, please call our hotline at <br />
-              <a href="tel:+1800123456" className="text-calmBlue-600 font-medium">1-800-123-456</a>
+              {translate('liveChat', 'emergency', language)} <br />
+              <a href="tel:+1800123456" className="text-calmBlue-600 font-medium">{translate('liveChat', 'hotline', language)}</a>
             </div>
           </div>
         </div>
