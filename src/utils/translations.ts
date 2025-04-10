@@ -435,3 +435,24 @@ export const translations = {
     }
   }
 };
+
+/**
+ * Utility function to get translations based on the provided key and language
+ * @param section The section in the translations object
+ * @param key The specific key within the section
+ * @param language The language code ('en' or 'ar')
+ * @returns The translated string or the key if translation not found
+ */
+export const translate = (
+  section: string, 
+  key: string, 
+  language: 'en' | 'ar'
+): string => {
+  try {
+    // @ts-ignore - We know the structure matches but TS can't infer it
+    return translations[section]?.[language]?.[key] || key;
+  } catch (error) {
+    console.error(`Translation error for ${section}.${language}.${key}:`, error);
+    return key;
+  }
+};
