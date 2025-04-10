@@ -1,4 +1,3 @@
-
 export const translations = {
   navbar: {
     en: {
@@ -361,9 +360,246 @@ export const translations = {
       emergency: 'للحالات الطارئة، يرجى الاتصال بالخط الساخن على',
       hotline: '1-800-123-456'
     }
-  }
-};
-
-export const translate = (section: keyof typeof translations, key: string, language: 'en' | 'ar') => {
-  return translations[section][language][key];
-};
+  },
+  gainService: {
+    en: {
+      title: 'How to Gain Our Services',
+      subtitle: 'Choose the most convenient way to access our mental health services',
+      subscription: 'Subscription Plans',
+      subscriptionDesc: 'Ongoing support with flexible payment plans',
+      subscriptionBenefit1: 'Unlimited access to all services',
+      subscriptionBenefit2: 'Priority booking with specialists',
+      subscriptionBenefit3: 'Monthly progress tracking and reports',
+      oneTimePayment: 'One-Time Payment',
+      oneTimePaymentDesc: 'Pay for individual sessions as needed',
+      oneTimePaymentBenefit1: 'No long-term commitment required',
+      oneTimePaymentBenefit2: 'Choose any specialist for your session',
+      oneTimePaymentBenefit3: 'Full session recording available',
+      referral: 'Referral Program',
+      referralDesc: 'Share with friends and earn free sessions',
+      referralBenefit1: 'Earn one free session per successful referral',
+      referralBenefit2: 'Your friend gets 15% off their first session',
+      referralBenefit3: 'No limit to how many friends you can refer',
+      promoCode: 'Promo Code',
+      promoCodeDesc: 'Apply a promotional code for discounts',
+      promoCodeBenefit1: 'One-time discounts on any service',
+      promoCodeBenefit2: 'Combine with other offers where applicable',
+      promoCodeBenefit3: 'Redeem special event and partner promotions',
+      enterPromoCode: 'Enter promo code',
+      apply: 'Apply',
+      selectMethod: 'Select This Method',
+      methodSelected: 'Method Selected',
+      selected: 'You selected',
+      promoApplied: 'Promo Code Applied',
+      promoSuccess: 'Your promotional code was successfully applied to your account.',
+      securePayment: 'Secure Payment Processing',
+      securePaymentDesc: 'All payments are processed securely with industry-standard encryption.',
+      instantAccess: 'Instant Access to Services',
+      instantAccessDesc: 'Gain immediate access to our services after completing your payment or promotion.'
+    },
+    ar: {
+      title: 'كيفية الحصول على خدماتنا',
+      subtitle: 'اختر الطريقة الأكثر ملاءمة للوصول إلى خدمات الصحة النفسية لدينا',
+      subscription: 'خطط الاشتراك',
+      subscriptionDesc: 'دعم مستمر مع خطط دفع مرنة',
+      subscriptionBenefit1: 'وصول غير محدود لجميع الخدمات',
+      subscriptionBenefit2: 'حجز ذو أولوية مع المتخصصين',
+      subscriptionBenefit3: 'متابعة التقدم الشهري والتقارير',
+      oneTimePayment: 'دفعة لمرة واحدة',
+      oneTimePaymentDesc: 'ادفع مقابل الجلسات الفردية حسب الحاجة',
+      oneTimePaymentBenefit1: 'لا يلزم التزام طويل الأمد',
+      oneTimePaymentBenefit2: 'اختر أي متخصص لجلستك',
+      oneTimePaymentBenefit3: 'تسجيل كامل للجلسة متاح',
+      referral: 'برنامج الإحالة',
+      referralDesc: 'شارك مع الأصدقاء واكسب جلسات مجانية',
+      referralBenefit1: 'احصل على جلسة مجانية واحدة لكل إحالة ناجحة',
+      referralBenefit2: 'يحصل صديقك على خصم 15٪ على جلسته الأولى',
+      referralBenefit3: 'لا يوجد حد لعدد الأصدقاء الذين يمكنك إحالتهم',
+      promoCode: 'رمز ترويجي',
+      promoCodeDesc: 'استخدم رمزاً ترويجياً للحصول على خصومات',
+      promoCodeBenefit1: 'خصومات لمرة واحدة على أي خدمة',
+      promoCodeBenefit2: 'ادمجها مع عروض أخرى حيثما أمكن',
+      promoCodeBenefit3: 'استرداد عروض المناسبات الخاصة والشركاء',
+      enterPromoCode: 'أدخل الرمز الترويجي',
+      apply: 'تطبيق',
+      selectMethod: 'اختر هذه الطريقة',
+      methodSelected: 'تم اختيار الطريقة',
+      selected: 'لقد اخترت',
+      promoApplied: 'تم تطبيق الرمز الترويجي',
+      promoSuccess: 'تم تطبيق الرمز الترويجي الخاص بك بنجاح على حسابك.',
+      securePayment: 'معالجة دفع آمنة',
+      securePaymentDesc: 'تتم معالجة جميع المدفوعات بشكل آمن باستخدام تشفير بمعايير الصناعة.',
+      instantAccess: 'وصول فوري إلى الخدمات',
+      instantAccessDesc: 'احصل على وصول فوري إلى خدماتنا بعد إكمال الدفع أو الترويج الخاص بك.'
+    }
+  },
+  
+  howItWorks: {
+    en: {
+      title: 'How It Works',
+      description: 'Getting the support you need is simple and straightforward with our easy-to-follow process.',
+      step1: 'Create an Account',
+      step1Desc: 'Sign up securely with enhanced privacy features to protect your personal information.',
+      step2: 'Complete Assessment',
+      step2Desc: 'Take an optional psychological assessment to help identify your specific needs.',
+      step3: 'Browse Specialists',
+      step3Desc: 'Explore our network of qualified therapists and choose one who matches your requirements.',
+      step4: 'Choose Consultation Type',
+      step4Desc: 'Select your preferred method: text chat, voice call, or video session.',
+      step5: 'Schedule & Pay',
+      step5Desc: 'Book your appointment at a convenient time and complete the secure payment process.',
+      step6: 'Attend Session',
+      step6Desc: 'Connect with your therapist through our secure platform for your scheduled session.',
+      consultationMethods: 'Consultation Methods',
+      textChat: 'Text Chat',
+      textChatDesc: 'Communicate through secure messaging at your own pace.',
+      voiceCall: 'Voice Call',
+      voiceCallDesc: 'Have private conversations with crystal-clear audio quality.',
+      videoSession: 'Video Session',
+      videoSessionDesc: 'Connect face-to-face for a more personal experience.'
+    },
+    ar: {
+      title: 'كيف يعمل',
+      description: 'الحصول على الدعم الذي تحتاجه بسيط ومباشر مع عمليتنا سهلة المتابعة.',
+      step1: 'إنشاء حساب',
+      step1Desc: 'قم بالتسجيل بأمان مع ميزات خصوصية معززة لحماية معلوماتك الشخصية.',
+      step2: 'إكمال التقييم',
+      step2Desc: 'خذ تقييماً نفسياً اختيارياً للمساعدة في تحديد احتياجاتك الخاصة.',
+      step3: 'تصفح المتخصصين',
+      step3Desc: 'استكشف شبكتنا من المعالجين المؤهلين واختر الشخص الذي يناسب متطلباتك.',
+      step4: 'اختيار نوع الاستشارة',
+      step4Desc: 'حدد طريقتك المفضلة: دردشة نصية، مكالمة صوتية، أو جلسة فيديو.',
+      step5: 'جدولة ودفع',
+      step5Desc: 'احجز موعدك في وقت مناسب وأكمل عملية الدفع الآمنة.',
+      step6: 'حضور الجلسة',
+      step6Desc: 'تواصل مع معالجك من خلال منصتنا الآمنة لجلستك المجدولة.',
+      consultationMethods: 'طرق الاستشارة',
+      textChat: 'دردشة نصية',
+      textChatDesc: 'تواصل من خلال المراسلة الآمنة بوتيرتك الخاصة.',
+      voiceCall: 'مكالمة صوتية',
+      voiceCallDesc: 'أجرِ محادثات خاصة بجودة صوت واضحة للغاية.',
+      videoSession: 'جلسة فيديو',
+      videoSessionDesc: 'اتصل وجهاً لوجه لتجربة أكثر شخصية.'
+    }
+  },
+  specialists: {
+    en: {
+      title: 'Our Mental Health Specialists',
+      description: 'Connect with highly qualified professionals who are committed to supporting your mental wellbeing through secure online consultations.',
+      specializes: 'Specializes in:',
+      experience: 'Experience:',
+      years: 'years',
+      languages: 'Languages:',
+      bookAppointment: 'Book Appointment',
+      viewMore: 'View More Specialists'
+    },
+    ar: {
+      title: 'متخصصو الصحة النفسية لدينا',
+      description: 'تواصل مع متخصصين مؤهلين تأهيلاً عالياً ملتزمين بدعم صحتك النفسية من خلال استشارات آمنة عبر الإنترنت.',
+      specializes: 'متخصص في:',
+      experience: 'الخبرة:',
+      years: 'سنوات',
+      languages: 'اللغات:',
+      bookAppointment: 'حجز موعد',
+      viewMore: 'عرض المزيد من المتخصصين'
+    }
+  },
+  privacy: {
+    en: {
+      title: 'Privacy & Security',
+      description: 'Your privacy is our priority. We implement comprehensive security measures to ensure your information and conversations remain confidential.',
+      commitment: 'Our Privacy Commitment',
+      standards: 'Data Protection Standards',
+      control: 'Your Data, Your Control',
+      controlDescription: 'We believe you should have complete control over your information. Access, download, or delete your data anytime through your account settings.',
+      rights: 'Learn About Your Privacy Rights',
+      endToEndEncryption: 'End-to-End Encryption',
+      endToEndDescription: 'All communications between you and your therapist are encrypted, ensuring that your conversations remain private and secure.',
+      anonymousConsultation: 'Anonymous Consultation',
+      anonymousDescription: 'Option to receive therapy without revealing your identity, allowing you to speak freely about sensitive issues.',
+      hipaa: 'HIPAA Compliance',
+      hipaaDescription: 'Our platform adheres to healthcare privacy standards, providing the same level of confidentiality as in-person therapy.',
+      hiddenApp: 'Hidden App Feature',
+      hiddenAppDescription: 'Discreet app icon and name option on your device for additional privacy on shared or monitored devices.'
+    },
+    ar: {
+      title: 'الخصوصية والأمان',
+      description: 'خصوصيتك هي أولويتنا. نطبق إجراءات أمان شاملة لضمان بقاء معلوماتك ومحادثاتك سرية.',
+      commitment: 'التزامنا بالخصوصية',
+      standards: 'معايير حماية البيانات',
+      control: 'بياناتك، تحت سيطرتك',
+      controlDescription: 'نحن نؤمن بأنه يجب أن يكون لديك السيطرة الكاملة على معلوماتك. يمكنك الوصول إلى بياناتك أو تنزيلها أو حذفها في أي وقت من خلال إعدادات حسابك.',
+      rights: 'تعرف على حقوق الخصوصية الخاصة بك',
+      endToEndEncryption: 'تشفير من طرف إلى طرف',
+      endToEndDescription: 'جميع الاتصالات بينك وبين معالجك مشفرة، مما يضمن بقاء محادثاتك خاصة وآمنة.',
+      anonymousConsultation: 'استشارة مجهولة',
+      anonymousDescription: 'خيار تلقي العلاج دون الكشف عن هويتك، مما يتيح لك التحدث بحرية عن القضايا الحساسة.',
+      hipaa: 'الامتثال لمعايير HIPAA',
+      hipaaDescription: 'تلتزم منصتنا بمعايير خصوصية الرعاية الصحية، مما يوفر نفس مستوى السرية مثل العلاج وجهاً لوجه.',
+      hiddenApp: 'ميزة التطبيق المخفي',
+      hiddenAppDescription: 'خيار أيقونة واسم تطبيق غير ملفت للنظر على جهازك لخصوصية إضافية على الأجهزة المشتركة أو المراقبة.'
+    }
+  },
+  plans: {
+    en: {
+      title: 'Subscription Plans',
+      description: 'Choose the plan that best fits your needs, from individual sessions to comprehensive packages for families and organizations.',
+      perSession: 'per session',
+      perMonth: 'per month',
+      pricing: 'pricing',
+      payPerSession: 'Pay Per Session',
+      payPerSessionDesc: 'Flexible therapy with no commitment',
+      monthly: 'Monthly Essential',
+      monthlyDesc: 'Regular support for ongoing improvement',
+      family: 'Family Plan',
+      familyDesc: 'Support for the whole family',
+      corporate: 'Corporate',
+      corporateDesc: 'Employee mental health support',
+      popular: 'Most Popular',
+      insurance: 'Insurance Coverage',
+      insuranceDesc: 'We work with many major insurance providers to help make therapy more affordable. Check if your insurance plan covers our services.',
+      verifyInsurance: 'Verify Your Insurance',
+      bookSingleSession: 'Book Single Session',
+      startMonthlyPlan: 'Start Monthly Plan',
+      chooseFamilyPlan: 'Choose Family Plan',
+      contactSales: 'Contact Sales'
+    },
+    ar: {
+      title: 'خطط الاشتراك',
+      description: 'اختر الخطة التي تناسب احتياجاتك، من الجلسات الفردية إلى الباقات الشاملة للعائلات والمؤسسات.',
+      perSession: 'لكل جلسة',
+      perMonth: 'شهرياً',
+      pricing: 'تسعير',
+      payPerSession: 'الدفع لكل جلسة',
+      payPerSessionDesc: 'علاج مرن بدون التزام',
+      monthly: 'الباقة الشهرية الأساسية',
+      monthlyDesc: 'دعم منتظم للتحسين المستمر',
+      family: 'خطة العائلة',
+      familyDesc: 'دعم للعائلة بأكملها',
+      corporate: 'الشركات',
+      corporateDesc: 'دعم الصحة النفسية للموظفين',
+      popular: 'الأكثر شعبية',
+      insurance: 'تغطية التأمين',
+      insuranceDesc: 'نحن نعمل مع العديد من شركات التأمين الكبرى للمساعدة في جعل العلاج أكثر يسر. تحقق مما إذا كانت خطة التأمين الخاصة بك تغطي خدماتنا.',
+      verifyInsurance: 'تحقق من تأمينك',
+      bookSingleSession: 'احجز جلسة واحدة',
+      startMonthlyPlan: 'ابدأ الخطة الشهرية',
+      chooseFamilyPlan: 'اختر خطة العائلة',
+      contactSales: 'تواصل مع المبيعات'
+    }
+  },
+  testimonials: {
+    en: {
+      title: 'What Our Clients Say',
+      description: 'Read about the experiences of people who have found support and healing through our platform.'
+    },
+    ar: {
+      title: 'ما يقوله عملاؤنا',
+      description: 'اقرأ عن تجارب الأشخاص الذين وجدوا الدعم والشفاء من خلال منصتنا.'
+    }
+  },
+  mobileApp: {
+    en: {
+      title: 'Take Your Mental Health Journey with You',
+      description: 'Our mobile app brings the full functionality of our platform to your smartphone, allowing you to access support whenever and wherever you need it.',
+      privacyDesign: 'Privacy First Design',
