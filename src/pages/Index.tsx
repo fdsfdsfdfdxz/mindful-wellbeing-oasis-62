@@ -8,7 +8,6 @@ import Privacy from "@/components/Privacy";
 import Plans from "@/components/Plans";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
-import MobileApp from "@/components/MobileApp";
 import Footer from "@/components/Footer";
 import LiveChat from "@/components/LiveChat";
 
@@ -23,7 +22,6 @@ const Index = () => {
       <Privacy />
       <Plans />
       <Testimonials />
-      <MobileApp />
       <CTA />
       <Footer />
       <LiveChat />
