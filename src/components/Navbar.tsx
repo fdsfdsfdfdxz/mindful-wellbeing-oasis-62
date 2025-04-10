@@ -1,26 +1,32 @@
 
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { 
   Menu, 
   X, 
   Globe, 
-  User
+  User,
+  LogOut
 } from 'lucide-react';
 import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { translate } from '@/utils/translations';
 import { useToast } from "@/components/ui/use-toast";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, switchLanguage, isRTL } = useLanguage();
+  const { isLoggedIn, userEmail, logout } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -43,6 +49,21 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  const handleLogin = () => {
+    navigate('/login');
+    setIsMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: translate('auth', 'logoutSuccess', language),
+      description: translate('auth', 'comeBackSoon', language),
+      duration: 3000
+    });
+    setIsMenuOpen(false);
+  };
+
   // Force a re-render when language changes to ensure all components update
   useEffect(() => {
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
@@ -53,11 +74,11 @@ const Navbar = () => {
       <div className="container-custom py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <a href="#" className="flex items-center">
+          <Link to="/" className="flex items-center">
             <span className="text-2xl font-bold text-calmBlue-600">
               MindfulCare
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-8`}>
@@ -100,13 +121,39 @@ const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <Button variant="outline" size="sm">
-              {translate('navbar', 'login', language)}
-            </Button>
-            
-            <Button className="bg-calmBlue-500 hover:bg-calmBlue-600">
-              {translate('navbar', 'register', language)}
-            </Button>
+            {isLoggedIn ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="rounded-full">
+                    <User className={`h-4 w-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+                    {userEmail ? userEmail.split('@')[0] : translate('auth', 'account', language)}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align={isRTL ? "start" : "end"}>
+                  <DropdownMenuItem>
+                    {translate('auth', 'profile', language)}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    {translate('auth', 'settings', language)}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                    {translate('auth', 'logout', language)}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="outline" size="sm" onClick={handleLogin}>
+                  {translate('navbar', 'login', language)}
+                </Button>
+                
+                <Button className="bg-calmBlue-500 hover:bg-calmBlue-600">
+                  {translate('navbar', 'register', language)}
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -182,14 +229,37 @@ const Navbar = () => {
 
               <div className="border-t border-gray-200 my-2"></div>
 
-              <div className={`flex ${isRTL ? 'flex-row-reverse' : ''} space-x-2 ${isRTL ? 'space-x-reverse' : ''} px-4`}>
-                <Button variant="outline" size="sm" className="w-1/2">
-                  {translate('navbar', 'login', language)}
-                </Button>
-                <Button className="bg-calmBlue-500 hover:bg-calmBlue-600 w-1/2">
-                  {translate('navbar', 'register', language)}
-                </Button>
-              </div>
+              {isLoggedIn ? (
+                <div className="px-4 space-y-2">
+                  <div className="flex items-center py-2">
+                    <User className="h-4 w-4" />
+                    <span className="ml-2 font-medium">{userEmail}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full flex items-center justify-center"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    {translate('auth', 'logout', language)}
+                  </Button>
+                </div>
+              ) : (
+                <div className={`flex ${isRTL ? 'flex-row-reverse' : ''} space-x-2 ${isRTL ? 'space-x-reverse' : ''} px-4`}>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-1/2"
+                    onClick={handleLogin}
+                  >
+                    {translate('navbar', 'login', language)}
+                  </Button>
+                  <Button className="bg-calmBlue-500 hover:bg-calmBlue-600 w-1/2">
+                    {translate('navbar', 'register', language)}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         )}

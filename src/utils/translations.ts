@@ -352,7 +352,68 @@ export const translations = {
       description: 'الصفحة التي تبحث عنها غير موجودة أو تم نقلها.',
       goHome: 'العودة إلى الرئيسية'
     }
-  }
+  },
+  
+  auth: {
+    en: {
+      login: 'Login',
+      register: 'Register',
+      email: 'Email',
+      password: 'Password',
+      forgotPassword: 'Forgot Password?',
+      loginSuccess: 'Login Successful',
+      welcomeBack: 'Welcome back!',
+      error: 'Error',
+      invalidCredentials: 'Invalid email or password',
+      allFieldsRequired: 'All fields are required',
+      loggingIn: 'Logging in...',
+      noAccount: 'Don\'t have an account?',
+      registerNow: 'Register now',
+      emailPlaceholder: 'Enter your email',
+      passwordPlaceholder: 'Enter your password',
+      enterCredentials: 'Enter your credentials to access your account',
+      account: 'Account',
+      profile: 'Profile',
+      settings: 'Settings',
+      logout: 'Logout',
+      logoutSuccess: 'Logged out successfully',
+      comeBackSoon: 'Come back soon!',
+      secureLogin: 'Secure Login',
+      secureLoginDesc: 'Your login information is protected with advanced encryption technology.',
+      accountVerified: 'Account Verified',
+      accountVerifiedDesc: 'Your account is active and verified. You have access to all available services.'
+    },
+    ar: {
+      login: 'تسجيل الدخول',
+      register: 'إنشاء حساب',
+      email: 'البريد الإلكتروني',
+      password: 'كلمة المرور',
+      forgotPassword: 'نسيت كلمة المرور؟',
+      loginSuccess: 'تم تسجيل الدخول بنجاح',
+      welcomeBack: 'مرحبا بعودتك!',
+      error: 'خطأ',
+      invalidCredentials: 'بريد إلكتروني أو كلمة مرور غير صالحة',
+      allFieldsRequired: 'جميع الحقول مطلوبة',
+      loggingIn: 'جاري تسجيل الدخول...',
+      noAccount: 'ليس لديك حساب؟',
+      registerNow: 'سجل الآن',
+      emailPlaceholder: 'أدخل بريدك الإلكتروني',
+      passwordPlaceholder: 'أدخل كلمة المرور',
+      enterCredentials: 'أدخل بيانات الاعتماد الخاصة بك للوصول إلى حسابك',
+      account: 'الحساب',
+      profile: 'الملف الشخصي',
+      settings: 'الإعدادات',
+      logout: 'تسجيل الخروج',
+      logoutSuccess: 'تم تسجيل الخروج بنجاح',
+      comeBackSoon: 'عد قريبا!',
+      secureLogin: 'تسجيل دخول آمن',
+      secureLoginDesc: 'معلومات تسجيل الدخول الخاصة بك محمية بتقنية تشفير متقدمة.',
+      accountVerified: 'تم التحقق من الحساب',
+      accountVerifiedDesc: 'حسابك نشط وتم التحقق منه. لديك حق الوصول إلى جميع الخدمات المتاحة.'
+    }
+  },
+
+  
 };
 
 /**
