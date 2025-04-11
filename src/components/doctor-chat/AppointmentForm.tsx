@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -66,12 +67,15 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
   const handleSubmit = (values: AppointmentFormValues) => {
     onSubmit(values);
     
-    form.reset({
+    // Create a properly typed object with non-optional properties for reset
+    const resetValues: AppointmentFormValues = {
       date: new Date().toISOString().split("T")[0],
       time: "10:00",
       reason: "",
       type: "video",
-    } as AppointmentFormValues);
+    };
+    
+    form.reset(resetValues);
   };
 
   return (
