@@ -52,7 +52,9 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
     }),
   });
 
-  const form = useForm<z.infer<typeof appointmentFormSchema>>({
+  type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
+
+  const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentFormSchema),
     defaultValues: {
       date: new Date().toISOString().split("T")[0],
@@ -62,7 +64,7 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof appointmentFormSchema>) => {
+  const handleSubmit = (values: AppointmentFormValues) => {
     onSubmit(values);
     form.reset({
       date: new Date().toISOString().split("T")[0],
@@ -197,4 +199,3 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
     </Form>
   );
 };
-
