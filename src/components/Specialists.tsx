@@ -1,8 +1,13 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
-import { Star, Calendar } from "lucide-react";
+import { Star, Calendar, MessageSquare } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translate } from "@/utils/translations";
 
 const specialistsData = [
   {
@@ -53,9 +58,27 @@ const specialistsData = [
 
 const Specialists = () => {
   const [visibleSpecialists, setVisibleSpecialists] = useState(4);
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { language } = useLanguage();
   
   const showMoreSpecialists = () => {
     setVisibleSpecialists(specialistsData.length);
+  };
+
+  const handleCommunication = (action: "message" | "appointment") => {
+    if (!isLoggedIn) {
+      toast({
+        title: translate("specialists", "loginRequired", language) || "Login Required",
+        description: translate("specialists", "loginToCommunicate", language) || 
+          "Please login to communicate with specialists",
+      });
+      navigate("/login");
+      return;
+    }
+    
+    navigate("/doctor-chat");
   };
 
   return (
@@ -116,10 +139,21 @@ const Specialists = () => {
                 </div>
               </CardContent>
               
-              <CardFooter>
-                <Button className="w-full">
+              <CardFooter className="flex flex-col space-y-2">
+                <Button 
+                  className="w-full"
+                  onClick={() => handleCommunication("appointment")}
+                >
                   <Calendar className="mr-2 h-4 w-4" />
                   Book Appointment
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleCommunication("message")}
+                >
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Message
                 </Button>
               </CardFooter>
             </Card>
