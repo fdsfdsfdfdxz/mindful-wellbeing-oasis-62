@@ -6,12 +6,18 @@ import { translate } from "@/utils/translations";
 import { UseFormReturn } from "react-hook-form";
 import { AppointmentFormValues } from "../schemas/appointmentFormSchema";
 
+// Ensure Language type matches translations utility
+type Language = 'en' | 'ar';
+
 interface ReasonFieldProps {
   form: UseFormReturn<AppointmentFormValues>;
   language: string;
 }
 
 export const ReasonField = ({ form, language }: ReasonFieldProps) => {
+  // Ensure language is a valid Language type
+  const safeLanguage = (language === 'en' || language === 'ar') ? language as Language : 'en';
+  
   return (
     <FormField
       control={form.control}
@@ -19,12 +25,12 @@ export const ReasonField = ({ form, language }: ReasonFieldProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>
-            {translate("doctorChat", "appointmentReason", language) || "Reason for Appointment"}
+            {translate("doctorChat", "appointmentReason", safeLanguage) || "Reason for Appointment"}
           </FormLabel>
           <FormControl>
             <Textarea
               placeholder={
-                translate("doctorChat", "reasonPlaceholder", language) ||
+                translate("doctorChat", "reasonPlaceholder", safeLanguage) ||
                 "Briefly describe the reason for your appointment..."
               }
               className="min-h-[100px]"

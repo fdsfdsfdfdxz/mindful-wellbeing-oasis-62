@@ -6,6 +6,10 @@ import { Input } from "@/components/ui/input";
 import { translate } from "@/utils/translations";
 import { UseFormReturn } from "react-hook-form";
 import { AppointmentFormValues } from "../schemas/appointmentFormSchema";
+import { getMinAppointmentDate } from "../utils/formUtils";
+
+// Ensure Language type matches translations utility
+type Language = 'en' | 'ar';
 
 interface DateTimeFieldsProps {
   form: UseFormReturn<AppointmentFormValues>;
@@ -13,6 +17,10 @@ interface DateTimeFieldsProps {
 }
 
 export const DateTimeFields = ({ form, language }: DateTimeFieldsProps) => {
+  // Ensure language is a valid Language type
+  const safeLanguage = (language === 'en' || language === 'ar') ? language as Language : 'en';
+  const minDate = getMinAppointmentDate();
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <FormField
@@ -21,7 +29,7 @@ export const DateTimeFields = ({ form, language }: DateTimeFieldsProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              {translate("doctorChat", "appointmentDate", language) || "Appointment Date"}
+              {translate("doctorChat", "appointmentDate", safeLanguage) || "Appointment Date"}
             </FormLabel>
             <FormControl>
               <div className="relative">
@@ -30,7 +38,7 @@ export const DateTimeFields = ({ form, language }: DateTimeFieldsProps) => {
                   type="date"
                   className="pl-10"
                   {...field}
-                  min={new Date().toISOString().split("T")[0]}
+                  min={minDate}
                 />
               </div>
             </FormControl>
@@ -45,7 +53,7 @@ export const DateTimeFields = ({ form, language }: DateTimeFieldsProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              {translate("doctorChat", "appointmentTime", language) || "Appointment Time"}
+              {translate("doctorChat", "appointmentTime", safeLanguage) || "Appointment Time"}
             </FormLabel>
             <FormControl>
               <div className="relative">

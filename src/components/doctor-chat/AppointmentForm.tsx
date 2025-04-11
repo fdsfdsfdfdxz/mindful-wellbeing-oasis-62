@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +11,7 @@ import { DateTimeFields } from "./appointment-form/DateTimeFields";
 import { AppointmentTypeField } from "./appointment-form/AppointmentTypeField";
 import { ReasonField } from "./appointment-form/ReasonField";
 import { translate } from "@/utils/translations";
+import { getDefaultAppointmentValues, resetAppointmentForm } from "./utils/formUtils";
 
 interface AppointmentFormProps {
   onSubmit: (data: {
@@ -24,30 +26,16 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
   const { language } = useLanguage();
   
   const appointmentFormSchema = createAppointmentFormSchema(language);
+  const defaultValues = getDefaultAppointmentValues();
 
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentFormSchema),
-    defaultValues: {
-      date: new Date().toISOString().split("T")[0],
-      time: "10:00",
-      reason: "",
-      type: "video",
-    },
+    defaultValues,
   });
 
   const handleSubmit = (values: AppointmentFormValues) => {
     onSubmit(values);
-    
-    // Define default values with explicit required properties
-    const defaultValues: AppointmentFormValues = {
-      date: new Date().toISOString().split("T")[0],
-      time: "10:00",
-      reason: "",
-      type: "video",
-    };
-    
-    // Pass the properly typed values to reset
-    form.reset(defaultValues);
+    resetAppointmentForm(form);
   };
 
   return (
