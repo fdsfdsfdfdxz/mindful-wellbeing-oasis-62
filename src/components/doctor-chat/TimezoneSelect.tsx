@@ -15,17 +15,19 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translate } from "@/utils/translations";
 
 // Common timezones - in a real app, you'd fetch all IANA timezones
 const TIMEZONES = [
-  { value: "America/New_York", label: "Eastern Time (ET)" },
-  { value: "America/Chicago", label: "Central Time (CT)" },
-  { value: "America/Denver", label: "Mountain Time (MT)" },
-  { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
-  { value: "Europe/London", label: "Greenwich Mean Time (GMT)" },
-  { value: "Europe/Paris", label: "Central European Time (CET)" },
-  { value: "Asia/Tokyo", label: "Japan Standard Time (JST)" },
-  { value: "Australia/Sydney", label: "Australian Eastern Time (AET)" },
+  { value: "America/New_York", label: "Eastern Time (ET)", labelAr: "التوقيت الشرقي (ET)" },
+  { value: "America/Chicago", label: "Central Time (CT)", labelAr: "التوقيت المركزي (CT)" },
+  { value: "America/Denver", label: "Mountain Time (MT)", labelAr: "توقيت الجبال (MT)" },
+  { value: "America/Los_Angeles", label: "Pacific Time (PT)", labelAr: "توقيت المحيط الهادئ (PT)" },
+  { value: "Europe/London", label: "Greenwich Mean Time (GMT)", labelAr: "توقيت غرينتش (GMT)" },
+  { value: "Europe/Paris", label: "Central European Time (CET)", labelAr: "توقيت وسط أوروبا (CET)" },
+  { value: "Asia/Tokyo", label: "Japan Standard Time (JST)", labelAr: "توقيت اليابان القياسي (JST)" },
+  { value: "Australia/Sydney", label: "Australian Eastern Time (AET)", labelAr: "توقيت شرق أستراليا (AET)" },
 ];
 
 interface TimezoneSelectProps {
@@ -36,6 +38,7 @@ interface TimezoneSelectProps {
 
 export function TimezoneSelect({ value, onChange, className }: TimezoneSelectProps) {
   const [open, setOpen] = useState(false);
+  const { language } = useLanguage();
   
   // Get user's local timezone on component mount
   useEffect(() => {
@@ -51,7 +54,14 @@ export function TimezoneSelect({ value, onChange, className }: TimezoneSelectPro
   }, [value, onChange]);
 
   const selectedTimezone = TIMEZONES.find(tz => tz.value === value) || 
-    { value: value || "UTC", label: value?.replace('_', ' ').replace(/\//g, ' - ') || "UTC" };
+    { 
+      value: value || "UTC", 
+      label: value?.replace('_', ' ').replace(/\//g, ' - ') || "UTC",
+      labelAr: value?.replace('_', ' ').replace(/\//g, ' - ') || "توقيت عالمي منسق"
+    };
+
+  const noTimezoneFound = language === 'ar' ? "لم يتم العثور على منطقة زمنية." : "No timezone found.";
+  const searchTimezone = language === 'ar' ? "البحث عن منطقة زمنية..." : "Search timezone...";
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -64,14 +74,14 @@ export function TimezoneSelect({ value, onChange, className }: TimezoneSelectPro
         >
           <div className="flex items-center">
             <Globe className="mr-2 h-4 w-4" />
-            {selectedTimezone.label}
+            {language === 'ar' ? selectedTimezone.labelAr || selectedTimezone.label : selectedTimezone.label}
           </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
         <Command>
-          <CommandInput placeholder="Search timezone..." />
-          <CommandEmpty>No timezone found.</CommandEmpty>
+          <CommandInput placeholder={searchTimezone} />
+          <CommandEmpty>{noTimezoneFound}</CommandEmpty>
           <CommandGroup className="max-h-[300px] overflow-auto">
             {TIMEZONES.map((timezone) => (
               <CommandItem
@@ -88,7 +98,7 @@ export function TimezoneSelect({ value, onChange, className }: TimezoneSelectPro
                     value === timezone.value ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {timezone.label}
+                {language === 'ar' ? timezone.labelAr : timezone.label}
               </CommandItem>
             ))}
           </CommandGroup>

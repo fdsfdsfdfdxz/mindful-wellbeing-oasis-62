@@ -23,6 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { TimezoneSelect } from "./TimezoneSelect";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface TimeSlot {
   start: string;
@@ -48,6 +49,7 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
   const [endTime, setEndTime] = useState<string>("17:00");
   const [timezone, setTimezone] = useState<string>("");
   const { toast } = useToast();
+  const { language } = useLanguage();
   
   // Time slots at 30-minute intervals
   const timeOptions = Array.from({ length: 24 * 2 }, (_, i) => {
@@ -62,8 +64,8 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
     // Convert times to 24-hour format for comparison
     if (startTime >= endTime) {
       toast({
-        title: "Invalid time range",
-        description: "End time must be later than start time",
+        title: language === 'ar' ? "نطاق زمني غير صالح" : "Invalid time range",
+        description: language === 'ar' ? "يجب أن يكون وقت الانتهاء بعد وقت البدء" : "End time must be later than start time",
         variant: "destructive"
       });
       return;
@@ -108,8 +110,10 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
     setSelectedTimeSlots([]);
     
     toast({
-      title: "Availability updated",
-      description: `Your availability for ${format(selectedDate, 'EEEE, MMMM d, yyyy')} has been saved.`,
+      title: language === 'ar' ? "تم تحديث التوفر" : "Availability updated",
+      description: language === 'ar' 
+        ? `تم حفظ توفرك ليوم ${format(selectedDate, 'EEEE, MMMM d, yyyy')}.`
+        : `Your availability for ${format(selectedDate, 'EEEE, MMMM d, yyyy')} has been saved.`,
     });
     
     if (onSave) {
@@ -136,7 +140,7 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
 
   const formatTimeDisplay = (time: string) => {
     const [hour, minute] = time.split(':').map(Number);
-    return new Date(2022, 0, 1, hour, minute).toLocaleTimeString('en-US', { 
+    return new Date(2022, 0, 1, hour, minute).toLocaleTimeString(language === 'ar' ? 'ar-SA' : 'en-US', { 
       hour: 'numeric', 
       minute: '2-digit', 
       hour12: true 
@@ -149,7 +153,7 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
         <CardHeader>
           <CardTitle className="text-lg flex items-center">
             <CalendarIcon className="mr-2 h-5 w-5" />
-            Select Dates & Times
+            {language === 'ar' ? "حدد التواريخ والأوقات" : "Select Dates & Times"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -171,14 +175,21 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
           {selectedDate && (
             <>
               <div className="mb-4">
-                <h3 className="font-medium mb-2">Availability for {format(selectedDate, 'EEEE, MMMM d, yyyy')}</h3>
+                <h3 className="font-medium mb-2">
+                  {language === 'ar' 
+                    ? `التوفر ليوم ${format(selectedDate, 'EEEE, MMMM d, yyyy')}` 
+                    : `Availability for ${format(selectedDate, 'EEEE, MMMM d, yyyy')}`
+                  }
+                </h3>
                 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="text-sm text-muted-foreground mb-1 block">Start Time</label>
+                    <label className="text-sm text-muted-foreground mb-1 block">
+                      {language === 'ar' ? "وقت البدء" : "Start Time"}
+                    </label>
                     <Select value={startTime} onValueChange={setStartTime}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Start time" />
+                        <SelectValue placeholder={language === 'ar' ? "وقت البدء" : "Start time"} />
                       </SelectTrigger>
                       <SelectContent>
                         {timeOptions.map((time) => (
@@ -190,10 +201,12 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
                     </Select>
                   </div>
                   <div>
-                    <label className="text-sm text-muted-foreground mb-1 block">End Time</label>
+                    <label className="text-sm text-muted-foreground mb-1 block">
+                      {language === 'ar' ? "وقت الانتهاء" : "End Time"}
+                    </label>
                     <Select value={endTime} onValueChange={setEndTime}>
                       <SelectTrigger>
-                        <SelectValue placeholder="End time" />
+                        <SelectValue placeholder={language === 'ar' ? "وقت الانتهاء" : "End time"} />
                       </SelectTrigger>
                       <SelectContent>
                         {timeOptions.map((time) => (
@@ -214,7 +227,7 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
                   className="mb-4"
                 >
                   <Plus className="h-4 w-4 mr-1" />
-                  Add Time Slot
+                  {language === 'ar' ? "إضافة فترة زمنية" : "Add Time Slot"}
                 </Button>
                 
                 <div className="space-y-2">
@@ -234,7 +247,9 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
                     ))
                   ) : (
                     <div className="text-center p-4 bg-gray-50 rounded-md">
-                      <p className="text-sm text-muted-foreground">No time slots added yet</p>
+                      <p className="text-sm text-muted-foreground">
+                        {language === 'ar' ? "لم يتم إضافة أي فترات زمنية بعد" : "No time slots added yet"}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -245,7 +260,7 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
                     className="w-full mt-4"
                   >
                     <Save className="h-4 w-4 mr-1" />
-                    Save Availability
+                    {language === 'ar' ? "حفظ التوفر" : "Save Availability"}
                   </Button>
                 )}
               </div>
@@ -258,17 +273,21 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
         <CardHeader>
           <CardTitle className="text-lg flex items-center">
             <CalendarIcon2 className="mr-2 h-5 w-5" />
-            Your Availability
+            {language === 'ar' ? "توفرك" : "Your Availability"}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mb-4">
-            <label className="text-sm font-medium mb-2 block">Timezone for Appointments</label>
+            <label className="text-sm font-medium mb-2 block">
+              {language === 'ar' ? "المنطقة الزمنية للمواعيد" : "Timezone for Appointments"}
+            </label>
             <TimezoneSelect value={timezone} onChange={setTimezone} />
           </div>
           
           <div className="mt-6">
-            <h3 className="font-medium mb-4">Available Days</h3>
+            <h3 className="font-medium mb-4">
+              {language === 'ar' ? "الأيام المتاحة" : "Available Days"}
+            </h3>
             {availability.length > 0 ? (
               <div className="space-y-4">
                 {availability.map((day, dayIndex) => (
@@ -294,9 +313,14 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
             ) : (
               <div className="text-center p-6 bg-gray-50 rounded-md">
                 <CalendarIcon className="h-10 w-10 mx-auto text-gray-300 mb-2" />
-                <p className="text-muted-foreground">No availability set</p>
+                <p className="text-muted-foreground">
+                  {language === 'ar' ? "لم يتم تعيين التوفر" : "No availability set"}
+                </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Select dates from the calendar to add your availability
+                  {language === 'ar' 
+                    ? "اختر تواريخ من التقويم لإضافة توفرك" 
+                    : "Select dates from the calendar to add your availability"
+                  }
                 </p>
               </div>
             )}

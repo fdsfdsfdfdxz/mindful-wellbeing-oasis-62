@@ -32,6 +32,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
 import { TimezoneSelect } from "./TimezoneSelect";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Define the appointment type using non-optional properties since they're required
 interface AppointmentData {
@@ -58,6 +59,7 @@ const UNAVAILABLE_SLOTS = [
 const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
@@ -96,8 +98,8 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const joinWaitlist = () => {
     setIsWaitlisted(true);
     toast({
-      title: "Added to Waitlist",
-      description: "You'll be notified if this slot becomes available.",
+      title: language === 'ar' ? "تمت الإضافة إلى قائمة الانتظار" : "Added to Waitlist",
+      description: language === 'ar' ? "سيتم إخطارك إذا أصبح هذا الموعد متاحًا." : "You'll be notified if this slot becomes available.",
     });
   };
 
@@ -107,8 +109,8 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
     // Make sure all required fields are filled
     if (!date || !time || !reason || !type) {
       toast({
-        title: "Missing information",
-        description: "Please fill all required fields to book your appointment.",
+        title: language === 'ar' ? "معلومات مفقودة" : "Missing information",
+        description: language === 'ar' ? "يرجى ملء جميع الحقول المطلوبة لحجز موعدك." : "Please fill all required fields to book your appointment.",
         variant: "destructive"
       });
       return;
@@ -130,23 +132,41 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
     } else {
       // Default behavior - show success toast and navigate
       toast({
-        title: "Appointment Scheduled",
-        description: `Your ${type} appointment has been booked for ${format(date, "MMMM d, yyyy")} at ${time}.`,
+        title: language === 'ar' ? "تم تحديد الموعد" : "Appointment Scheduled",
+        description: language === 'ar' 
+          ? `تم حجز موعد ${type === 'video' ? 'الفيديو' : type === 'phone' ? 'المكالمة الهاتفية' : 'الحضور الشخصي'} الخاص بك ليوم ${format(date, "MMMM d, yyyy")} في ${time}.`
+          : `Your ${type} appointment has been booked for ${format(date, "MMMM d, yyyy")} at ${time}.`,
       });
       navigate(`/doctor-chat?appointment=${type}`);
     }
   };
 
+  // Translations for badge texts
+  const getBadgeText = (text: string) => {
+    if (language !== 'ar') return text;
+    
+    switch (text) {
+      case "No available slots":
+        return "لا توجد مواعيد متاحة";
+      case "Join waitlist":
+        return "الانضمام إلى قائمة الانتظار";
+      case "Added to waitlist":
+        return "تمت الإضافة إلى قائمة الانتظار";
+      default:
+        return text;
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-bold mb-6">Schedule an Appointment</h2>
+      <h2 className="text-xl font-bold mb-6">{language === 'ar' ? "تحديد موعد" : "Schedule an Appointment"}</h2>
       
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Date Selection */}
           <div className="space-y-2">
             <label className="block text-sm font-medium">
-              Appointment Date <span className="text-red-500">*</span>
+              {language === 'ar' ? "تاريخ الموعد" : "Appointment Date"} <span className="text-red-500">*</span>
             </label>
             <Popover>
               <PopoverTrigger asChild>
@@ -158,7 +178,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : "Select date"}
+                  {date ? format(date, "PPP") : language === 'ar' ? "اختر التاريخ" : "Select date"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -183,20 +203,20 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
           {/* Time Selection */}
           <div className="space-y-2">
             <label className="block text-sm font-medium">
-              Appointment Time <span className="text-red-500">*</span>
+              {language === 'ar' ? "وقت الموعد" : "Appointment Time"} <span className="text-red-500">*</span>
             </label>
             <Select
               value={time}
               onValueChange={setTime}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select time">
+                <SelectValue placeholder={language === 'ar' ? "اختر الوقت" : "Select time"}>
                   {time ? (
                     <div className="flex items-center">
                       <Clock className="mr-2 h-4 w-4" />
                       {time}
                     </div>
-                  ) : "Select time"}
+                  ) : language === 'ar' ? "اختر الوقت" : "Select time"}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
@@ -206,7 +226,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
                   ))
                 ) : (
                   <div className="py-2 px-2 text-center">
-                    <p className="text-sm text-muted-foreground">No available slots</p>
+                    <p className="text-sm text-muted-foreground">{getBadgeText("No available slots")}</p>
                     {date && !isWaitlisted && (
                       <Button 
                         variant="ghost" 
@@ -215,12 +235,12 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
                         type="button"
                         onClick={joinWaitlist}
                       >
-                        Join waitlist
+                        {getBadgeText("Join waitlist")}
                       </Button>
                     )}
                     {isWaitlisted && (
                       <Badge className="mt-1 bg-amber-100 text-amber-800 border-amber-300">
-                        Added to waitlist
+                        {getBadgeText("Added to waitlist")}
                       </Badge>
                     )}
                   </div>
@@ -233,18 +253,20 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
         {/* Timezone Selection */}
         <div className="mb-6">
           <label className="block text-sm font-medium mb-2">
-            Your Timezone
+            {language === 'ar' ? "المنطقة الزمنية الخاصة بك" : "Your Timezone"}
           </label>
           <TimezoneSelect value={timezone} onChange={setTimezone} />
           <p className="text-xs text-muted-foreground mt-1">
-            Appointment times will be displayed in this timezone
+            {language === 'ar' 
+              ? "سيتم عرض أوقات المواعيد بهذه المنطقة الزمنية" 
+              : "Appointment times will be displayed in this timezone"}
           </p>
         </div>
 
         {/* Appointment Type */}
         <div className="mb-6 space-y-2">
           <label className="block text-sm font-medium">
-            Appointment Type <span className="text-red-500">*</span>
+            {language === 'ar' ? "نوع الموعد" : "Appointment Type"} <span className="text-red-500">*</span>
           </label>
           <div className="grid grid-cols-3 gap-3">
             <Button
@@ -254,7 +276,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
               onClick={() => setType("video")}
             >
               <VideoIcon className="h-6 w-6 mb-2" />
-              <span>Video Call</span>
+              <span>{language === 'ar' ? "مكالمة فيديو" : "Video Call"}</span>
             </Button>
             <Button
               type="button"
@@ -263,7 +285,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
               onClick={() => setType("phone")}
             >
               <Phone className="h-6 w-6 mb-2" />
-              <span>Phone Call</span>
+              <span>{language === 'ar' ? "مكالمة هاتفية" : "Phone Call"}</span>
             </Button>
             <Button
               type="button"
@@ -272,7 +294,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
               onClick={() => setType("inPerson")}
             >
               <UserRound className="h-6 w-6 mb-2" />
-              <span>In Person</span>
+              <span>{language === 'ar' ? "حضور شخصي" : "In Person"}</span>
             </Button>
           </div>
         </div>
@@ -280,10 +302,13 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
         {/* Reason for Visit */}
         <div className="mb-6 space-y-2">
           <label className="block text-sm font-medium">
-            Reason for Visit <span className="text-red-500">*</span>
+            {language === 'ar' ? "سبب الزيارة" : "Reason for Visit"} <span className="text-red-500">*</span>
           </label>
           <Textarea 
-            placeholder="Please describe your concerns or what you would like to discuss..."
+            placeholder={language === 'ar' 
+              ? "يرجى وصف مخاوفك أو ما تود مناقشته..." 
+              : "Please describe your concerns or what you would like to discuss..."
+            }
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={4}
@@ -295,8 +320,15 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
         <div className="mb-6 space-y-2">
           <div className="flex items-center justify-between">
             <div>
-              <label className="block text-sm font-medium">Appointment Reminders</label>
-              <p className="text-xs text-muted-foreground">Receive reminders 24h and 1h before appointment</p>
+              <label className="block text-sm font-medium">
+                {language === 'ar' ? "تذكيرات المواعيد" : "Appointment Reminders"}
+              </label>
+              <p className="text-xs text-muted-foreground">
+                {language === 'ar' 
+                  ? "تلقي تذكيرات قبل 24 ساعة وساعة واحدة من الموعد" 
+                  : "Receive reminders 24h and 1h before appointment"
+                }
+              </p>
             </div>
             <Switch 
               checked={reminders} 
@@ -314,12 +346,12 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
           {isWaitlisted ? (
             <>
               <BellRing className="mr-2 h-4 w-4" />
-              On Waitlist
+              {language === 'ar' ? "في قائمة الانتظار" : "On Waitlist"}
             </>
           ) : (
             <>
               <Calendar className="mr-2 h-4 w-4" />
-              Book Appointment
+              {language === 'ar' ? "حجز موعد" : "Book Appointment"}
             </>
           )}
         </Button>
@@ -329,3 +361,4 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
 };
 
 export default AppointmentForm;
+

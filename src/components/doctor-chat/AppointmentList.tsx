@@ -1,9 +1,11 @@
+
 import React from "react";
 import { Video, Calendar, FileText, Check, X, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Appointment } from "@/types/appointment";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface AppointmentListProps {
   appointments: Appointment[];
@@ -12,9 +14,11 @@ interface AppointmentListProps {
 }
 
 export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointment }: AppointmentListProps) => {
+  const { language } = useLanguage();
+  
   const formatAppointmentDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat(language === 'ar' ? 'ar-SA' : 'en-US', {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
@@ -32,39 +36,58 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
   };
   
   const getStatusBadge = (status: string) => {
+    const getStatusText = (status: string) => {
+      if (language !== 'ar') {
+        return status.charAt(0).toUpperCase() + status.slice(1);
+      }
+      
+      switch (status) {
+        case "confirmed":
+          return "مؤكد";
+        case "pending":
+          return "قيد الانتظار";
+        case "completed":
+          return "مكتمل";
+        case "cancelled":
+          return "ملغى";
+        default:
+          return status;
+      }
+    };
+    
     switch (status) {
       case "confirmed":
         return (
           <Badge className="bg-green-100 text-green-800 border-green-300">
             <Check className="h-3 w-3 mr-1" />
-            Confirmed
+            {getStatusText("confirmed")}
           </Badge>
         );
       case "pending":
         return (
           <Badge className="bg-yellow-100 text-yellow-800 border-yellow-300">
             <Clock className="h-3 w-3 mr-1" />
-            Pending
+            {getStatusText("pending")}
           </Badge>
         );
       case "completed":
         return (
           <Badge className="bg-blue-100 text-blue-800 border-blue-300">
             <CheckCircleIcon className="h-3 w-3 mr-1" />
-            Completed
+            {getStatusText("completed")}
           </Badge>
         );
       case "cancelled":
         return (
           <Badge className="bg-red-100 text-red-800 border-red-300">
             <X className="h-3 w-3 mr-1" />
-            Cancelled
+            {getStatusText("cancelled")}
           </Badge>
         );
       default:
         return (
           <Badge>
-            {status}
+            {getStatusText(status)}
           </Badge>
         );
     }
@@ -80,6 +103,23 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
         return <MapPin className="h-4 w-4 text-calmBlue-500" />;
       default:
         return null;
+    }
+  };
+  
+  const getAppointmentTypeText = (type: string) => {
+    if (language !== 'ar') {
+      return type === "inPerson" ? "In Person" : `${type} Call`;
+    }
+    
+    switch (type) {
+      case "video":
+        return "مكالمة فيديو";
+      case "phone":
+        return "مكالمة هاتفية";
+      case "inPerson":
+        return "حضور شخصي";
+      default:
+        return type;
     }
   };
   
@@ -126,7 +166,9 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-4">Upcoming Appointments</h3>
+        <h3 className="text-lg font-medium mb-4">
+          {language === 'ar' ? "المواعيد القادمة" : "Upcoming Appointments"}
+        </h3>
         {upcomingAppointments.length > 0 ? (
           <div className="space-y-4">
             {upcomingAppointments.map(appointment => (
@@ -138,7 +180,7 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
                       <div className="flex items-center mt-1 text-sm text-gray-500">
                         {getAppointmentTypeIcon(appointment.type)}
                         <span className="ml-1 capitalize">
-                          {appointment.type === "inPerson" ? "In Person" : `${appointment.type} Call`}
+                          {getAppointmentTypeText(appointment.type)}
                         </span>
                       </div>
                       <p className="text-sm mt-2">{appointment.notes}</p>
@@ -152,7 +194,7 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
                           onClick={() => onJoinCall(appointment.id)}
                         >
                           <Video className="h-4 w-4 mr-1" />
-                          Join Call
+                          {language === 'ar' ? "انضمام للمكالمة" : "Join Call"}
                         </Button>
                       )}
                     </div>
@@ -165,21 +207,23 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
           <div className="text-center py-8 border rounded-lg bg-gray-50">
             <Calendar className="h-10 w-10 text-gray-300 mx-auto mb-2" />
             <p className="text-gray-500">
-              No upcoming appointments
+              {language === 'ar' ? "لا توجد مواعيد قادمة" : "No upcoming appointments"}
             </p>
             <Button
               variant="link"
               className="mt-2"
               onClick={onScheduleAppointment}
             >
-              Schedule an appointment
+              {language === 'ar' ? "جدولة موعد" : "Schedule an appointment"}
             </Button>
           </div>
         )}
       </div>
       
       <div>
-        <h3 className="text-lg font-medium mb-4">Past Appointments</h3>
+        <h3 className="text-lg font-medium mb-4">
+          {language === 'ar' ? "المواعيد السابقة" : "Past Appointments"}
+        </h3>
         {pastAppointments.length > 0 ? (
           <div className="space-y-4">
             {pastAppointments.map(appointment => (
@@ -191,7 +235,7 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
                       <div className="flex items-center mt-1 text-sm text-gray-500">
                         {getAppointmentTypeIcon(appointment.type)}
                         <span className="ml-1 capitalize">
-                          {appointment.type === "inPerson" ? "In Person" : `${appointment.type} Call`}
+                          {getAppointmentTypeText(appointment.type)}
                         </span>
                       </div>
                       <p className="text-sm mt-2 text-gray-600">{appointment.notes}</p>
@@ -208,7 +252,7 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
           <div className="text-center py-8 border rounded-lg bg-gray-50">
             <FileText className="h-10 w-10 text-gray-300 mx-auto mb-2" />
             <p className="text-gray-500">
-              No past appointments
+              {language === 'ar' ? "لا توجد مواعيد سابقة" : "No past appointments"}
             </p>
           </div>
         )}
