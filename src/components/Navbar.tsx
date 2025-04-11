@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,9 @@ import {
   Globe, 
   User,
   LogOut,
-  UserPlus
+  UserPlus,
+  MoonStar,
+  Sun
 } from 'lucide-react';
 import { 
   DropdownMenu,
@@ -20,12 +23,15 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { translate } from '@/utils/translations';
 import { useToast } from "@/components/ui/use-toast";
+import { ThemeToggle } from './theme/ThemeToggle';
+import { useTheme } from './theme/ThemeProvider';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, switchLanguage, isRTL } = useLanguage();
   const { isLoggedIn, userEmail, logout } = useAuth();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -69,39 +75,45 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  // Toggle theme
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+    setIsMenuOpen(false);
+  };
+
   // Force a re-render when language changes to ensure all components update
   useEffect(() => {
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
   }, [language, isRTL]);
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
+    <nav className="bg-background border-b border-border sticky top-0 z-50">
       <div className="container-custom py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold text-calmBlue-600">
+            <span className="text-2xl font-bold text-primary">
               MindfulCare
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-8`}>
-            <a href="#services" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
+            <a href="#services" className="text-foreground hover:text-primary transition-colors">
               {translate('navbar', 'services', language)}
             </a>
-            <a href="#how-it-works" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
+            <a href="#how-it-works" className="text-foreground hover:text-primary transition-colors">
               {translate('navbar', 'howItWorks', language)}
             </a>
-            <a href="#specialists" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
+            <a href="#specialists" className="text-foreground hover:text-primary transition-colors">
               {translate('navbar', 'specialists', language)}
             </a>
-            <a href="#plans" className="text-gray-700 hover:text-calmBlue-600 transition-colors">
+            <a href="#plans" className="text-foreground hover:text-primary transition-colors">
               {translate('navbar', 'plans', language)}
             </a>
           </div>
 
-          {/* Language Selector & Auth Buttons - Desktop */}
+          {/* Language, Theme Selector & Auth Buttons - Desktop */}
           <div className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-4`}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -125,6 +137,8 @@ const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
+            <ThemeToggle />
             
             {isLoggedIn ? (
               <DropdownMenu>
@@ -154,7 +168,7 @@ const Navbar = () => {
                   {translate('navbar', 'login', language)}
                 </Button>
                 
-                <Button className="bg-calmBlue-500 hover:bg-calmBlue-600" onClick={handleRegister}>
+                <Button className="button-primary" onClick={handleRegister}>
                   <UserPlus className="h-4 w-4 mr-1" />
                   {translate('navbar', 'register', language)}
                 </Button>
@@ -181,32 +195,46 @@ const Navbar = () => {
             <div className="flex flex-col space-y-4">
               <a 
                 href="#services" 
-                className="text-gray-700 hover:text-calmBlue-600 transition-colors py-2 px-4 rounded-md hover:bg-gray-50"
+                className="text-foreground hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-muted"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {translate('navbar', 'services', language)}
               </a>
               <a 
                 href="#how-it-works" 
-                className="text-gray-700 hover:text-calmBlue-600 transition-colors py-2 px-4 rounded-md hover:bg-gray-50"
+                className="text-foreground hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-muted"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {translate('navbar', 'howItWorks', language)}
               </a>
               <a 
                 href="#specialists" 
-                className="text-gray-700 hover:text-calmBlue-600 transition-colors py-2 px-4 rounded-md hover:bg-gray-50"
+                className="text-foreground hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-muted"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {translate('navbar', 'specialists', language)}
               </a>
               <a 
                 href="#plans" 
-                className="text-gray-700 hover:text-calmBlue-600 transition-colors py-2 px-4 rounded-md hover:bg-gray-50"
+                className="text-foreground hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-muted"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {translate('navbar', 'plans', language)}
               </a>
+
+              <div className="border-t border-border my-2"></div>
+              
+              {/* Theme toggle on mobile */}
+              <button 
+                className="flex items-center justify-between py-2 px-4 rounded-md hover:bg-muted"
+                onClick={toggleTheme}
+              >
+                <span>{translate("theme", theme === "dark" ? "switchToLight" : "switchToDark", language)}</span>
+                {theme === "dark" ? 
+                  <Sun className="h-4 w-4" /> : 
+                  <MoonStar className="h-4 w-4" />
+                }
+              </button>
 
               <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : ''} py-2 px-4`}>
                 <Globe className="h-4 w-4" />
@@ -233,7 +261,7 @@ const Navbar = () => {
                 </Button>
               </div>
 
-              <div className="border-t border-gray-200 my-2"></div>
+              <div className="border-t border-border my-2"></div>
 
               {isLoggedIn ? (
                 <div className="px-4 space-y-2">
@@ -262,7 +290,7 @@ const Navbar = () => {
                     {translate('navbar', 'login', language)}
                   </Button>
                   <Button 
-                    className="bg-calmBlue-500 hover:bg-calmBlue-600 w-1/2"
+                    className="button-primary w-1/2"
                     onClick={handleRegister}
                   >
                     <UserPlus className="h-4 w-4 mr-1" />

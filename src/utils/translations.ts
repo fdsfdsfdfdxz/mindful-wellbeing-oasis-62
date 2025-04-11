@@ -1,4 +1,8 @@
-export const translations = {
+type TranslationKey = string;
+type SubKey = string;
+type Language = 'en' | 'ar';
+
+const translations: Record<TranslationKey, Record<SubKey, Record<Language, string>>> = {
   navbar: {
     en: {
       home: 'Home',
@@ -434,25 +438,123 @@ export const translations = {
       registrationFailed: 'فشل التسجيل. يرجى المحاولة مرة أخرى.'
     }
   },
+  
+  accessibility: {
+    skipToContent: {
+      en: "Skip to content",
+      ar: "تخطي إلى المحتوى"
+    },
+    toggleTheme: {
+      en: "Toggle theme",
+      ar: "تبديل السمة"
+    },
+    highContrast: {
+      en: "High contrast mode",
+      ar: "وضع التباين العالي"
+    },
+    loading: {
+      en: "Loading...",
+      ar: "جار التحميل..."
+    },
+    loadingContent: {
+      en: "Please wait while we load your content",
+      ar: "يرجى الانتظار بينما نقوم بتحميل المحتوى الخاص بك"
+    },
+    error: {
+      en: "An error occurred",
+      ar: "حدث خطأ"
+    },
+    retry: {
+      en: "Retry",
+      ar: "إعادة المحاولة"
+    },
+    errorBoundary: {
+      en: "Something went wrong",
+      ar: "حدث خطأ ما"
+    },
+    errorBoundaryDesc: {
+      en: "An error occurred while rendering this component",
+      ar: "حدث خطأ أثناء عرض هذا المكون"
+    }
+  },
+  
+  theme: {
+    light: {
+      en: "Light",
+      ar: "فاتح"
+    },
+    dark: {
+      en: "Dark",
+      ar: "داكن"
+    },
+    system: {
+      en: "System",
+      ar: "نظام"
+    },
+    switchToLight: {
+      en: "Switch to light theme",
+      ar: "التبديل إلى المظهر الفاتح"
+    },
+    switchToDark: {
+      en: "Switch to dark theme",
+      ar: "التبديل إلى المظهر الداكن"
+    },
+    useSystemPreference: {
+      en: "Use system preference",
+      ar: "استخدام تفضيلات النظام"
+    }
+  },
+  
+  feedback: {
+    success: {
+      en: "Success",
+      ar: "نجاح"
+    },
+    error: {
+      en: "Error",
+      ar: "خطأ"
+    },
+    warning: {
+      en: "Warning",
+      ar: "تحذير"
+    },
+    info: {
+      en: "Information",
+      ar: "معلومات"
+    },
+    networkError: {
+      en: "Network error. Please check your connection.",
+      ar: "خطأ في الشبكة. يرجى التحقق من اتصالك."
+    },
+    sessionExpired: {
+      en: "Your session has expired. Please log in again.",
+      ar: "انتهت جلستك. الرجاء تسجيل الدخول مرة أخرى."
+    },
+    formErrors: {
+      en: "Please fix the errors in the form",
+      ar: "يرجى إصلاح الأخطاء في النموذج"
+    },
+    savedSuccess: {
+      en: "Changes saved successfully",
+      ar: "تم حفظ التغييرات بنجاح"
+    }
+  }
 };
 
-/**
- * Utility function to get translations based on the provided key and language
- * @param section The section in the translations object
- * @param key The specific key within the section
- * @param language The language code ('en' or 'ar')
- * @returns The translated string or the key if translation not found
- */
 export const translate = (
-  section: string, 
-  key: string, 
-  language: 'en' | 'ar'
+  key: string,
+  subKey: string,
+  language: Language
 ): string => {
-  try {
-    // @ts-ignore - We know the structure matches but TS can't infer it
-    return translations[section]?.[language]?.[key] || key;
-  } catch (error) {
-    console.error(`Translation error for ${section}.${language}.${key}:`, error);
-    return key;
-  }
+  // Try to find the translation
+  const section = translations[key];
+  if (!section) return subKey;
+  
+  const content = section[subKey];
+  if (!content) return subKey;
+  
+  const translation = content[language];
+  
+  // If translation exists, return it, otherwise return the English version or subKey
+  return translation || content['en'] || subKey;
 };
