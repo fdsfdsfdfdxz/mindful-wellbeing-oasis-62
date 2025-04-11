@@ -99,7 +99,7 @@ const DoctorChat = () => {
       
       // Mock chat history
       setTimeout(() => {
-        const mockMessages = [
+        const mockMessages: Message[] = [
           {
             id: 1,
             sender: "doctor",
@@ -142,7 +142,7 @@ const DoctorChat = () => {
       }, 1000);
       
       // Simulate loading appointments
-      const mockAppointments = [
+      const mockAppointments: Appointment[] = [
         {
           id: 1,
           date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
@@ -182,7 +182,7 @@ const DoctorChat = () => {
     }
 
     // Add message to chat
-    const newMessage = {
+    const newMessage: Message = {
       id: Date.now(),
       sender: "user",
       text: message,
@@ -194,7 +194,7 @@ const DoctorChat = () => {
     
     // Simulate doctor response
     setTimeout(() => {
-      const doctorResponse = {
+      const doctorResponse: Message = {
         id: Date.now() + 1,
         sender: "doctor",
         text: "Thank you for your message. I'll review it and get back to you soon.",
@@ -216,7 +216,7 @@ const DoctorChat = () => {
     date: string;
     time: string;
     reason: string;
-    type: string;
+    type: "video" | "phone" | "inPerson";
   }) => {
     if (!selectedDoctor) {
       toast({
@@ -228,10 +228,10 @@ const DoctorChat = () => {
     }
 
     // Add appointment to list
-    const newAppointment = {
+    const newAppointment: Appointment = {
       id: Date.now(),
       date: `${values.date}T${values.time}`,
-      type: values.type as "video" | "phone" | "inPerson",
+      type: values.type,
       status: "pending",
       notes: values.reason,
       doctor: doctors.find(d => d.id === selectedDoctor),
@@ -249,7 +249,7 @@ const DoctorChat = () => {
       setAppointments(prevAppointments => 
         prevAppointments.map(app => 
           app.id === newAppointment.id 
-            ? { ...app, status: "confirmed" } 
+            ? { ...app, status: "confirmed" as const } 
             : app
         )
       );

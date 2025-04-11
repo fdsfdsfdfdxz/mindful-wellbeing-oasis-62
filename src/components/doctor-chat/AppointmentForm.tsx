@@ -30,7 +30,7 @@ interface AppointmentFormProps {
     date: string;
     time: string;
     reason: string;
-    type: string;
+    type: "video" | "phone" | "inPerson";
   }) => void;
 }
 
