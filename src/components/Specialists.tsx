@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ const specialistsData = [
   {
     id: 1,
     name: "Dr. Sarah Johnson",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "Ph.D. in Clinical Psychology",
     specializations: ["Anxiety", "Depression", "Trauma"],
     experience: 8,
@@ -34,7 +35,7 @@ const specialistsData = [
   {
     id: 3,
     name: "Dr. Aisha Rahman",
-    photo: "https://images.unsplash.com/photo-1498936178812-4b2e558d2937?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "M.D., Psychiatrist",
     specializations: ["Bipolar Disorder", "Anxiety", "ADHD"],
     experience: 15,
@@ -45,7 +46,7 @@ const specialistsData = [
   {
     id: 4,
     name: "Dr. James Wilson",
-    photo: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "M.S., Licensed Marriage and Family Therapist",
     specializations: ["Couples Therapy", "Family Conflicts", "Parenting Issues"],
     experience: 10,
