@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -67,15 +66,12 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
   const handleSubmit = (values: AppointmentFormValues) => {
     onSubmit(values);
     
-    // Fix: Provide non-optional values for form reset that match the required type
-    const resetValues: AppointmentFormValues = {
+    form.reset({
       date: new Date().toISOString().split("T")[0],
       time: "10:00",
       reason: "",
       type: "video",
-    };
-    
-    form.reset(resetValues);
+    } as AppointmentFormValues);
   };
 
   return (
