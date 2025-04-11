@@ -13,7 +13,9 @@ import {
   CheckCircle2,
   ArrowRight,
   Shield,
-  Share2
+  Share2,
+  ShieldAlert,
+  Headphones
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -77,8 +79,7 @@ const Services = () => {
       badges: [
         { text: "End-to-end encrypted", color: "bg-green-100 text-green-800 border-green-200" },
         { text: "Low bandwidth", color: "bg-blue-100 text-blue-800 border-blue-200" }
-      ],
-      isNew: true
+      ]
     },
     {
       title: translate('services', 'videoConsultations', language) || "Video Consultations",
@@ -90,6 +91,44 @@ const Services = () => {
       badges: [
         { text: "HD Quality", color: "bg-amber-100 text-amber-800 border-amber-200" },
         { text: "Screen Sharing", color: "bg-blue-100 text-blue-800 border-blue-200" }
+      ]
+    },
+    {
+      title: translate('services', 'marriageCounseling', language) || "Relationship Counseling",
+      description: translate('services', 'marriageCounselingDesc', language) || "Expert guidance for couples seeking to improve communication and resolve conflicts.",
+      icon: <Heart className="h-10 w-10 text-red-500" />,
+      iconBg: "bg-red-100",
+      cta: translate('services', 'learnMore', language) || "Learn More",
+      link: "/services/marriage-counseling",
+      badges: [
+        { text: "Couples", color: "bg-red-100 text-red-800 border-red-200" },
+        { text: "Family", color: "bg-orange-100 text-orange-800 border-orange-200" }
+      ],
+      isNew: true
+    },
+    {
+      title: translate('services', 'supportGroups', language) || "Support Groups",
+      description: translate('services', 'supportGroupsDesc', language) || "Join moderated anonymous groups focused on specific mental health topics and challenges.",
+      icon: <Users className="h-10 w-10 text-indigo-500" />,
+      iconBg: "bg-indigo-100",
+      cta: translate('services', 'joinGroup', language) || "Join a Group",
+      link: "/services/support-groups",
+      badges: [
+        { text: "Anonymous", color: "bg-indigo-100 text-indigo-800 border-indigo-200" },
+        { text: "Moderated", color: "bg-violet-100 text-violet-800 border-violet-200" }
+      ],
+      isNew: true
+    },
+    {
+      title: translate('services', 'crisisSupport', language) || "Crisis Support",
+      description: translate('services', 'crisisSupportDesc', language) || "Immediate help during difficult moments with trained crisis intervention specialists.",
+      icon: <ShieldAlert className="h-10 w-10 text-red-500" />,
+      iconBg: "bg-red-100",
+      cta: translate('services', 'getHelp', language) || "Get Help",
+      link: "/services/crisis-intervention",
+      badges: [
+        { text: "24/7", color: "bg-red-100 text-red-800 border-red-200" },
+        { text: "Emergency", color: "bg-red-100 text-red-800 border-red-200" }
       ],
       isNew: true
     },
@@ -103,8 +142,7 @@ const Services = () => {
       badges: [
         { text: "Encrypted", color: "bg-green-100 text-green-800 border-green-200" },
         { text: "Read Receipts", color: "bg-purple-100 text-purple-800 border-purple-200" }
-      ],
-      isNew: true
+      ]
     },
     {
       title: translate('services', 'educationalResources', language),
@@ -154,6 +192,30 @@ const Services = () => {
     }
   ];
   
+  // New specialized service features
+  const specializedFeatures = [
+    {
+      icon: <Users className="h-6 w-6 text-indigo-500 flex-shrink-0" />,
+      title: "Anonymous Support Groups",
+      description: "Join moderated groups focused on specific topics with privacy-preserving participation options."
+    },
+    {
+      icon: <Heart className="h-6 w-6 text-red-500 flex-shrink-0" />,
+      title: "Relationship Counseling",
+      description: "Multi-participant video sessions with specialized assessment tools and shared homework."
+    },
+    {
+      icon: <ShieldAlert className="h-6 w-6 text-red-500 flex-shrink-0" />,
+      title: "Crisis Intervention",
+      description: "24/7 emergency support with escalation protocols for high-risk situations."
+    },
+    {
+      icon: <Headphones className="h-6 w-6 text-amber-500 flex-shrink-0" />,
+      title: "Audio/Video Sessions",
+      description: "High-quality remote consultations with screen sharing and recording capabilities."
+    }
+  ];
+  
   const handleServiceClick = (link: string, index: number) => {
     setActiveCardIndex(index);
     
@@ -184,7 +246,7 @@ const Services = () => {
             <span className="mr-2 bg-calmBlue-500 w-2 h-2 rounded-full inline-block"></span>
             {translate('services', 'newFeature', language) || "New Feature"}: 
             <span className="font-semibold ml-1">
-              {translate('services', 'secureConsultation', language) || "Secure Audio/Video Consultation"}
+              {translate('services', 'specializedServices', language) || "Specialized Mental Health Services"}
             </span>
           </Badge>
         </div>
@@ -237,33 +299,58 @@ const Services = () => {
           ))}
         </div>
         
-        <div className="mt-16 max-w-4xl mx-auto bg-gray-50 p-8 rounded-lg shadow-sm">
-          <h3 className="text-2xl font-bold mb-6 text-center">
-            {translate('services', 'consultationFeatures', language) || "Our Consultation System Features"}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <h3 className="text-2xl font-bold mb-8 text-center">
+            {translate('services', 'specializedServices', language) || "Our Specialized Services"}
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            {serviceFeatures.map((feature, index) => (
-              <div key={index} className="flex space-x-4">
-                <div className="bg-white p-3 rounded-full shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            {specializedFeatures.map((feature, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex gap-4 hover:shadow-md transition-shadow">
+                <div className={`p-3 rounded-full h-12 w-12 flex items-center justify-center shrink-0 ${
+                  index === 0 ? "bg-indigo-100" : 
+                  index === 1 ? "bg-red-100" : 
+                  index === 2 ? "bg-red-100" : 
+                  "bg-amber-100"
+                }`}>
                   {feature.icon}
                 </div>
                 <div>
-                  <h4 className="font-medium text-lg mb-2">{feature.title}</h4>
-                  <p className="text-gray-600 text-sm">{feature.description}</p>
+                  <h4 className="font-bold text-lg mb-1">{feature.title}</h4>
+                  <p className="text-gray-600">{feature.description}</p>
                 </div>
               </div>
             ))}
           </div>
           
-          <div className="mt-8 text-center">
-            <Button 
-              className="button-primary group"
-              onClick={() => navigate('/doctor-chat')}
-            >
-              {translate('services', 'startConsultation', language) || "Start Consultation"}
-              <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-1' : 'ml-2 group-hover:translate-x-1'}`} />
-            </Button>
+          <div className="bg-gray-50 p-8 rounded-lg shadow-sm">
+            <h3 className="text-xl font-bold mb-6 text-center">
+              {translate('services', 'consultationFeatures', language) || "Our Consultation System Features"}
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              {serviceFeatures.map((feature, index) => (
+                <div key={index} className="flex space-x-4">
+                  <div className="bg-white p-3 rounded-full shadow-sm">
+                    {feature.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-lg mb-2">{feature.title}</h4>
+                    <p className="text-gray-600 text-sm">{feature.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-8 text-center">
+              <Button 
+                className="button-primary group"
+                onClick={() => navigate('/doctor-chat')}
+              >
+                {translate('services', 'startConsultation', language) || "Start Consultation"}
+                <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-1' : 'ml-2 group-hover:translate-x-1'}`} />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

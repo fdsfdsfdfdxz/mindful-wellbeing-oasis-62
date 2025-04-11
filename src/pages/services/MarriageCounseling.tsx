@@ -14,12 +14,7 @@ const MarriageCounseling = () => {
   const { toast } = useToast();
 
   const handleBooking = () => {
-    toast({
-      title: translate('services', 'counselingRequest', language) || "Request Received",
-      description: translate('services', 'counselingRequestDesc', language) || 
-        "Your request for marriage counseling has been submitted. A therapist specializing in relationship counseling will contact you shortly.",
-      duration: 3000,
-    });
+    navigate('/services/marriage-counseling/detail');
   };
 
   return (
@@ -86,7 +81,7 @@ const MarriageCounseling = () => {
                 We use evidence-based approaches including the Gottman Method, Emotionally Focused Therapy (EFT), and Imago Relationship Therapy to help couples create lasting positive change.
               </p>
               <Button onClick={handleBooking} className="w-full">
-                Request Family Solutions
+                Request Relationship Consultation
               </Button>
             </div>
           </div>

@@ -20,6 +20,9 @@ import AnonymousConsultation from "./pages/services/AnonymousConsultation";
 import PsychologicalAssessment from "./pages/services/PsychologicalAssessment";
 import SpecializedTherapy from "./pages/services/SpecializedTherapy";
 import MarriageCounseling from "./pages/services/MarriageCounseling";
+import MarriageCounselingDetail from "./pages/services/MarriageCounselingDetail";
+import SupportGroups from "./pages/services/SupportGroups";
+import CrisisIntervention from "./pages/services/CrisisIntervention";
 import SelfDevelopment from "./pages/services/SelfDevelopment";
 import EducationalResources from "./pages/services/EducationalResources";
 import FollowupCare from "./pages/services/FollowupCare";
@@ -58,6 +61,9 @@ const App = () => (
                   <Route path="/services/psychological-assessment" element={<PsychologicalAssessment />} />
                   <Route path="/services/specialized-therapy" element={<SpecializedTherapy />} />
                   <Route path="/services/marriage-counseling" element={<MarriageCounseling />} />
+                  <Route path="/services/marriage-counseling/detail" element={<MarriageCounselingDetail />} />
+                  <Route path="/services/support-groups" element={<SupportGroups />} />
+                  <Route path="/services/crisis-intervention" element={<CrisisIntervention />} />
                   <Route path="/services/self-development" element={<SelfDevelopment />} />
                   <Route path="/services/educational-resources" element={<EducationalResources />} />
                   <Route path="/services/followup-care" element={<FollowupCare />} />
