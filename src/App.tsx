@@ -23,7 +23,6 @@ import MarriageCounseling from "./pages/services/MarriageCounseling";
 import SelfDevelopment from "./pages/services/SelfDevelopment";
 import EducationalResources from "./pages/services/EducationalResources";
 import FollowupCare from "./pages/services/FollowupCare";
-import LiveChat from "./components/LiveChat";
 
 const queryClient = new QueryClient();
 
@@ -58,7 +57,6 @@ const App = () => (
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-                <LiveChat />
               </BrowserRouter>
             </TooltipProvider>
           </QueryClientProvider>

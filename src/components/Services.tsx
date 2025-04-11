@@ -11,7 +11,9 @@ import {
   BookOpen, 
   Clock,
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  Share2
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translate } from "@/utils/translations";
 import { useToast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 const Services = () => {
   const { language, isRTL } = useLanguage();
@@ -35,7 +38,11 @@ const Services = () => {
       icon: <MessageSquare className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
       cta: translate('services', 'bookSession', language),
-      link: "/services/book-session"
+      link: "/services/book-session",
+      badges: [
+        { text: "Secure Chat", color: "bg-green-100 text-green-800 border-green-200" },
+        { text: "File Sharing", color: "bg-blue-100 text-blue-800 border-blue-200" }
+      ]
     },
     {
       title: translate('services', 'anonymousConsultations', language),
@@ -43,7 +50,11 @@ const Services = () => {
       icon: <Lock className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
       cta: translate('services', 'startAnonymously', language),
-      link: "/services/anonymous-consultation"
+      link: "/services/anonymous-consultation",
+      badges: [
+        { text: "Anonymous", color: "bg-indigo-100 text-indigo-800 border-indigo-200" },
+        { text: "No Registration", color: "bg-purple-100 text-purple-800 border-purple-200" }
+      ]
     },
     {
       title: translate('services', 'psychologicalAssessments', language),
@@ -51,31 +62,49 @@ const Services = () => {
       icon: <FileText className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
       cta: translate('services', 'takeAssessment', language),
-      link: "/services/psychological-assessment"
+      link: "/services/psychological-assessment",
+      badges: [
+        { text: "Evidence-based", color: "bg-teal-100 text-teal-800 border-teal-200" }
+      ]
     },
     {
-      title: translate('services', 'specializedTherapy', language),
-      description: translate('services', 'specializedTherapyDesc', language),
-      icon: <Brain className="h-10 w-10 text-sageGreen-500" />,
+      title: translate('services', 'audioConsultations', language) || "Audio Consultations",
+      description: translate('services', 'audioConsultationsDesc', language) || "Connect with a therapist through voice calls for more personal conversations.",
+      icon: <PhoneCall className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
-      cta: translate('services', 'explorePrograms', language),
-      link: "/services/specialized-therapy"
+      cta: translate('services', 'startVoiceCall', language) || "Start Voice Call",
+      link: "/doctor-chat?appointment=audio",
+      badges: [
+        { text: "End-to-end encrypted", color: "bg-green-100 text-green-800 border-green-200" },
+        { text: "Low bandwidth", color: "bg-blue-100 text-blue-800 border-blue-200" }
+      ],
+      isNew: true
     },
     {
-      title: translate('services', 'marriageCounseling', language),
-      description: translate('services', 'marriageCounselingDesc', language),
-      icon: <Users className="h-10 w-10 text-warmNeutral-500" />,
+      title: translate('services', 'videoConsultations', language) || "Video Consultations",
+      description: translate('services', 'videoConsultationsDesc', language) || "Face-to-face virtual therapy sessions with screen sharing capabilities.",
+      icon: <Video className="h-10 w-10 text-warmNeutral-500" />,
       iconBg: "bg-warmNeutral-100",
-      cta: translate('services', 'familySolutions', language),
-      link: "/services/marriage-counseling"
+      cta: translate('services', 'startVideoCall', language) || "Start Video Session",
+      link: "/doctor-chat?appointment=video",
+      badges: [
+        { text: "HD Quality", color: "bg-amber-100 text-amber-800 border-amber-200" },
+        { text: "Screen Sharing", color: "bg-blue-100 text-blue-800 border-blue-200" }
+      ],
+      isNew: true
     },
     {
-      title: translate('services', 'selfDevelopment', language),
-      description: translate('services', 'selfDevelopmentDesc', language),
-      icon: <Heart className="h-10 w-10 text-warmNeutral-500" />,
+      title: translate('services', 'secureMessaging', language) || "Secure Messaging",
+      description: translate('services', 'secureMessagingDesc', language) || "Private encrypted communication with mental health professionals.",
+      icon: <Shield className="h-10 w-10 text-warmNeutral-500" />,
       iconBg: "bg-warmNeutral-100",
-      cta: translate('services', 'startGrowing', language),
-      link: "/services/self-development"
+      cta: translate('services', 'sendMessage', language) || "Send Message",
+      link: "/doctor-chat",
+      badges: [
+        { text: "Encrypted", color: "bg-green-100 text-green-800 border-green-200" },
+        { text: "Read Receipts", color: "bg-purple-100 text-purple-800 border-purple-200" }
+      ],
+      isNew: true
     },
     {
       title: translate('services', 'educationalResources', language),
@@ -83,7 +112,10 @@ const Services = () => {
       icon: <BookOpen className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
       cta: translate('services', 'browseLibrary', language),
-      link: "/services/educational-resources"
+      link: "/services/educational-resources",
+      badges: [
+        { text: "Research-backed", color: "bg-sky-100 text-sky-800 border-sky-200" }
+      ]
     },
     {
       title: translate('services', 'followupCare', language),
@@ -91,16 +123,35 @@ const Services = () => {
       icon: <Clock className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
       cta: translate('services', 'learnMore', language),
-      link: "/services/followup-care"
+      link: "/services/followup-care",
+      badges: [
+        { text: "Continuous Support", color: "bg-teal-100 text-teal-800 border-teal-200" }
+      ]
     }
   ];
 
   // Additional service features
   const serviceFeatures = [
-    translate('services', 'feature1', language),
-    translate('services', 'feature2', language),
-    translate('services', 'feature3', language),
-    translate('services', 'feature4', language)
+    {
+      icon: <Lock className="h-6 w-6 text-calmBlue-500 flex-shrink-0" />,
+      title: translate('services', 'secureEncryption', language) || "End-to-End Encryption",
+      description: translate('services', 'secureEncryptionDesc', language) || "All communications are protected with enterprise-grade encryption."
+    },
+    {
+      icon: <Share2 className="h-6 w-6 text-calmBlue-500 flex-shrink-0" />,
+      title: translate('services', 'fileSharingCapabilities', language) || "File Sharing Capabilities",
+      description: translate('services', 'fileSharingDesc', language) || "Securely share documents, images, and assessment results."
+    },
+    {
+      icon: <Shield className="h-6 w-6 text-calmBlue-500 flex-shrink-0" />,
+      title: translate('services', 'dataPrivacy', language) || "Enhanced Data Privacy",
+      description: translate('services', 'dataPrivacyDesc', language) || "Your personal data is protected and never shared with third parties."
+    },
+    {
+      icon: <CheckCircle2 className="h-6 w-6 text-calmBlue-500 flex-shrink-0" />,
+      title: translate('services', 'accessibleAnywhere', language) || "Accessible Anywhere",
+      description: translate('services', 'accessibleAnywhereDesc', language) || "Connect from any device with no plugins or downloads required."
+    }
   ];
   
   const handleServiceClick = (link: string, index: number) => {
@@ -124,19 +175,36 @@ const Services = () => {
         <h2 className="section-title text-center">
           {translate('services', 'title', language)}
         </h2>
-        <p className="section-subtitle text-center">
+        <p className="section-subtitle text-center mb-6">
           {translate('services', 'subtitle', language)}
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <div className="flex justify-center mb-12">
+          <Badge variant="outline" className="px-3 py-1 text-base bg-calmBlue-50 border-calmBlue-200 text-calmBlue-700">
+            <span className="mr-2 bg-calmBlue-500 w-2 h-2 rounded-full inline-block"></span>
+            {translate('services', 'newFeature', language) || "New Feature"}: 
+            <span className="font-semibold ml-1">
+              {translate('services', 'secureConsultation', language) || "Secure Audio/Video Consultation"}
+            </span>
+          </Badge>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
           {serviceData.map((service, index) => (
             <Card 
               key={index} 
               className={`card-hover border border-gray-100 h-full transition-all duration-300 hover:shadow-md ${activeCardIndex === index ? 'ring-2 ring-calmBlue-500 shadow-lg' : ''}`}
             >
               <CardHeader className="pb-2">
-                <div className={`${service.iconBg} p-3 rounded-full w-16 h-16 flex items-center justify-center mb-4 transition-transform duration-300 ${activeCardIndex === index ? 'scale-110' : ''}`}>
-                  {service.icon}
+                <div className="flex justify-between items-start">
+                  <div className={`${service.iconBg} p-3 rounded-full w-16 h-16 flex items-center justify-center mb-4 transition-transform duration-300 ${activeCardIndex === index ? 'scale-110' : ''}`}>
+                    {service.icon}
+                  </div>
+                  {service.isNew && (
+                    <Badge className="bg-calmBlue-500">
+                      {translate('services', 'new', language) || "New"}
+                    </Badge>
+                  )}
                 </div>
                 <CardTitle className="text-xl font-bold">{service.title}</CardTitle>
               </CardHeader>
@@ -144,6 +212,16 @@ const Services = () => {
                 <CardDescription className="text-gray-600 min-h-[80px]">
                   {service.description}
                 </CardDescription>
+                
+                {service.badges && service.badges.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {service.badges.map((badge, i) => (
+                      <Badge key={i} className={`${badge.color} font-normal text-xs`}>
+                        {badge.text}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </CardContent>
               <CardFooter>
                 <Button 
@@ -159,16 +237,21 @@ const Services = () => {
           ))}
         </div>
         
-        <div className="mt-16 max-w-3xl mx-auto bg-gray-50 p-8 rounded-lg shadow-sm">
+        <div className="mt-16 max-w-4xl mx-auto bg-gray-50 p-8 rounded-lg shadow-sm">
           <h3 className="text-2xl font-bold mb-6 text-center">
-            {translate('services', 'whyChooseUs', language)}
+            {translate('services', 'consultationFeatures', language) || "Our Consultation System Features"}
           </h3>
           
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             {serviceFeatures.map((feature, index) => (
-              <div key={index} className={`flex items-center ${isRTL ? 'flex-row-reverse text-right' : ''}`}>
-                <CheckCircle2 className={`h-6 w-6 text-calmBlue-500 flex-shrink-0 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                <p className="text-gray-700">{feature}</p>
+              <div key={index} className="flex space-x-4">
+                <div className="bg-white p-3 rounded-full shadow-sm">
+                  {feature.icon}
+                </div>
+                <div>
+                  <h4 className="font-medium text-lg mb-2">{feature.title}</h4>
+                  <p className="text-gray-600 text-sm">{feature.description}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -176,9 +259,9 @@ const Services = () => {
           <div className="mt-8 text-center">
             <Button 
               className="button-primary group"
-              onClick={() => navigate('/services/book-session')}
+              onClick={() => navigate('/doctor-chat')}
             >
-              {translate('services', 'getStarted', language)}
+              {translate('services', 'startConsultation', language) || "Start Consultation"}
               <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-1' : 'ml-2 group-hover:translate-x-1'}`} />
             </Button>
           </div>
