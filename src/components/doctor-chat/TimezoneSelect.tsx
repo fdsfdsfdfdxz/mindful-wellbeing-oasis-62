@@ -51,7 +51,7 @@ export function TimezoneSelect({ value, onChange, className }: TimezoneSelectPro
   }, [value, onChange]);
 
   const selectedTimezone = TIMEZONES.find(tz => tz.value === value) || 
-    { value, label: value?.replace('_', ' ').replace(/\//g, ' - ') };
+    { value: value || "UTC", label: value?.replace('_', ' ').replace(/\//g, ' - ') || "UTC" };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -64,7 +64,7 @@ export function TimezoneSelect({ value, onChange, className }: TimezoneSelectPro
         >
           <div className="flex items-center">
             <Globe className="mr-2 h-4 w-4" />
-            {selectedTimezone ? selectedTimezone.label : "Select timezone..."}
+            {selectedTimezone.label}
           </div>
         </Button>
       </PopoverTrigger>

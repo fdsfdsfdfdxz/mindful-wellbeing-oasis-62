@@ -62,7 +62,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const [time, setTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [type, setType] = useState<AppointmentData["type"]>("video");
-  const [timezone, setTimezone] = useState<string>("UTC");  // Default to UTC instead of empty string
+  const [timezone, setTimezone] = useState<string>("UTC");  // Default to UTC
   const [reminders, setReminders] = useState<boolean>(true);
   const [isWaitlisted, setIsWaitlisted] = useState<boolean>(false);
   
