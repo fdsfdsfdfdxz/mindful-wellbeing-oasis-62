@@ -6,16 +6,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { translate } from "@/utils/translations";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 
 const Login = () => {
   const { language } = useLanguage();
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,11 +36,9 @@ const Login = () => {
     
     // Simulate API call delay
     setTimeout(() => {
-      // Mock successful login
-      if (email && password) {
-        // Store login state in localStorage
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userEmail", email);
+      try {
+        // Login with the auth context
+        login(email);
         
         toast({
           title: translate('auth', 'loginSuccess', language),
@@ -45,16 +46,17 @@ const Login = () => {
         });
         
         navigate("/");
-      } else {
+      } catch (error) {
+        console.error("Login error:", error);
         toast({
           title: translate('auth', 'error', language),
           description: translate('auth', 'invalidCredentials', language),
           variant: "destructive",
         });
+      } finally {
+        setIsLoading(false);
       }
-      
-      setIsLoading(false);
-    }, 1500);
+    }, 1000);
   };
 
   return (

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,8 @@ import {
   LogOut,
   UserPlus,
   MoonStar,
-  Sun
+  Sun,
+  LogIn
 } from 'lucide-react';
 import { 
   DropdownMenu,
@@ -42,7 +42,6 @@ const Navbar = () => {
     if (newLanguage !== language) {
       switchLanguage(newLanguage);
       
-      // Show toast notification for language change
       toast({
         title: newLanguage === 'en' ? "Language Changed" : "تم تغيير اللغة",
         description: newLanguage === 'en' 
@@ -75,13 +74,11 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  // Toggle theme
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
     setIsMenuOpen(false);
   };
 
-  // Force a re-render when language changes to ensure all components update
   useEffect(() => {
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
   }, [language, isRTL]);
@@ -90,14 +87,12 @@ const Navbar = () => {
     <nav className="bg-background border-b border-border sticky top-0 z-50">
       <div className="container-custom py-4">
         <div className="flex justify-between items-center">
-          {/* Logo */}
           <Link to="/" className="flex items-center">
             <span className="text-2xl font-bold text-primary">
               MindfulCare
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-8`}>
             <a href="#services" className="text-foreground hover:text-primary transition-colors">
               {translate('navbar', 'services', language)}
@@ -113,7 +108,6 @@ const Navbar = () => {
             </a>
           </div>
 
-          {/* Language, Theme Selector & Auth Buttons - Desktop */}
           <div className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-4`}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -165,10 +159,11 @@ const Navbar = () => {
             ) : (
               <>
                 <Button variant="outline" size="sm" onClick={handleLogin}>
+                  <LogIn className="h-4 w-4 mr-1" />
                   {translate('navbar', 'login', language)}
                 </Button>
                 
-                <Button className="button-primary" onClick={handleRegister}>
+                <Button variant="blue" size="sm" onClick={handleRegister}>
                   <UserPlus className="h-4 w-4 mr-1" />
                   {translate('navbar', 'register', language)}
                 </Button>
@@ -176,7 +171,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <Button 
               variant="ghost" 
@@ -189,7 +183,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className={`md:hidden py-4 animate-fade-in ${isRTL ? 'rtl' : ''}`}>
             <div className="flex flex-col space-y-4">
@@ -224,7 +217,6 @@ const Navbar = () => {
 
               <div className="border-t border-border my-2"></div>
               
-              {/* Theme toggle on mobile */}
               <button 
                 className="flex items-center justify-between py-2 px-4 rounded-md hover:bg-muted"
                 onClick={toggleTheme}
@@ -284,13 +276,16 @@ const Navbar = () => {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-1/2"
+                    className="w-1/2 flex items-center justify-center"
                     onClick={handleLogin}
                   >
+                    <LogIn className="h-4 w-4 mr-1" />
                     {translate('navbar', 'login', language)}
                   </Button>
                   <Button 
-                    className="button-primary w-1/2"
+                    variant="blue" 
+                    size="sm"
+                    className="w-1/2 flex items-center justify-center"
                     onClick={handleRegister}
                   >
                     <UserPlus className="h-4 w-4 mr-1" />
