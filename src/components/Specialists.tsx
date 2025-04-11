@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,7 @@ const specialistsData = [
   {
     id: 3,
     name: "Dr. Aisha Rahman",
-    photo: "https://images.unsplash.com/photo-1498936178812-4b2e558d2937?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "M.D., Psychiatrist",
     specializations: ["Bipolar Disorder", "Anxiety", "ADHD"],
     experience: 15,
@@ -45,7 +46,7 @@ const specialistsData = [
   {
     id: 4,
     name: "Dr. James Wilson",
-    photo: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "M.S., Licensed Marriage and Family Therapist",
     specializations: ["Couples Therapy", "Family Conflicts", "Parenting Issues"],
     experience: 10,
