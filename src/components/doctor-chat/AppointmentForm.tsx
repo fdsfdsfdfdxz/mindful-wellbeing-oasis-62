@@ -1,9 +1,18 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CalendarIcon, Clock, MessageSquare, VideoIcon, Phone, UserRound } from "lucide-react";
+import { 
+  CalendarIcon, 
+  Clock, 
+  MessageSquare, 
+  VideoIcon, 
+  Phone, 
+  UserRound,
+  Calendar,
+  BellRing
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -18,8 +27,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { format, addDays, isEqual, isBefore, addMinutes } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { Switch } from "@/components/ui/switch";
+import { TimezoneSelect } from "./TimezoneSelect";
+import { Badge } from "@/components/ui/badge";
 
 // Define the appointment type using non-optional properties since they're required
 interface AppointmentData {
@@ -27,12 +39,21 @@ interface AppointmentData {
   time: string;
   reason: string;
   type: "video" | "phone" | "inPerson";
+  timezone?: string;
+  reminders?: boolean;
 }
 
 interface AppointmentFormProps {
   doctorId?: string;
   onSubmit?: (appointment: AppointmentData) => void;
 }
+
+// Define unavailable time slots for demonstration
+const UNAVAILABLE_SLOTS = [
+  { date: "2025-04-12", times: ["09:00 AM", "09:30 AM", "02:00 PM"] },
+  { date: "2025-04-13", times: ["10:30 AM", "11:00 AM", "03:30 PM"] },
+  { date: "2025-04-15", times: ["01:00 PM", "01:30 PM", "04:00 PM"] },
+];
 
 const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const navigate = useNavigate();
@@ -41,6 +62,9 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const [time, setTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [type, setType] = useState<AppointmentData["type"]>("video");
+  const [timezone, setTimezone] = useState<string>("");
+  const [reminders, setReminders] = useState<boolean>(true);
+  const [isWaitlisted, setIsWaitlisted] = useState<boolean>(false);
   
   // Define available time slots
   const timeSlots = [
@@ -49,6 +73,33 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
     "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", 
     "04:00 PM", "04:30 PM"
   ];
+  
+  // Filter out unavailable time slots for the selected date
+  const getAvailableTimeSlots = () => {
+    if (!date) return timeSlots;
+    
+    const formattedDate = format(date, "yyyy-MM-dd");
+    const unavailableDay = UNAVAILABLE_SLOTS.find(slot => slot.date === formattedDate);
+    
+    if (!unavailableDay) return timeSlots;
+    return timeSlots.filter(slot => !unavailableDay.times.includes(slot));
+  };
+  
+  const availableTimeSlots = getAvailableTimeSlots();
+  
+  const handleDateChange = (newDate: Date | undefined) => {
+    setDate(newDate);
+    setTime(""); // Reset time when date changes
+    setIsWaitlisted(false); // Reset waitlist status
+  };
+
+  const joinWaitlist = () => {
+    setIsWaitlisted(true);
+    toast({
+      title: "Added to Waitlist",
+      description: "You'll be notified if this slot becomes available.",
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +119,9 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
       date: format(date, "yyyy-MM-dd"),
       time,
       reason, 
-      type
+      type,
+      timezone,
+      reminders
     };
 
     // If onSubmit prop is provided, call it
@@ -108,18 +161,19 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
                   {date ? format(date, "PPP") : "Select date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
                   mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={handleDateChange}
                   initialFocus
+                  className="p-3 pointer-events-auto"
                   disabled={(date) => {
                     // Disable past dates and weekends
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
                     const day = date.getDay();
-                    return date < today || day === 0 || day === 6;
+                    return isBefore(date, today) || day === 0 || day === 6 || isEqual(date, addDays(today, 60));
                   }}
                 />
               </PopoverContent>
@@ -146,12 +200,45 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                {timeSlots.map((slot) => (
-                  <SelectItem key={slot} value={slot}>{slot}</SelectItem>
-                ))}
+                {availableTimeSlots.length > 0 ? (
+                  availableTimeSlots.map((slot) => (
+                    <SelectItem key={slot} value={slot}>{slot}</SelectItem>
+                  ))
+                ) : (
+                  <div className="py-2 px-2 text-center">
+                    <p className="text-sm text-muted-foreground">No available slots</p>
+                    {date && !isWaitlisted && (
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="mt-1 text-xs"
+                        type="button"
+                        onClick={joinWaitlist}
+                      >
+                        Join waitlist
+                      </Button>
+                    )}
+                    {isWaitlisted && (
+                      <Badge className="mt-1 bg-amber-100 text-amber-800 border-amber-300">
+                        Added to waitlist
+                      </Badge>
+                    )}
+                  </div>
+                )}
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        {/* Timezone Selection */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-2">
+            Your Timezone
+          </label>
+          <TimezoneSelect value={timezone} onChange={setTimezone} />
+          <p className="text-xs text-muted-foreground mt-1">
+            Appointment times will be displayed in this timezone
+          </p>
         </div>
 
         {/* Appointment Type */}
@@ -204,13 +291,37 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
           />
         </div>
 
+        {/* Reminder Preferences */}
+        <div className="mb-6 space-y-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="block text-sm font-medium">Appointment Reminders</label>
+              <p className="text-xs text-muted-foreground">Receive reminders 24h and 1h before appointment</p>
+            </div>
+            <Switch 
+              checked={reminders} 
+              onCheckedChange={setReminders} 
+              className="data-[state=checked]:bg-green-500" 
+            />
+          </div>
+        </div>
+
         <Button 
           type="submit" 
           className="w-full"
-          disabled={!date || !time || !reason || !type}
+          disabled={!date || !time || !reason || !type || isWaitlisted}
         >
-          <MessageSquare className="mr-2 h-4 w-4" />
-          Book Appointment
+          {isWaitlisted ? (
+            <>
+              <BellRing className="mr-2 h-4 w-4" />
+              On Waitlist
+            </>
+          ) : (
+            <>
+              <Calendar className="mr-2 h-4 w-4" />
+              Book Appointment
+            </>
+          )}
         </Button>
       </form>
     </div>
