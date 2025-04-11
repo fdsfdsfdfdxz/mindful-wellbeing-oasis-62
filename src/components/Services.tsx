@@ -10,17 +10,22 @@ import {
   Heart, 
   BookOpen, 
   Clock,
-  CheckCircle2
+  CheckCircle2,
+  ArrowRight
 } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translate } from "@/utils/translations";
+import { useToast } from "@/components/ui/use-toast";
 
 const Services = () => {
   const { language, isRTL } = useLanguage();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
   
   // Enhanced service data with more details
   const serviceData = [
@@ -98,8 +103,19 @@ const Services = () => {
     translate('services', 'feature4', language)
   ];
   
-  const handleServiceClick = (link: string) => {
-    navigate(link);
+  const handleServiceClick = (link: string, index: number) => {
+    setActiveCardIndex(index);
+    
+    toast({
+      title: translate('services', 'navigating', language) || "Navigating to service",
+      description: translate('services', 'redirecting', language) || "You're being redirected to the selected service page",
+      duration: 1500,
+    });
+    
+    // Short delay for visual feedback before navigation
+    setTimeout(() => {
+      navigate(link);
+    }, 300);
   };
 
   return (
@@ -114,9 +130,12 @@ const Services = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
           {serviceData.map((service, index) => (
-            <Card key={index} className="card-hover border border-gray-100 h-full">
+            <Card 
+              key={index} 
+              className={`card-hover border border-gray-100 h-full transition-all duration-300 hover:shadow-md ${activeCardIndex === index ? 'ring-2 ring-calmBlue-500 shadow-lg' : ''}`}
+            >
               <CardHeader className="pb-2">
-                <div className={`${service.iconBg} p-3 rounded-full w-16 h-16 flex items-center justify-center mb-4`}>
+                <div className={`${service.iconBg} p-3 rounded-full w-16 h-16 flex items-center justify-center mb-4 transition-transform duration-300 ${activeCardIndex === index ? 'scale-110' : ''}`}>
                   {service.icon}
                 </div>
                 <CardTitle className="text-xl font-bold">{service.title}</CardTitle>
@@ -128,11 +147,12 @@ const Services = () => {
               </CardContent>
               <CardFooter>
                 <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => handleServiceClick(service.link)}
+                  variant={activeCardIndex === index ? "default" : "outline"}
+                  className={`w-full group ${isRTL ? 'flex-row-reverse' : ''}`}
+                  onClick={() => handleServiceClick(service.link, index)}
                 >
-                  {service.cta}
+                  <span>{service.cta}</span>
+                  <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-1' : 'ml-2 group-hover:translate-x-1'}`} />
                 </Button>
               </CardFooter>
             </Card>
@@ -155,10 +175,11 @@ const Services = () => {
           
           <div className="mt-8 text-center">
             <Button 
-              className="button-primary"
+              className="button-primary group"
               onClick={() => navigate('/services/book-session')}
             >
               {translate('services', 'getStarted', language)}
+              <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-1' : 'ml-2 group-hover:translate-x-1'}`} />
             </Button>
           </div>
         </div>
