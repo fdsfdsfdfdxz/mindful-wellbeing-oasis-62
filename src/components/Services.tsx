@@ -12,6 +12,7 @@ import {
   Clock,
   CheckCircle2
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -19,6 +20,7 @@ import { translate } from "@/utils/translations";
 
 const Services = () => {
   const { language, isRTL } = useLanguage();
+  const navigate = useNavigate();
   
   // Enhanced service data with more details
   const serviceData = [
@@ -27,56 +29,64 @@ const Services = () => {
       description: translate('services', 'privateConsultationsDesc', language),
       icon: <MessageSquare className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
-      cta: translate('services', 'bookSession', language)
+      cta: translate('services', 'bookSession', language),
+      link: "/services/book-session"
     },
     {
       title: translate('services', 'anonymousConsultations', language),
       description: translate('services', 'anonymousConsultationsDesc', language),
       icon: <Lock className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
-      cta: translate('services', 'startAnonymously', language)
+      cta: translate('services', 'startAnonymously', language),
+      link: "/services/anonymous-consultation"
     },
     {
       title: translate('services', 'psychologicalAssessments', language),
       description: translate('services', 'psychologicalAssessmentsDesc', language),
       icon: <FileText className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
-      cta: translate('services', 'takeAssessment', language)
+      cta: translate('services', 'takeAssessment', language),
+      link: "/services/psychological-assessment"
     },
     {
       title: translate('services', 'specializedTherapy', language),
       description: translate('services', 'specializedTherapyDesc', language),
       icon: <Brain className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
-      cta: translate('services', 'explorePrograms', language)
+      cta: translate('services', 'explorePrograms', language),
+      link: "/services/specialized-therapy"
     },
     {
       title: translate('services', 'marriageCounseling', language),
       description: translate('services', 'marriageCounselingDesc', language),
       icon: <Users className="h-10 w-10 text-warmNeutral-500" />,
       iconBg: "bg-warmNeutral-100",
-      cta: translate('services', 'familySolutions', language)
+      cta: translate('services', 'familySolutions', language),
+      link: "/services/marriage-counseling"
     },
     {
       title: translate('services', 'selfDevelopment', language),
       description: translate('services', 'selfDevelopmentDesc', language),
       icon: <Heart className="h-10 w-10 text-warmNeutral-500" />,
       iconBg: "bg-warmNeutral-100",
-      cta: translate('services', 'startGrowing', language)
+      cta: translate('services', 'startGrowing', language),
+      link: "/services/self-development"
     },
     {
       title: translate('services', 'educationalResources', language),
       description: translate('services', 'educationalResourcesDesc', language),
       icon: <BookOpen className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
-      cta: translate('services', 'browseLibrary', language)
+      cta: translate('services', 'browseLibrary', language),
+      link: "/services/educational-resources"
     },
     {
       title: translate('services', 'followupCare', language),
       description: translate('services', 'followupCareDesc', language),
       icon: <Clock className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
-      cta: translate('services', 'learnMore', language)
+      cta: translate('services', 'learnMore', language),
+      link: "/services/followup-care"
     }
   ];
 
@@ -87,6 +97,10 @@ const Services = () => {
     translate('services', 'feature3', language),
     translate('services', 'feature4', language)
   ];
+  
+  const handleServiceClick = (link: string) => {
+    navigate(link);
+  };
 
   return (
     <section id="services" className="py-20 bg-white">
@@ -113,7 +127,11 @@ const Services = () => {
                 </CardDescription>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleServiceClick(service.link)}
+                >
                   {service.cta}
                 </Button>
               </CardFooter>
@@ -136,7 +154,10 @@ const Services = () => {
           </div>
           
           <div className="mt-8 text-center">
-            <Button className="button-primary">
+            <Button 
+              className="button-primary"
+              onClick={() => navigate('/services/book-session')}
+            >
               {translate('services', 'getStarted', language)}
             </Button>
           </div>

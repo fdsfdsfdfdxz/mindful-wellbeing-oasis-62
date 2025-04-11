@@ -13,6 +13,14 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import DoctorChat from "./pages/DoctorChat";
 import DoctorProfile from "./pages/DoctorProfile";
+import BookSession from "./pages/services/BookSession";
+import AnonymousConsultation from "./pages/services/AnonymousConsultation";
+import PsychologicalAssessment from "./pages/services/PsychologicalAssessment";
+import SpecializedTherapy from "./pages/services/SpecializedTherapy";
+import MarriageCounseling from "./pages/services/MarriageCounseling";
+import SelfDevelopment from "./pages/services/SelfDevelopment";
+import EducationalResources from "./pages/services/EducationalResources";
+import FollowupCare from "./pages/services/FollowupCare";
 import LiveChat from "./components/LiveChat";
 
 const queryClient = new QueryClient();
@@ -32,6 +40,17 @@ const App = () => (
                 <Route path="/register" element={<Register />} />
                 <Route path="/doctor-chat" element={<DoctorChat />} />
                 <Route path="/doctor/:doctorId" element={<DoctorProfile />} />
+                
+                {/* Service Routes */}
+                <Route path="/services/book-session" element={<BookSession />} />
+                <Route path="/services/anonymous-consultation" element={<AnonymousConsultation />} />
+                <Route path="/services/psychological-assessment" element={<PsychologicalAssessment />} />
+                <Route path="/services/specialized-therapy" element={<SpecializedTherapy />} />
+                <Route path="/services/marriage-counseling" element={<MarriageCounseling />} />
+                <Route path="/services/self-development" element={<SelfDevelopment />} />
+                <Route path="/services/educational-resources" element={<EducationalResources />} />
+                <Route path="/services/followup-care" element={<FollowupCare />} />
+                
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
