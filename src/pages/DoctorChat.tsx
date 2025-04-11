@@ -54,6 +54,7 @@ import {
   Image,
   Paperclip,
   Smile,
+  MapPin,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
