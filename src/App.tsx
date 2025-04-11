@@ -24,6 +24,14 @@ import SelfDevelopment from "./pages/services/SelfDevelopment";
 import EducationalResources from "./pages/services/EducationalResources";
 import FollowupCare from "./pages/services/FollowupCare";
 
+// Assessment & Therapeutic Programs Routes
+import AssessmentLibrary from "./pages/assessments/AssessmentLibrary";
+import AssessmentTaker from "./pages/assessments/AssessmentTaker";
+import AssessmentResults from "./pages/assessments/AssessmentResults";
+import TherapyPrograms from "./pages/therapy/TherapyPrograms";
+import ProgramDetail from "./pages/therapy/ProgramDetail";
+import SelfHelpResources from "./pages/therapy/SelfHelpResources";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -53,6 +61,16 @@ const App = () => (
                   <Route path="/services/self-development" element={<SelfDevelopment />} />
                   <Route path="/services/educational-resources" element={<EducationalResources />} />
                   <Route path="/services/followup-care" element={<FollowupCare />} />
+                  
+                  {/* Assessment Routes */}
+                  <Route path="/assessments" element={<AssessmentLibrary />} />
+                  <Route path="/assessments/:id" element={<AssessmentTaker />} />
+                  <Route path="/assessments/results/:id" element={<AssessmentResults />} />
+                  
+                  {/* Therapy Program Routes */}
+                  <Route path="/therapy/programs" element={<TherapyPrograms />} />
+                  <Route path="/therapy/programs/:id" element={<ProgramDetail />} />
+                  <Route path="/therapy/self-help" element={<SelfHelpResources />} />
                   
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
