@@ -2,6 +2,7 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface PractitionerSearchProps {
   searchQuery: string;
@@ -14,8 +15,14 @@ const PractitionerSearch: React.FC<PractitionerSearchProps> = ({
   onSearchChange,
   className,
 }) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Perform search with current query
+    // This is handled by the parent component via onSearchChange already
+  };
+
   return (
-    <div className={`relative ${className}`}>
+    <form onSubmit={handleSubmit} className={`relative ${className}`}>
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       <Input
         type="text"
@@ -24,7 +31,10 @@ const PractitionerSearch: React.FC<PractitionerSearchProps> = ({
         onChange={(e) => onSearchChange(e.target.value)}
         className="pl-10 border-none shadow-sm"
       />
-    </div>
+      <Button type="submit" className="sr-only">
+        Search
+      </Button>
+    </form>
   );
 };
 

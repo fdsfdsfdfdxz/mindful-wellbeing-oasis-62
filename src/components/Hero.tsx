@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MessageSquare } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -6,6 +7,15 @@ import { translate } from "@/utils/translations";
 
 const Hero = () => {
   const { language, isRTL } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleBookConsultation = () => {
+    navigate("/services/book-session");
+  };
+
+  const handleFreeAssessment = () => {
+    navigate("/services/anonymous-consultation");
+  };
 
   return (
     <section className="hero-gradient py-20 md:py-28">
@@ -19,11 +29,19 @@ const Hero = () => {
               {translate('hero', 'description', language)}
             </p>
             <div className={`flex flex-col sm:flex-row items-center justify-center lg:justify-${isRTL ? 'end' : 'start'} ${isRTL ? 'sm:space-x-reverse' : ''} space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in`} style={{ animationDelay: "0.4s" }}>
-              <Button className="button-primary w-full sm:w-auto" size="lg">
+              <Button 
+                className="button-primary w-full sm:w-auto" 
+                size="lg"
+                onClick={handleBookConsultation}
+              >
                 <CalendarDays className={`${isRTL ? 'ml-2' : 'mr-2'} h-5 w-5`} /> 
                 {translate('hero', 'bookConsultation', language)}
               </Button>
-              <Button className="button-secondary w-full sm:w-auto" size="lg">
+              <Button 
+                className="button-secondary w-full sm:w-auto" 
+                size="lg"
+                onClick={handleFreeAssessment}
+              >
                 <MessageSquare className={`${isRTL ? 'ml-2' : 'mr-2'} h-5 w-5`} /> 
                 {translate('hero', 'freeAssessment', language)}
               </Button>

@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router-dom";
 import { CalendarDays, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -6,6 +7,15 @@ import { translate } from "@/utils/translations";
 
 const CTA = () => {
   const { language, isRTL } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleBookConsultation = () => {
+    navigate("/services/book-session");
+  };
+
+  const handleFreeAssessment = () => {
+    navigate("/services/anonymous-consultation");
+  };
 
   return (
     <section className="py-20 bg-calmBlue-600 text-white">
@@ -22,6 +32,7 @@ const CTA = () => {
             <Button 
               size="lg" 
               className="bg-white text-calmBlue-600 hover:bg-calmBlue-50 w-full sm:w-auto"
+              onClick={handleBookConsultation}
             >
               <CalendarDays className={`${isRTL ? 'ml-2' : 'mr-2'} h-5 w-5`} /> 
               {translate('cta', 'bookConsultation', language)}
@@ -30,6 +41,7 @@ const CTA = () => {
               variant="outline" 
               size="lg" 
               className="bg-transparent border-white text-white hover:bg-calmBlue-700 w-full sm:w-auto"
+              onClick={handleFreeAssessment}
             >
               <MessageSquare className={`${isRTL ? 'ml-2' : 'mr-2'} h-5 w-5`} /> 
               {translate('cta', 'freeAssessment', language)}
