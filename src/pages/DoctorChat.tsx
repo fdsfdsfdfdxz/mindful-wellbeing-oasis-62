@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translate } from "@/utils/translations";
@@ -45,18 +45,53 @@ import {
   Clock,
   Send,
   Calendar as CalendarIcon,
+  User,
+  FileText,
+  Check,
+  X,
+  ChevronRight,
+  PaperclipIcon,
+  Image,
+  Paperclip,
+  Smile,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 const DoctorChat = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, userEmail } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { language, isRTL } = useLanguage();
   const { toast } = useToast();
   const [selectedDoctor, setSelectedDoctor] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"message" | "appointment">("message");
+  const [activeTab, setActiveTab] = useState<"message" | "appointment" | "history">("message");
+  const [messages, setMessages] = useState<any[]>([]);
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Get doctor ID from URL if present
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const doctorId = params.get("doctor");
+    
+    if (doctorId) {
+      setSelectedDoctor(doctorId);
+    }
+    
+    const appointment = params.get("appointment");
+    if (appointment) {
+      setActiveTab("appointment");
+    }
+  }, [location.search]);
 
   // Redirect if not logged in
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isLoggedIn) {
       toast({
         title: translate("doctorChat", "loginRequired", language) || "Login Required",
@@ -66,6 +101,80 @@ const DoctorChat = () => {
       navigate("/login");
     }
   }, [isLoggedIn, navigate, toast, language]);
+
+  // Load chat history when doctor is selected
+  useEffect(() => {
+    if (selectedDoctor) {
+      // Simulate loading chat history
+      setIsLoading(true);
+      
+      // Mock chat history
+      setTimeout(() => {
+        const mockMessages = [
+          {
+            id: 1,
+            sender: "doctor",
+            text: "Hello! How can I help you today?",
+            timestamp: new Date(Date.now() - 8640000).toISOString(),
+            read: true,
+          },
+          {
+            id: 2,
+            sender: "user",
+            text: "I've been experiencing anxiety lately. I'm not sure if I should be concerned.",
+            timestamp: new Date(Date.now() - 7640000).toISOString(),
+            read: true,
+          },
+          {
+            id: 3,
+            sender: "doctor",
+            text: "I understand how difficult anxiety can be. Could you tell me more about your symptoms? When did you start noticing them?",
+            timestamp: new Date(Date.now() - 7540000).toISOString(),
+            read: true,
+          },
+          {
+            id: 4,
+            sender: "user",
+            text: "It started about two weeks ago. I'm having trouble sleeping and I feel on edge most of the day. Sometimes I get heart palpitations.",
+            timestamp: new Date(Date.now() - 7440000).toISOString(),
+            read: true,
+          },
+          {
+            id: 5,
+            sender: "doctor",
+            text: "Thank you for sharing that. Those are common symptoms of anxiety. I'd like to discuss some strategies that might help, and we can also explore whether you might benefit from a more comprehensive evaluation.",
+            timestamp: new Date(Date.now() - 7340000).toISOString(),
+            read: true,
+          },
+        ];
+        
+        setMessages(mockMessages);
+        setIsLoading(false);
+      }, 1000);
+      
+      // Simulate loading appointments
+      const mockAppointments = [
+        {
+          id: 1,
+          date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+          type: "video",
+          status: "confirmed",
+          notes: "Initial consultation",
+          doctor: doctors.find(d => d.id === selectedDoctor),
+        },
+        {
+          id: 2,
+          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          type: "video",
+          status: "completed",
+          notes: "Follow-up session",
+          doctor: doctors.find(d => d.id === selectedDoctor),
+        },
+      ];
+      
+      setAppointments(mockAppointments);
+    }
+  }, [selectedDoctor]);
 
   // Mock doctors data
   const doctors = [
@@ -97,8 +206,8 @@ const DoctorChat = () => {
 
   // Message form schema
   const messageFormSchema = z.object({
-    message: z.string().min(10, {
-      message: translate("doctorChat", "messageTooShort", language) || "Message must be at least 10 characters",
+    message: z.string().min(1, {
+      message: translate("doctorChat", "messageTooShort", language) || "Message is required",
     }),
   });
 
@@ -129,8 +238,8 @@ const DoctorChat = () => {
   const appointmentForm = useForm<z.infer<typeof appointmentFormSchema>>({
     resolver: zodResolver(appointmentFormSchema),
     defaultValues: {
-      date: "",
-      time: "",
+      date: new Date().toISOString().split("T")[0],
+      time: "10:00",
       reason: "",
       type: "video",
     },
@@ -147,11 +256,35 @@ const DoctorChat = () => {
       return;
     }
 
-    console.log("Message sent", values);
-    toast({
-      title: translate("doctorChat", "messageSent", language) || "Message Sent",
-      description: translate("doctorChat", "doctorWillRespond", language) || "Your doctor will respond shortly",
-    });
+    // Add message to chat
+    const newMessage = {
+      id: Date.now(),
+      sender: "user",
+      text: values.message,
+      timestamp: new Date().toISOString(),
+      read: false,
+    };
+    
+    setMessages([...messages, newMessage]);
+    
+    // Simulate doctor response
+    setTimeout(() => {
+      const doctorResponse = {
+        id: Date.now() + 1,
+        sender: "doctor",
+        text: "Thank you for your message. I'll review it and get back to you soon.",
+        timestamp: new Date().toISOString(),
+        read: false,
+      };
+      
+      setMessages(prevMessages => [...prevMessages, doctorResponse]);
+      
+      toast({
+        title: translate("doctorChat", "newMessage", language) || "New Message",
+        description: translate("doctorChat", "doctorResponded", language) || "Your doctor has responded to your message",
+      });
+    }, 3000);
+    
     messageForm.reset();
   };
 
@@ -165,18 +298,169 @@ const DoctorChat = () => {
       return;
     }
 
-    console.log("Appointment requested", values);
+    // Add appointment to list
+    const newAppointment = {
+      id: Date.now(),
+      date: `${values.date}T${values.time}`,
+      type: values.type,
+      status: "pending",
+      notes: values.reason,
+      doctor: doctors.find(d => d.id === selectedDoctor),
+    };
+    
+    setAppointments([...appointments, newAppointment]);
+    
     toast({
       title: translate("doctorChat", "appointmentRequested", language) || "Appointment Requested",
       description: translate("doctorChat", "confirmationSoon", language) || "You will receive a confirmation soon",
     });
-    appointmentForm.reset();
+    
+    // Simulate confirmation
+    setTimeout(() => {
+      setAppointments(prevAppointments => 
+        prevAppointments.map(app => 
+          app.id === newAppointment.id 
+            ? { ...app, status: "confirmed" } 
+            : app
+        )
+      );
+      
+      toast({
+        title: translate("doctorChat", "appointmentConfirmed", language) || "Appointment Confirmed",
+        description: translate("doctorChat", "appointmentScheduled", language) || "Your appointment has been scheduled",
+      });
+    }, 5000);
+    
+    appointmentForm.reset({
+      date: new Date().toISOString().split("T")[0],
+      time: "10:00",
+      reason: "",
+      type: "video",
+    });
   };
 
   // Doctor selection handler
   const handleDoctorSelect = (doctorId: string) => {
     setSelectedDoctor(doctorId);
   };
+  
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    }).format(date);
+  };
+  
+  // Format date for appointment display
+  const formatAppointmentDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    }).format(date);
+  };
+  
+  // Check if appointment is upcoming
+  const isUpcoming = (dateString: string) => {
+    const now = new Date();
+    const appointmentDate = new Date(dateString);
+    return appointmentDate > now;
+  };
+  
+  // Get appointment status badge color
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "confirmed":
+        return (
+          <Badge className="bg-green-100 text-green-800 border-green-300">
+            <Check className="h-3 w-3 mr-1" />
+            Confirmed
+          </Badge>
+        );
+      case "pending":
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 border-yellow-300">
+            <Clock className="h-3 w-3 mr-1" />
+            Pending
+          </Badge>
+        );
+      case "completed":
+        return (
+          <Badge className="bg-blue-100 text-blue-800 border-blue-300">
+            <CheckCircleIcon className="h-3 w-3 mr-1" />
+            Completed
+          </Badge>
+        );
+      case "cancelled":
+        return (
+          <Badge className="bg-red-100 text-red-800 border-red-300">
+            <X className="h-3 w-3 mr-1" />
+            Cancelled
+          </Badge>
+        );
+      default:
+        return (
+          <Badge>
+            {status}
+          </Badge>
+        );
+    }
+  };
+  
+  // Get appointment type icon
+  const getAppointmentTypeIcon = (type: string) => {
+    switch (type) {
+      case "video":
+        return <Video className="h-4 w-4 text-calmBlue-500" />;
+      case "phone":
+        return <Phone className="h-4 w-4 text-calmBlue-500" />;
+      case "inPerson":
+        return <MapPin className="h-4 w-4 text-calmBlue-500" />;
+      default:
+        return null;
+    }
+  };
+  
+  // Join video call
+  const handleJoinCall = (appointmentId: number) => {
+    toast({
+      title: "Joining Video Call",
+      description: "Connecting to your doctor via secure video...",
+    });
+    
+    // In a real app, this would redirect to a video call platform or open one in-app
+    window.open(`https://example.com/call/${appointmentId}`, '_blank');
+  };
+  
+  // CheckCircleIcon component
+  const CheckCircleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -226,44 +510,69 @@ const DoctorChat = () => {
                           <p className="text-xs text-gray-500">{doctor.specialty}</p>
                           <p className="text-xs text-gray-500">{doctor.availability}</p>
                         </div>
+                        {selectedDoctor === doctor.id && (
+                          <ChevronRight className="ml-auto h-5 w-5 text-calmBlue-500" />
+                        )}
                       </div>
                     </div>
                   ))}
                 </CardContent>
               </Card>
+              
+              {/* View Profile Link */}
+              {selectedDoctor && (
+                <div className="mt-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => navigate(`/doctor/${selectedDoctor}`)}
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    {translate("doctorChat", "viewFullProfile", language) || "View Full Profile"}
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Communication Area */}
             <div className="md:col-span-2">
               <Card>
-                <CardHeader>
+                <CardHeader className="pb-0">
                   <div className="flex justify-between items-center">
                     <CardTitle>
                       {selectedDoctor
                         ? doctors.find((d) => d.id === selectedDoctor)?.name || ""
                         : translate("doctorChat", "selectDoctor", language) || "Select a Doctor"}
                     </CardTitle>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant={activeTab === "message" ? "default" : "outline"}
-                        size="sm"
+                    <TabsList>
+                      <TabsTrigger 
+                        value="message" 
                         onClick={() => setActiveTab("message")}
+                        className={activeTab === "message" ? "bg-calmBlue-500 text-white" : ""}
                       >
                         <MessageSquare className="h-4 w-4 mr-2" />
                         {translate("doctorChat", "message", language) || "Message"}
-                      </Button>
-                      <Button
-                        variant={activeTab === "appointment" ? "default" : "outline"}
-                        size="sm"
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="appointment" 
                         onClick={() => setActiveTab("appointment")}
+                        className={activeTab === "appointment" ? "bg-calmBlue-500 text-white" : ""}
                       >
                         <Calendar className="h-4 w-4 mr-2" />
                         {translate("doctorChat", "appointment", language) || "Appointment"}
-                      </Button>
-                    </div>
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="history" 
+                        onClick={() => setActiveTab("history")}
+                        className={activeTab === "history" ? "bg-calmBlue-500 text-white" : ""}
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        {translate("doctorChat", "history", language) || "History"}
+                      </TabsTrigger>
+                    </TabsList>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
                   {!selectedDoctor ? (
                     <div className="text-center py-10">
                       <p className="text-gray-500">
@@ -272,41 +581,115 @@ const DoctorChat = () => {
                       </p>
                     </div>
                   ) : activeTab === "message" ? (
-                    <Form {...messageForm}>
-                      <form onSubmit={messageForm.handleSubmit(onMessageSubmit)} className="space-y-4">
-                        <FormField
-                          control={messageForm.control}
-                          name="message"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                {translate("doctorChat", "yourMessage", language) || "Your Message"}
-                              </FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  placeholder={
-                                    translate("doctorChat", "messagePlaceholder", language) ||
-                                    "Type your message here..."
-                                  }
-                                  className="min-h-[200px]"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormDescription>
-                                {translate("doctorChat", "responseTime", language) ||
-                                  "Responses are typically within 24 hours"}
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button type="submit" className="w-full">
-                          <Send className="h-4 w-4 mr-2" />
-                          {translate("doctorChat", "sendMessage", language) || "Send Message"}
-                        </Button>
-                      </form>
-                    </Form>
-                  ) : (
+                    <div className="space-y-4">
+                      {/* Chat Messages */}
+                      <div className="h-96 overflow-y-auto border rounded-lg bg-gray-50 p-4">
+                        {isLoading ? (
+                          <div className="flex items-center justify-center h-full">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-calmBlue-500"></div>
+                          </div>
+                        ) : messages.length > 0 ? (
+                          <div className="space-y-4">
+                            {messages.map((message) => (
+                              <div
+                                key={message.id}
+                                className={`flex ${
+                                  message.sender === "user" ? "justify-end" : "justify-start"
+                                }`}
+                              >
+                                {message.sender === "doctor" && (
+                                  <div className="mr-2">
+                                    <div className="w-8 h-8 rounded-full overflow-hidden">
+                                      <img
+                                        src={doctors.find((d) => d.id === selectedDoctor)?.photo}
+                                        alt="Doctor"
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                                <div
+                                  className={`max-w-[75%] rounded-lg p-3 ${
+                                    message.sender === "user"
+                                      ? "bg-calmBlue-500 text-white"
+                                      : "bg-white border border-gray-200"
+                                  }`}
+                                >
+                                  <p className="whitespace-pre-wrap break-words">{message.text}</p>
+                                  <p
+                                    className={`text-xs mt-1 ${
+                                      message.sender === "user" ? "text-calmBlue-100" : "text-gray-500"
+                                    }`}
+                                  >
+                                    {formatDate(message.timestamp)}
+                                  </p>
+                                </div>
+                                {message.sender === "user" && (
+                                  <div className="ml-2">
+                                    <div className="w-8 h-8 rounded-full overflow-hidden bg-calmBlue-100 flex items-center justify-center">
+                                      <User className="h-4 w-4 text-calmBlue-500" />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <div className="text-center">
+                              <MessageSquare className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+                              <p className="text-gray-500">
+                                {translate("doctorChat", "noMessages", language) ||
+                                  "No messages yet. Start the conversation!"}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Message Input Form */}
+                      <Form {...messageForm}>
+                        <form onSubmit={messageForm.handleSubmit(onMessageSubmit)} className="space-y-4">
+                          <div className="relative">
+                            <FormField
+                              control={messageForm.control}
+                              name="message"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <div className="relative">
+                                    <Textarea
+                                      placeholder={
+                                        translate("doctorChat", "messagePlaceholder", language) ||
+                                        "Type your message here..."
+                                      }
+                                      className="pr-24 min-h-[120px] resize-none"
+                                      {...field}
+                                    />
+                                    <div className="absolute bottom-3 right-3 flex space-x-2">
+                                      <Button type="button" size="sm" variant="ghost" className="rounded-full h-8 w-8 p-0">
+                                        <Paperclip className="h-4 w-4 text-gray-500" />
+                                      </Button>
+                                      <Button type="button" size="sm" variant="ghost" className="rounded-full h-8 w-8 p-0">
+                                        <Image className="h-4 w-4 text-gray-500" />
+                                      </Button>
+                                      <Button type="button" size="sm" variant="ghost" className="rounded-full h-8 w-8 p-0">
+                                        <Smile className="h-4 w-4 text-gray-500" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <Button type="submit" className="w-full">
+                            <Send className="h-4 w-4 mr-2" />
+                            {translate("doctorChat", "sendMessage", language) || "Send Message"}
+                          </Button>
+                        </form>
+                      </Form>
+                    </div>
+                  ) : activeTab === "appointment" ? (
                     <Form {...appointmentForm}>
                       <form onSubmit={appointmentForm.handleSubmit(onAppointmentSubmit)} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -325,6 +708,7 @@ const DoctorChat = () => {
                                       type="date"
                                       className="pl-10"
                                       {...field}
+                                      min={new Date().toISOString().split("T")[0]}
                                     />
                                   </div>
                                 </FormControl>
@@ -428,6 +812,101 @@ const DoctorChat = () => {
                         </Button>
                       </form>
                     </Form>
+                  ) : (
+                    <div className="space-y-6">
+                      <div>
+                        <h3 className="text-lg font-medium mb-4">Upcoming Appointments</h3>
+                        {appointments.filter(app => isUpcoming(app.date)).length > 0 ? (
+                          <div className="space-y-4">
+                            {appointments
+                              .filter(app => isUpcoming(app.date))
+                              .map(appointment => (
+                                <Card key={appointment.id} className="overflow-hidden">
+                                  <div className="border-l-4 border-calmBlue-500 pl-4 p-4">
+                                    <div className="flex justify-between items-start">
+                                      <div>
+                                        <h4 className="font-medium">{formatAppointmentDate(appointment.date)}</h4>
+                                        <div className="flex items-center mt-1 text-sm text-gray-500">
+                                          {getAppointmentTypeIcon(appointment.type)}
+                                          <span className="ml-1 capitalize">
+                                            {appointment.type === "inPerson" ? "In Person" : `${appointment.type} Call`}
+                                          </span>
+                                        </div>
+                                        <p className="text-sm mt-2">{appointment.notes}</p>
+                                      </div>
+                                      <div className="flex flex-col items-end">
+                                        {getStatusBadge(appointment.status)}
+                                        {appointment.status === "confirmed" && appointment.type === "video" && (
+                                          <Button 
+                                            size="sm" 
+                                            className="mt-3"
+                                            onClick={() => handleJoinCall(appointment.id)}
+                                          >
+                                            <Video className="h-4 w-4 mr-1" />
+                                            Join Call
+                                          </Button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </Card>
+                              ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 border rounded-lg bg-gray-50">
+                            <Calendar className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+                            <p className="text-gray-500">
+                              No upcoming appointments
+                            </p>
+                            <Button
+                              variant="link"
+                              className="mt-2"
+                              onClick={() => setActiveTab("appointment")}
+                            >
+                              Schedule an appointment
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div>
+                        <h3 className="text-lg font-medium mb-4">Past Appointments</h3>
+                        {appointments.filter(app => !isUpcoming(app.date)).length > 0 ? (
+                          <div className="space-y-4">
+                            {appointments
+                              .filter(app => !isUpcoming(app.date))
+                              .map(appointment => (
+                                <Card key={appointment.id} className="overflow-hidden border-gray-200">
+                                  <div className="border-l-4 border-gray-300 pl-4 p-4">
+                                    <div className="flex justify-between items-start">
+                                      <div>
+                                        <h4 className="font-medium text-gray-700">{formatAppointmentDate(appointment.date)}</h4>
+                                        <div className="flex items-center mt-1 text-sm text-gray-500">
+                                          {getAppointmentTypeIcon(appointment.type)}
+                                          <span className="ml-1 capitalize">
+                                            {appointment.type === "inPerson" ? "In Person" : `${appointment.type} Call`}
+                                          </span>
+                                        </div>
+                                        <p className="text-sm mt-2 text-gray-600">{appointment.notes}</p>
+                                      </div>
+                                      <div>
+                                        {getStatusBadge(appointment.status)}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </Card>
+                              ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 border rounded-lg bg-gray-50">
+                            <FileText className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+                            <p className="text-gray-500">
+                              No past appointments
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </CardContent>
               </Card>

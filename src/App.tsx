@@ -12,6 +12,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import DoctorChat from "./pages/DoctorChat";
+import DoctorProfile from "./pages/DoctorProfile";
+import LiveChat from "./components/LiveChat";
 
 const queryClient = new QueryClient();
 
@@ -29,9 +31,11 @@ const App = () => (
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/doctor-chat" element={<DoctorChat />} />
+                <Route path="/doctor/:doctorId" element={<DoctorProfile />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <LiveChat />
             </BrowserRouter>
           </TooltipProvider>
         </QueryClientProvider>

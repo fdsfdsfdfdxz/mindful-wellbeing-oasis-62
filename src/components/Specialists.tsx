@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
-import { Star, Calendar, MessageSquare } from "lucide-react";
+import { Star, Calendar, MessageSquare, ArrowRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -67,7 +67,7 @@ const Specialists = () => {
     setVisibleSpecialists(specialistsData.length);
   };
 
-  const handleCommunication = (action: "message" | "appointment") => {
+  const handleCommunication = (specialistId: number, action: "message" | "appointment") => {
     if (!isLoggedIn) {
       toast({
         title: translate("specialists", "loginRequired", language) || "Login Required",
@@ -78,7 +78,15 @@ const Specialists = () => {
       return;
     }
     
-    navigate("/doctor-chat");
+    if (action === "message") {
+      navigate(`/doctor-chat?doctor=${specialistId}`);
+    } else {
+      navigate(`/doctor/${specialistId}`);
+    }
+  };
+  
+  const handleViewProfile = (specialistId: number) => {
+    navigate(`/doctor/${specialistId}`);
   };
 
   return (
@@ -92,7 +100,7 @@ const Specialists = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
           {specialistsData.slice(0, visibleSpecialists).map((specialist) => (
             <Card key={specialist.id} className="overflow-hidden transition-all duration-300 hover:shadow-xl">
-              <div className="relative">
+              <div className="relative cursor-pointer" onClick={() => handleViewProfile(specialist.id)}>
                 <img 
                   src={specialist.photo} 
                   alt={specialist.name} 
@@ -108,7 +116,17 @@ const Specialists = () => {
               </div>
               
               <CardHeader className="pb-2">
-                <h3 className="text-xl font-bold text-gray-800">{specialist.name}</h3>
+                <h3 className="text-xl font-bold text-gray-800 flex items-center justify-between">
+                  <span>{specialist.name}</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="p-0 h-auto text-calmBlue-600"
+                    onClick={() => handleViewProfile(specialist.id)}
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </h3>
                 <CardDescription>{specialist.credentials}</CardDescription>
               </CardHeader>
               
@@ -142,7 +160,7 @@ const Specialists = () => {
               <CardFooter className="flex flex-col space-y-2">
                 <Button 
                   className="w-full"
-                  onClick={() => handleCommunication("appointment")}
+                  onClick={() => handleCommunication(specialist.id, "appointment")}
                 >
                   <Calendar className="mr-2 h-4 w-4" />
                   Book Appointment
@@ -150,7 +168,7 @@ const Specialists = () => {
                 <Button 
                   variant="outline" 
                   className="w-full"
-                  onClick={() => handleCommunication("message")}
+                  onClick={() => handleCommunication(specialist.id, "message")}
                 >
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Message
