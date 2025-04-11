@@ -66,12 +66,16 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
 
   const handleSubmit = (values: AppointmentFormValues) => {
     onSubmit(values);
-    form.reset({
+    
+    // Fix: Provide non-optional values for form reset that match the required type
+    const resetValues: AppointmentFormValues = {
       date: new Date().toISOString().split("T")[0],
       time: "10:00",
       reason: "",
       type: "video",
-    });
+    };
+    
+    form.reset(resetValues);
   };
 
   return (
