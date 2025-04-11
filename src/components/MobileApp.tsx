@@ -77,15 +77,15 @@ const MobileApp = () => {
           <div className="lg:w-1/2 relative">
             <div className={`relative z-10 transform ${isRTL ? '-translate-x-16' : 'translate-x-16'}`}>
               <img 
-                src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                alt="Mobile app on smartphone" 
+                src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                alt="Mobile app interface" 
                 className="rounded-xl shadow-2xl max-w-xs mx-auto"
               />
             </div>
             <div className={`absolute top-1/4 ${isRTL ? '-right-4' : '-left-4'} z-0`}>
               <img 
-                src="https://images.unsplash.com/photo-1605236453806-6ff36851218e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                alt="Mobile app interface" 
+                src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                alt="Modern technology interface" 
                 className="rounded-xl shadow-2xl max-w-xs opacity-70"
               />
             </div>
