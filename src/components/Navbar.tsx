@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,8 @@ import {
   X, 
   Globe, 
   User,
-  LogOut
+  LogOut,
+  UserPlus
 } from 'lucide-react';
 import { 
   DropdownMenu,
@@ -61,6 +61,11 @@ const Navbar = () => {
       description: translate('auth', 'comeBackSoon', language),
       duration: 3000
     });
+    setIsMenuOpen(false);
+  };
+
+  const handleRegister = () => {
+    navigate('/register');
     setIsMenuOpen(false);
   };
 
@@ -149,7 +154,8 @@ const Navbar = () => {
                   {translate('navbar', 'login', language)}
                 </Button>
                 
-                <Button className="bg-calmBlue-500 hover:bg-calmBlue-600">
+                <Button className="bg-calmBlue-500 hover:bg-calmBlue-600" onClick={handleRegister}>
+                  <UserPlus className="h-4 w-4 mr-1" />
                   {translate('navbar', 'register', language)}
                 </Button>
               </>
@@ -255,7 +261,11 @@ const Navbar = () => {
                   >
                     {translate('navbar', 'login', language)}
                   </Button>
-                  <Button className="bg-calmBlue-500 hover:bg-calmBlue-600 w-1/2">
+                  <Button 
+                    className="bg-calmBlue-500 hover:bg-calmBlue-600 w-1/2"
+                    onClick={handleRegister}
+                  >
+                    <UserPlus className="h-4 w-4 mr-1" />
                     {translate('navbar', 'register', language)}
                   </Button>
                 </div>
