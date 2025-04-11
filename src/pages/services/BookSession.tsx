@@ -1,9 +1,10 @@
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translate } from "@/utils/translations";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, ArrowLeft } from "lucide-react";
+import { CalendarDays, ArrowLeft, Check } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from '@/components/Navbar';
@@ -14,8 +15,35 @@ const BookSession = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const { toast } = useToast();
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
+  const [isBooking, setIsBooking] = useState(false);
 
-  const handleBooking = () => {
+  const timeSlots = [
+    "Today, 2:00 PM - 3:00 PM",
+    "Today, 4:30 PM - 5:30 PM",
+    "Tomorrow, 10:00 AM - 11:00 AM",
+    "Tomorrow, 1:00 PM - 2:00 PM",
+    "Tomorrow, 3:30 PM - 4:30 PM",
+    "May 14, 11:00 AM - 12:00 PM",
+  ];
+
+  const handleBookSlot = (slotIndex: number) => {
+    setSelectedSlot(slotIndex);
+    handleBooking(timeSlots[slotIndex]);
+  };
+
+  const handleBookNextAvailable = () => {
+    // Book the first available slot
+    setSelectedSlot(0);
+    setIsBooking(true);
+    
+    setTimeout(() => {
+      setIsBooking(false);
+      handleBooking(timeSlots[0]);
+    }, 1000); // Simulate loading for 1 second
+  };
+
+  const handleBooking = (slotTime?: string) => {
     if (!isLoggedIn) {
       toast({
         title: translate('services', 'loginRequired', language) || "Login Required",
@@ -27,12 +55,31 @@ const BookSession = () => {
       return;
     }
     
-    // If logged in, show success toast for now
+    // If logged in, show success toast
     toast({
       title: translate('services', 'bookingSuccess', language) || "Session Booked",
-      description: translate('services', 'bookingConfirmation', language) || 
-        "Your session has been booked. You'll receive a confirmation email shortly.",
+      description: (translate('services', 'bookingConfirmation', language) || 
+        "Your session has been booked for") + (slotTime ? ` ${slotTime}.` : ".") + 
+        " " + (translate('services', 'bookingEmail', language) || 
+        "You'll receive a confirmation email shortly."),
       duration: 3000,
+    });
+    
+    // If we booked a specific slot, wait a moment then redirect to a thank you view
+    if (slotTime) {
+      setTimeout(() => {
+        navigate('/#services', { state: { bookingComplete: true, bookingTime: slotTime } });
+      }, 2000);
+    }
+  };
+
+  const handleViewMoreSlots = () => {
+    // Simulate loading more slots
+    toast({
+      title: translate('services', 'loadingMoreSlots', language) || "Loading More Slots",
+      description: translate('services', 'checkingAvailability', language) || 
+        "Checking therapist availability for next week",
+      duration: 2000,
     });
   };
 
@@ -64,34 +111,51 @@ const BookSession = () => {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {[
-              "Today, 2:00 PM - 3:00 PM",
-              "Today, 4:30 PM - 5:30 PM",
-              "Tomorrow, 10:00 AM - 11:00 AM",
-              "Tomorrow, 1:00 PM - 2:00 PM",
-              "Tomorrow, 3:30 PM - 4:30 PM",
-              "May 14, 11:00 AM - 12:00 PM",
-            ].map((slot, index) => (
+            {timeSlots.map((slot, index) => (
               <div 
                 key={index} 
-                className="border border-gray-200 hover:border-calmBlue-500 p-4 rounded-lg cursor-pointer transition-colors"
-                onClick={handleBooking}
+                className={`border p-4 rounded-lg cursor-pointer transition-colors ${
+                  selectedSlot === index 
+                    ? 'border-calmBlue-500 bg-calmBlue-50' 
+                    : 'border-gray-200 hover:border-calmBlue-500'
+                }`}
+                onClick={() => handleBookSlot(index)}
               >
                 <div className="flex items-center justify-between">
                   <span>{slot}</span>
-                  <CalendarDays className="h-5 w-5 text-calmBlue-500" />
+                  {selectedSlot === index ? (
+                    <Check className="h-5 w-5 text-calmBlue-500" />
+                  ) : (
+                    <CalendarDays className="h-5 w-5 text-calmBlue-500" />
+                  )}
                 </div>
               </div>
             ))}
           </div>
           
           <div className="flex flex-col md:flex-row gap-4">
-            <Button className="w-full md:w-auto" onClick={handleBooking}>
-              <CalendarDays className={`h-5 w-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-              {translate('services', 'bookNext', language) || "Book Next Available"}
+            <Button 
+              className="w-full md:w-auto"
+              onClick={handleBookNextAvailable}
+              disabled={isBooking}
+            >
+              {isBooking ? (
+                <>
+                  <span className="animate-pulse mr-2">Booking...</span>
+                </>
+              ) : (
+                <>
+                  <CalendarDays className={`h-5 w-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                  {translate('services', 'bookNext', language) || "Book Next Available"}
+                </>
+              )}
             </Button>
             
-            <Button variant="outline" className="w-full md:w-auto">
+            <Button 
+              variant="outline" 
+              className="w-full md:w-auto"
+              onClick={handleViewMoreSlots}
+            >
               {translate('services', 'viewMoreSlots', language) || "View More Time Slots"}
             </Button>
           </div>

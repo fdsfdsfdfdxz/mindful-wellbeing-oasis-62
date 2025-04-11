@@ -1,9 +1,10 @@
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translate } from "@/utils/translations";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Lock, Shield, UserX } from "lucide-react";
+import { ArrowLeft, Lock, Shield, UserX, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -12,14 +13,27 @@ const AnonymousConsultation = () => {
   const { language, isRTL } = useLanguage();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [isStarting, setIsStarting] = useState(false);
 
   const handleStart = () => {
-    toast({
-      title: translate('services', 'anonConsultStarted', language) || "Anonymous Session Created",
-      description: translate('services', 'anonConsultDesc', language) || 
-        "Your anonymous consultation has been initiated. You'll be matched with a therapist shortly.",
-      duration: 3000,
-    });
+    setIsStarting(true);
+    
+    // Simulate starting an anonymous session
+    setTimeout(() => {
+      setIsStarting(false);
+      
+      toast({
+        title: translate('services', 'anonConsultStarted', language) || "Anonymous Session Created",
+        description: translate('services', 'anonConsultDesc', language) || 
+          "Your anonymous consultation has been initiated. You'll be matched with a therapist shortly.",
+        duration: 3000,
+      });
+      
+      // Redirect to doctor chat with anonymous flag
+      setTimeout(() => {
+        navigate('/doctor-chat', { state: { anonymous: true } });
+      }, 1500);
+    }, 2000);
   };
 
   return (
@@ -114,9 +128,20 @@ const AnonymousConsultation = () => {
           </ol>
           
           <div className="flex justify-center mt-8">
-            <Button onClick={handleStart} className="px-10">
-              <Lock className={`h-5 w-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-              {translate('services', 'startAnon', language) || "Start Anonymously"}
+            <Button 
+              onClick={handleStart} 
+              className="px-10"
+              disabled={isStarting}
+            >
+              {isStarting ? (
+                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+              ) : (
+                <Lock className={`h-5 w-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+              )}
+              {isStarting 
+                ? (translate('services', 'startingAnon', language) || "Starting Anonymous Session...")
+                : (translate('services', 'startAnon', language) || "Start Anonymously")
+              }
             </Button>
           </div>
         </div>
