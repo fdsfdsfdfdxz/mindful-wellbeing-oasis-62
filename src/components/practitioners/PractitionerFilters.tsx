@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -127,6 +126,22 @@ const PractitionerFilters: React.FC<PractitionerFiltersProps> = ({
   };
 
   const activeFilterCount = getActiveFilterCount();
+
+  // Helper functions
+  const getSpecialtyLabel = (value: SpecialtyArea): string => {
+    const specialty = specialties.find(s => s.value === value);
+    return specialty ? specialty.label : value;
+  };
+  
+  const getLanguageLabel = (value: string): string => {
+    const language = languages.find(l => l === value);
+    return language ? language : value;
+  };
+  
+  const getApproachLabel = (value: TherapyApproach): string => {
+    const approach = approaches.find(a => a.value === value);
+    return approach ? approach.label : value;
+  };
   
   return (
     <div className={`bg-white rounded-lg ${className}`}>
