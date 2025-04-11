@@ -10,7 +10,7 @@ export function SkipToContent() {
       href="#main-content" 
       className="skip-to-content"
     >
-      {translate("accessibility", "skipToContent", language) || "Skip to content"}
+      {translate("accessibility", "skipToContent", language)}
     </a>
   );
 }

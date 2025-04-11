@@ -1,4 +1,3 @@
-
 type TranslationKey = string;
 type SubKey = string;
 type Language = 'en' | 'ar';
@@ -713,7 +712,7 @@ const translations: Record<TranslationKey, TranslationContent> = {
       ar: 'خدماتنا غير مخصصة لحالات الأزمات. إذا كنت أنت أو شخص تعرفه في خطر مباشر، يرجى الاتصال برقم الطوارئ المحلي أو خط أزمات.'
     },
     about: {
-      en: 'We provide accessible, professional mental health services to help you navigate life's challenges and improve your wellbeing.',
+      en: 'We provide accessible, professional mental health services to help you navigate life\'s challenges and improve your wellbeing.',
       ar: 'نقدم خدمات الصحة النفسية المهنية والميسرة لمساعدتك في التغلب على تحديات الحياة وتحسين رفاهيتك.'
     }
   },
@@ -1014,71 +1013,4 @@ const translations: Record<TranslationKey, TranslationContent> = {
     },
     emergency: {
       en: "For emergencies, please call our hotline",
-      ar: "للطوارئ، يرجى الاتصال بخط المساعدة"
-    },
-    hotline: {
-      en: "Crisis Hotline: +1-800-123-4567",
-      ar: "خط أزمات: +1-800-123-4567"
-    },
-    openChat: {
-      en: "Open chat",
-      ar: "فتح الدردشة"
-    },
-    close: {
-      en: "Close chat",
-      ar: "إغلاق الدردشة"
-    }
-  },
-  mobileApp: {
-    title: {
-      en: "Take Us With You Everywhere",
-      ar: "خذنا معك في كل مكان"
-    },
-    description: {
-      en: "Download our mobile app to access therapy and mental health resources on the go.",
-      ar: "قم بتنزيل تطبيقنا للهاتف المحمول للوصول إلى العلاج وموارد الصحة النفسية أثناء التنقل."
-    },
-    downloadOn: {
-      en: "Download on the",
-      ar: "تنزيل من"
-    },
-    getItOn: {
-      en: "GET IT ON",
-      ar: "احصل عليه من"
-    },
-    appStore: {
-      en: "App Store",
-      ar: "متجر التطبيقات"
-    },
-    googlePlay: {
-      en: "Google Play",
-      ar: "جوجل بلاي"
-    },
-    privacyDesign: {
-      en: "Privacy by Design",
-      ar: "الخصوصية في التصميم"
-    },
-    privacyDesc: {
-      en: "Our app is built with your privacy and security as the top priority.",
-      ar: "تم بناء تطبيقنا مع وضع خصوصيتك وأمانك كأولوية قصوى."
-    }
-  }
-};
-
-export const translate = (
-  key: string,
-  subKey: string,
-  language: Language
-): string => {
-  // Try to find the translation
-  const section = translations[key];
-  if (!section) return subKey;
-  
-  const content = section[subKey];
-  if (!content) return subKey;
-  
-  const translation = content[language];
-  
-  // If translation exists, return it, otherwise return the English version or subKey
-  return translation || content['en'] || subKey;
-};
+      ar: "للطوارئ
