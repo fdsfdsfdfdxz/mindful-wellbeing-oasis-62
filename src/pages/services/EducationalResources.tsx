@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -18,6 +19,7 @@ interface Resource {
   readTime: string;
   content?: string;
   url?: string;
+  icon?: React.ReactNode; // Add the optional icon property here
 }
 
 const EducationalResources = () => {
