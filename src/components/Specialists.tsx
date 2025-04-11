@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
-import { Star, Calendar, MessageSquare, ArrowRight } from "lucide-react";
+import { Star, Calendar, MessageSquare, ArrowRight, Users } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -87,6 +87,10 @@ const Specialists = () => {
   
   const handleViewProfile = (specialistId: number) => {
     navigate(`/doctor/${specialistId}`);
+  };
+  
+  const handleViewAllSpecialists = () => {
+    navigate("/practitioners");
   };
 
   return (
@@ -178,17 +182,15 @@ const Specialists = () => {
           ))}
         </div>
         
-        {visibleSpecialists < specialistsData.length && (
-          <div className="mt-12 text-center">
-            <Button 
-              variant="outline" 
-              onClick={showMoreSpecialists}
-              className="px-8"
-            >
-              View More Specialists
-            </Button>
-          </div>
-        )}
+        <div className="mt-12 text-center">
+          <Button 
+            onClick={handleViewAllSpecialists}
+            className="px-8 flex items-center gap-2"
+          >
+            <Users className="h-4 w-4" />
+            View Full Practitioner Directory
+          </Button>
+        </div>
       </div>
     </section>
   );

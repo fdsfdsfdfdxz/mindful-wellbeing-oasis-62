@@ -35,6 +35,10 @@ import TherapyPrograms from "./pages/therapy/TherapyPrograms";
 import ProgramDetail from "./pages/therapy/ProgramDetail";
 import SelfHelpResources from "./pages/therapy/SelfHelpResources";
 
+// Practitioner Directory
+import PractitionerDirectory from "./pages/practitioners/PractitionerDirectory";
+import PractitionerProfile from "./pages/practitioners/PractitionerProfile";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -77,6 +81,10 @@ const App = () => (
                   <Route path="/therapy/programs" element={<TherapyPrograms />} />
                   <Route path="/therapy/programs/:id" element={<ProgramDetail />} />
                   <Route path="/therapy/self-help" element={<SelfHelpResources />} />
+                  
+                  {/* Practitioner Directory Routes */}
+                  <Route path="/practitioners" element={<PractitionerDirectory />} />
+                  <Route path="/practitioners/:practitionerId" element={<PractitionerProfile />} />
                   
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
