@@ -67,15 +67,16 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
   const handleSubmit = (values: AppointmentFormValues) => {
     onSubmit(values);
     
-    // Create a properly typed object with non-optional properties for reset
-    const resetValues: AppointmentFormValues = {
+    // Define default values for reset with explicit type annotation and all required properties
+    const defaultValues: Required<AppointmentFormValues> = {
       date: new Date().toISOString().split("T")[0],
       time: "10:00",
       reason: "",
       type: "video",
     };
     
-    form.reset(resetValues);
+    // Pass the properly typed values to reset
+    form.reset(defaultValues);
   };
 
   return (
@@ -203,3 +204,4 @@ export const AppointmentForm = ({ onSubmit }: AppointmentFormProps) => {
     </Form>
   );
 };
+
