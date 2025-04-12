@@ -12,7 +12,7 @@ const specialistsData = [
   {
     id: 1,
     name: "Dr. Ahmed Ibrahim",
-    photo: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
+    photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d",
     credentials: "Ph.D. in Clinical Psychology",
     specializations: ["Anxiety", "Depression", "Trauma"],
     experience: 8,
@@ -23,7 +23,7 @@ const specialistsData = [
   {
     id: 2,
     name: "Dr. Mohammed Al-Fayed",
-    photo: "https://images.unsplash.com/photo-1493962853295-0fd70327578a",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
     credentials: "Psy.D., Licensed Psychologist",
     specializations: ["Stress Management", "Relationship Issues", "Work-Life Balance"],
     experience: 12,
@@ -34,7 +34,7 @@ const specialistsData = [
   {
     id: 3,
     name: "Dr. Khalid Mahmoud",
-    photo: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d",
+    photo: "https://images.unsplash.com/photo-1530268729831-4b0b9e170218",
     credentials: "M.D., Psychiatrist",
     specializations: ["Bipolar Disorder", "Anxiety", "ADHD"],
     experience: 15,
@@ -45,7 +45,7 @@ const specialistsData = [
   {
     id: 4,
     name: "Dr. Omar Youssef",
-    photo: "https://images.unsplash.com/photo-1469041797191-50ace28483c3",
+    photo: "https://images.unsplash.com/photo-1545167622-3a6ac756afa4",
     credentials: "M.S., Licensed Marriage and Family Therapist",
     specializations: ["Couples Therapy", "Family Conflicts", "Parenting Issues"],
     experience: 10,

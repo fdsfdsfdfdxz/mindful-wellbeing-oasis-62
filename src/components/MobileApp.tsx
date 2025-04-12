@@ -77,15 +77,15 @@ const MobileApp = () => {
           <div className="lg:w-1/2 relative">
             <div className={`relative z-10 transform ${isRTL ? '-translate-x-16' : 'translate-x-16'}`}>
               <img 
-                src="https://images.unsplash.com/photo-1482938289607-e9573fc25ebb" 
-                alt="Serene river landscape with mountains" 
+                src="https://images.unsplash.com/photo-1524230572899-a752b3835840" 
+                alt="Elegant white building representing peace and tranquility" 
                 className="rounded-xl shadow-2xl max-w-xs mx-auto"
               />
             </div>
             <div className={`absolute top-1/4 ${isRTL ? '-right-4' : '-left-4'} z-0`}>
               <img 
-                src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07" 
-                alt="Vibrant natural landscape" 
+                src="https://images.unsplash.com/photo-1426604966848-d7adac402bff" 
+                alt="Serene desert landscape with mountains" 
                 className="rounded-xl shadow-2xl max-w-xs opacity-70"
               />
             </div>

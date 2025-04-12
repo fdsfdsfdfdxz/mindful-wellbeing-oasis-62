@@ -49,8 +49,8 @@ const Hero = () => {
           </div>
           <div className="lg:w-1/2 animate-fade-in" style={{ animationDelay: "0.6s" }}>
             <img 
-              src="https://images.unsplash.com/photo-1492321936769-b49830bc1d1e" 
-              alt="Beautiful white building symbolizing serenity and Islamic architecture" 
+              src="https://images.unsplash.com/photo-1487958449943-2429e8be8625" 
+              alt="Majestic Islamic architecture symbolizing peace and spiritual healing" 
               className="rounded-lg shadow-2xl"
             />
           </div>
