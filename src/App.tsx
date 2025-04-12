@@ -15,6 +15,7 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import DoctorChat from "./pages/DoctorChat";
 import DoctorProfile from "./pages/DoctorProfile";
+import BookAppointment from "./pages/BookAppointment";
 import BookSession from "./pages/services/BookSession";
 import AnonymousConsultation from "./pages/services/AnonymousConsultation";
 import PsychologicalAssessment from "./pages/services/PsychologicalAssessment";
@@ -65,6 +66,7 @@ const App = () => (
                   <Route path="/register" element={<Register />} />
                   <Route path="/doctor-chat" element={<DoctorChat />} />
                   <Route path="/doctor/:doctorId" element={<DoctorProfile />} />
+                  <Route path="/book-appointment" element={<BookAppointment />} />
                   
                   {/* Service Routes */}
                   <Route path="/services/book-session" element={<BookSession />} />

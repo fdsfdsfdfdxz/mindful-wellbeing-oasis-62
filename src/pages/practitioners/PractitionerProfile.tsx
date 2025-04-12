@@ -1,372 +1,371 @@
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import {
-  Calendar,
-  MessageSquare,
-  Star,
-  ShieldCheck,
-  Clock,
-  AlertTriangle,
-  Check,
-  Bookmark,
-  Share,
-  ThumbsUp,
-  Calendar as CalendarIcon,
-  FileText,
-  MapPin,
-} from "lucide-react";
+import { Calendar, MessageSquare, Star, Clock, MapPin, Languages, Award, CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { getPractitionerById, getSpecialtyLabel, getApproachLabel } from "@/services/practitionerService";
-import { PractitionerReview } from "@/types/practitioner";
+import { useAuth } from "@/contexts/AuthContext";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-const ReviewCard: React.FC<{ review: PractitionerReview }> = ({ review }) => {
-  return (
-    <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="flex items-center">
-            <div className="font-medium">
-              {review.isAnonymous ? "Anonymous Client" : review.userName}
-            </div>
-            {review.verified && (
-              <Badge variant="outline" className="ml-2 text-xs flex items-center">
-                <Check className="h-3 w-3 mr-1" /> Verified Client
-              </Badge>
-            )}
-          </div>
-          <div className="text-sm text-gray-500">
-            {new Date(review.date).toLocaleDateString()}
-          </div>
-        </div>
-        <div className="flex items-center">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`h-4 w-4 ${i < review.rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-            />
-          ))}
-        </div>
-      </div>
-      
-      {review.comment && (
-        <div className="mt-3 text-gray-700">
-          "{review.comment}"
-        </div>
-      )}
-      
-      <div className="mt-3 flex justify-between items-center">
-        <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
-          <ThumbsUp className="h-4 w-4 mr-2" />
-          Helpful ({review.helpful})
-        </Button>
-      </div>
-    </div>
-  );
-};
+// Mock practitioner data - in a real app, this would come from an API
+const PRACTITIONERS = [
+  {
+    id: "p1",
+    name: "Dr. Sarah Johnson",
+    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    credentials: "Ph.D. in Clinical Psychology",
+    specializations: ["Anxiety", "Depression", "Trauma"],
+    experience: 8,
+    languages: ["English", "Spanish"],
+    rating: 4.9,
+    reviewCount: 127,
+    bio: "Dr. Sarah Johnson is a clinical psychologist with over 8 years of experience helping clients overcome anxiety, depression, and trauma. She specializes in cognitive-behavioral therapy and mindfulness-based approaches, tailoring treatment to each individual's unique needs and goals.",
+    education: [
+      "Ph.D. in Clinical Psychology, Stanford University",
+      "M.A. in Psychology, University of California, Berkeley",
+      "B.A. in Psychology, University of Washington"
+    ],
+    certifications: [
+      "Licensed Clinical Psychologist",
+      "Certified in Cognitive-Behavioral Therapy",
+      "Trauma-Focused Therapy Certification"
+    ],
+    location: "Remote (Online Sessions)",
+    sessionRate: "$150/session",
+    availabilities: ["Monday-Friday: 9AM-5PM", "Saturday: 10AM-2PM"],
+    acceptsInsurance: true,
+    insuranceNetworks: ["Blue Cross", "Aetna", "United Healthcare"]
+  },
+  {
+    id: "p2",
+    name: "Dr. Michael Chen",
+    photo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    credentials: "Psy.D., Licensed Psychologist",
+    specializations: ["Stress Management", "Relationship Issues", "Work-Life Balance"],
+    experience: 12,
+    languages: ["English", "Mandarin"],
+    rating: 4.8,
+    reviewCount: 205,
+    bio: "Dr. Michael Chen is a licensed psychologist with 12 years of experience specializing in stress management, relationship issues, and work-life balance. He combines evidence-based approaches with compassionate understanding to help clients navigate life's challenges and achieve greater well-being.",
+    education: [
+      "Psy.D. in Clinical Psychology, Yale University",
+      "M.S. in Counseling Psychology, Columbia University",
+      "B.S. in Psychology, University of California, Los Angeles"
+    ],
+    certifications: [
+      "Licensed Psychologist",
+      "Certified in Couples Therapy",
+      "Mindfulness-Based Stress Reduction Instructor"
+    ],
+    location: "Remote (Online Sessions)",
+    sessionRate: "$175/session",
+    availabilities: ["Tuesday-Thursday: 8AM-6PM", "Sunday: 12PM-4PM"],
+    acceptsInsurance: true,
+    insuranceNetworks: ["Cigna", "Kaiser", "Anthem"]
+  }
+];
 
-const PractitionerProfile: React.FC = () => {
+const PractitionerProfile = () => {
   const { practitionerId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("about");
+  const { isLoggedIn } = useAuth();
   
-  const {
-    data: practitioner,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["practitioner", practitionerId],
-    queryFn: () => getPractitionerById(practitionerId || ""),
-    enabled: !!practitionerId,
-  });
+  const [practitioner, setPractitioner] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   
-  if (isLoading) {
+  useEffect(() => {
+    // In a real app, fetch practitioner data from an API
+    const fetchPractitioner = () => {
+      setLoading(true);
+      const found = PRACTITIONERS.find(p => p.id === practitionerId);
+      
+      if (found) {
+        setPractitioner(found);
+      } else {
+        // Handle practitioner not found
+        toast({
+          title: "Practitioner not found",
+          description: "We couldn't find the practitioner you're looking for.",
+          variant: "destructive"
+        });
+        navigate("/practitioners");
+      }
+      
+      setLoading(false);
+    };
+    
+    fetchPractitioner();
+  }, [practitionerId, navigate, toast]);
+  
+  const handleBookAppointment = () => {
+    if (!isLoggedIn) {
+      toast({
+        title: "Login Required",
+        description: "You need to be logged in to book an appointment.",
+      });
+      navigate(`/login?redirect=/book-appointment?practitionerId=${practitionerId}`);
+      return;
+    }
+    
+    navigate(`/book-appointment?practitionerId=${practitionerId}`);
+  };
+  
+  const handleSendMessage = () => {
+    if (!isLoggedIn) {
+      toast({
+        title: "Login Required",
+        description: "You need to be logged in to send messages.",
+      });
+      navigate(`/login?redirect=/doctor-chat?doctor=${practitionerId}`);
+      return;
+    }
+    
+    navigate(`/doctor-chat?doctor=${practitionerId}`);
+  };
+  
+  if (loading || !practitioner) {
     return (
-      <div className="container max-w-6xl mx-auto py-12 px-4">
-        <div className="flex flex-col md:flex-row gap-8">
-          <div className="w-full md:w-1/3">
-            <Skeleton className="h-80 w-full mb-4 rounded-lg" />
-            <Skeleton className="h-10 w-full mb-2" />
-            <Skeleton className="h-6 w-2/3 mb-6" />
-            <Skeleton className="h-10 w-full mb-2" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-          <div className="w-full md:w-2/3">
-            <Skeleton className="h-12 w-3/4 mb-6" />
-            <Skeleton className="h-6 w-full mb-2" />
-            <Skeleton className="h-6 w-full mb-2" />
-            <Skeleton className="h-6 w-full mb-6" />
-            <Skeleton className="h-8 w-32 mb-4" />
-            <Skeleton className="h-20 w-full" />
-          </div>
+      <>
+        <Navbar />
+        <div className="container-custom py-20 text-center">
+          <p>Loading practitioner profile...</p>
         </div>
-      </div>
-    );
-  }
-  
-  if (isError || !practitioner) {
-    toast({
-      title: "Error",
-      description: `Failed to load practitioner profile: ${(error as Error)?.message || "Practitioner not found"}`,
-      variant: "destructive",
-    });
-    return (
-      <div className="container max-w-6xl mx-auto py-12 px-4 text-center">
-        <h1 className="text-2xl font-bold mb-4">Practitioner Not Found</h1>
-        <p className="mb-6">The practitioner you're looking for does not exist or there was an error loading their profile.</p>
-        <Button onClick={() => navigate("/practitioners")}>
-          Back to Directory
-        </Button>
-      </div>
+        <Footer />
+      </>
     );
   }
   
   return (
-    <div className="container max-w-6xl mx-auto py-12 px-4">
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar */}
-        <div className="w-full md:w-1/3">
-          <div className="sticky top-24">
-            <div className="rounded-lg overflow-hidden mb-6">
-              <img
-                src={practitioner.profileImage}
-                alt={practitioner.name}
-                className="w-full h-80 object-cover object-center"
-              />
-            </div>
-            
-            <div className="mb-6">
-              <div className="flex justify-between mb-2">
-                <h2 className="text-2xl font-bold">{practitioner.name}</h2>
-                {practitioner.verificationStatus === "verified" && (
-                  <div className="flex items-center text-green-600">
-                    <ShieldCheck className="h-5 w-5 mr-1" />
-                    <span className="text-sm font-medium">Verified</span>
-                  </div>
-                )}
-                {practitioner.verificationStatus === "pending" && (
-                  <div className="flex items-center text-yellow-600">
-                    <Clock className="h-5 w-5 mr-1" />
-                    <span className="text-sm font-medium">Pending</span>
-                  </div>
-                )}
-                {practitioner.verificationStatus === "unverified" && (
-                  <div className="flex items-center text-gray-600">
-                    <AlertTriangle className="h-5 w-5 mr-1" />
-                    <span className="text-sm font-medium">Unverified</span>
-                  </div>
-                )}
-              </div>
-              <p className="text-gray-600 mb-2">{practitioner.title}</p>
-              <div className="flex items-center mb-4">
-                <div className="flex items-center">
-                  <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                  <span className="font-bold ml-1">{practitioner.ratings.average}</span>
-                </div>
-                <span className="text-gray-500 ml-1">
-                  ({practitioner.ratings.count} reviews)
-                </span>
-              </div>
-              <p className="text-lg font-semibold mb-2">
-                ${practitioner.rate.amount}/{practitioner.rate.per}
-              </p>
-            </div>
-            
-            <div className="space-y-3 mb-6">
-              <Button className="w-full flex items-center justify-center">
-                <Calendar className="mr-2 h-5 w-5" />
-                Book Appointment
-              </Button>
-              <Button variant="outline" className="w-full flex items-center justify-center">
-                <MessageSquare className="mr-2 h-5 w-5" />
-                Send Message
-              </Button>
-            </div>
-            
+    <>
+      <Navbar />
+      
+      <main className="container-custom py-12">
+        <Button 
+          variant="ghost" 
+          className="mb-6"
+          onClick={() => navigate("/practitioners")}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Directory
+        </Button>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="md:col-span-1">
             <Card>
-              <CardContent className="p-4">
-                <h3 className="font-medium mb-3">At a Glance</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex items-start">
-                    <CalendarIcon className="h-4 w-4 mr-2 mt-0.5 text-gray-500" />
-                    <div>
-                      <span className="font-medium">Experience</span>
-                      <p>{practitioner.yearsOfExperience} years</p>
-                    </div>
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center text-center">
+                  <img 
+                    src={practitioner.photo} 
+                    alt={practitioner.name} 
+                    className="w-32 h-32 rounded-full object-cover mb-4"
+                  />
+                  
+                  <h1 className="text-2xl font-bold mb-1">{practitioner.name}</h1>
+                  <p className="text-gray-500 mb-3">{practitioner.credentials}</p>
+                  
+                  <div className="flex items-center mb-4">
+                    <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                    <span className="font-bold ml-1">{practitioner.rating}</span>
+                    <span className="text-gray-500 text-sm ml-1">({practitioner.reviewCount} reviews)</span>
                   </div>
-                  <div className="flex items-start">
-                    <FileText className="h-4 w-4 mr-2 mt-0.5 text-gray-500" />
-                    <div>
-                      <span className="font-medium">Languages</span>
-                      <p>{practitioner.languages.join(', ')}</p>
-                    </div>
+                  
+                  <div className="flex flex-wrap gap-1 justify-center mb-6">
+                    {practitioner.specializations.map((spec: string, idx: number) => (
+                      <Badge key={idx} variant="outline" className="bg-calmBlue-50 text-calmBlue-700 border-calmBlue-200">
+                        {spec}
+                      </Badge>
+                    ))}
                   </div>
-                  {practitioner.contactInfo?.address && (
-                    <div className="flex items-start">
-                      <MapPin className="h-4 w-4 mr-2 mt-0.5 text-gray-500" />
-                      <div>
-                        <span className="font-medium">Location</span>
-                        <p>{practitioner.contactInfo.address}</p>
-                      </div>
+                  
+                  <div className="w-full space-y-3">
+                    <Button 
+                      className="w-full" 
+                      onClick={handleBookAppointment}
+                    >
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Book Appointment
+                    </Button>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={handleSendMessage}
+                    >
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Send Message
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle>Session Info</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start">
+                  <Clock className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Availability</p>
+                    <ul className="text-sm text-gray-600">
+                      {practitioner.availabilities.map((avail: string, idx: number) => (
+                        <li key={idx}>{avail}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <MapPin className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Location</p>
+                    <p className="text-sm text-gray-600">{practitioner.location}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <Languages className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Languages</p>
+                    <p className="text-sm text-gray-600">{practitioner.languages.join(", ")}</p>
+                  </div>
+                </div>
+                
+                <div className="border-t border-gray-100 pt-4 mt-6">
+                  <p className="font-medium text-xl text-center">{practitioner.sessionRate}</p>
+                  {practitioner.acceptsInsurance && (
+                    <div className="mt-2">
+                      <p className="text-sm text-center font-medium">Accepts Insurance</p>
+                      <p className="text-xs text-gray-500 text-center">
+                        {practitioner.insuranceNetworks.join(", ")}
+                      </p>
                     </div>
                   )}
                 </div>
               </CardContent>
             </Card>
           </div>
-        </div>
-        
-        {/* Main Content */}
-        <div className="w-full md:w-2/3">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="about">About</TabsTrigger>
-              <TabsTrigger value="specialties">Specialties</TabsTrigger>
-              <TabsTrigger value="qualifications">Qualifications</TabsTrigger>
-              <TabsTrigger value="reviews">
-                Reviews ({practitioner.reviews.length})
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="about" className="mt-6">
-              <h3 className="text-xl font-bold mb-4">About {practitioner.name}</h3>
-              <p className="text-gray-700 mb-6 whitespace-pre-line">
-                {practitioner.about}
-              </p>
+          
+          <div className="md:col-span-2">
+            <Tabs defaultValue="about" className="w-full">
+              <TabsList className="grid grid-cols-3 mb-6">
+                <TabsTrigger value="about">About</TabsTrigger>
+                <TabsTrigger value="education">Education & Credentials</TabsTrigger>
+                <TabsTrigger value="reviews">Reviews</TabsTrigger>
+              </TabsList>
               
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" size="sm" className="flex items-center">
-                  <Bookmark className="mr-2 h-4 w-4" />
-                  Save
-                </Button>
-                <Button variant="outline" size="sm" className="flex items-center">
-                  <Share className="mr-2 h-4 w-4" />
-                  Share
-                </Button>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="specialties" className="mt-6">
-              <div className="mb-6">
-                <h3 className="text-lg font-bold mb-3">Areas of Expertise</h3>
-                <div className="flex flex-wrap gap-2">
-                  {practitioner.specialties.map((specialty) => (
-                    <Badge key={specialty} variant="secondary" className="px-3 py-1 text-sm">
-                      {getSpecialtyLabel(specialty)}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="text-lg font-bold mb-3">Therapeutic Approaches</h3>
-                <div className="flex flex-wrap gap-2">
-                  {practitioner.approaches.map((approach) => (
-                    <Badge key={approach} variant="outline" className="px-3 py-1 text-sm">
-                      {getApproachLabel(approach)}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              
-              {practitioner.insuranceAccepted.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-bold mb-3">Insurance Accepted</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {practitioner.insuranceAccepted.map((insurance) => (
-                      <Badge key={insurance} variant="outline" className="px-3 py-1 text-sm">
-                        {insurance}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </TabsContent>
-            
-            <TabsContent value="qualifications" className="mt-6">
-              <h3 className="text-lg font-bold mb-4">Education & Certifications</h3>
-              <div className="space-y-6">
-                {practitioner.qualifications.map((qualification) => (
-                  <div key={qualification.id} className="flex items-start">
-                    {qualification.verified ? (
-                      <ShieldCheck className="h-5 w-5 mr-3 text-green-500 flex-shrink-0" />
-                    ) : (
-                      <Clock className="h-5 w-5 mr-3 text-yellow-500 flex-shrink-0" />
-                    )}
-                    <div>
-                      <h4 className="font-semibold">{qualification.title}</h4>
-                      <p className="text-gray-600">{qualification.institution}</p>
-                      <p className="text-gray-500 text-sm">{qualification.year}</p>
+              <TabsContent value="about" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>About {practitioner.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 whitespace-pre-line">{practitioner.bio}</p>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Areas of Expertise</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {practitioner.specializations.map((spec: string, idx: number) => (
+                        <div key={idx} className="flex items-start">
+                          <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                          <div>
+                            <p className="font-medium">{spec}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                ))}
-              </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
               
-              <Separator className="my-8" />
+              <TabsContent value="education" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Education</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {practitioner.education.map((edu: string, idx: number) => (
+                        <li key={idx} className="flex items-start">
+                          <Award className="h-5 w-5 text-calmBlue-500 mr-3 mt-0.5" />
+                          <span>{edu}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Certifications</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {practitioner.certifications.map((cert: string, idx: number) => (
+                        <li key={idx} className="flex items-start">
+                          <CheckCircle2 className="h-5 w-5 text-green-500 mr-3 mt-0.5" />
+                          <span>{cert}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Experience</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p>{practitioner.experience} years of professional experience in mental health services</p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
               
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-lg font-bold mb-2">Verification Process</h3>
-                <p className="text-gray-700 text-sm">
-                  We verify all practitioner credentials through a rigorous process that includes
-                  checking educational qualifications, licensure status, and professional standing.
-                  A verified badge indicates that we've confirmed the practitioner's credentials.
-                </p>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="reviews" className="mt-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold">Client Reviews</h3>
-                <div className="flex items-center">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-5 w-5 ${
-                          i < Math.floor(practitioner.ratings.average)
-                            ? "text-yellow-500 fill-yellow-500"
-                            : i < practitioner.ratings.average
-                            ? "text-yellow-500 fill-yellow-500 half-filled"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="font-bold ml-2">{practitioner.ratings.average}</span>
-                  <span className="text-gray-500 ml-1">
-                    ({practitioner.ratings.count} reviews)
-                  </span>
-                </div>
-              </div>
-              
-              {practitioner.reviews.length > 0 ? (
-                <div className="space-y-4">
-                  {practitioner.reviews.map((review) => (
-                    <ReviewCard key={review.id} review={review} />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 bg-gray-50 rounded-lg">
-                  <h3 className="text-lg font-medium mb-2">No reviews yet</h3>
-                  <p className="text-gray-500">
-                    This practitioner doesn't have any reviews yet.
-                  </p>
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="reviews">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Patient Reviews</CardTitle>
+                    <CardDescription>
+                      Overall rating: {practitioner.rating}/5 based on {practitioner.reviewCount} reviews
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      {/* Placeholder for reviews */}
+                      <p className="text-gray-500 text-center py-8">
+                        Reviews are only visible to registered users. 
+                        {!isLoggedIn && (
+                          <Button 
+                            variant="link" 
+                            className="p-0 h-auto ml-1"
+                            onClick={() => navigate("/login")}
+                          >
+                            Log in to view
+                          </Button>
+                        )}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
-      </div>
-    </div>
+      </main>
+      
+      <Footer />
+    </>
   );
 };
 
