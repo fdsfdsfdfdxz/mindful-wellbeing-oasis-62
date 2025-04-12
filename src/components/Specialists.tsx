@@ -13,7 +13,7 @@ const specialistsData = [
   {
     id: 1,
     name: "Dr. Sarah Johnson",
-    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "Ph.D. in Clinical Psychology",
     specializations: ["Anxiety", "Depression", "Trauma"],
     experience: 8,
@@ -24,7 +24,7 @@ const specialistsData = [
   {
     id: 2,
     name: "Dr. Michael Chen",
-    photo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "Psy.D., Licensed Psychologist",
     specializations: ["Stress Management", "Relationship Issues", "Work-Life Balance"],
     experience: 12,
@@ -35,7 +35,7 @@ const specialistsData = [
   {
     id: 3,
     name: "Dr. Aisha Rahman",
-    photo: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "M.D., Psychiatrist",
     specializations: ["Bipolar Disorder", "Anxiety", "ADHD"],
     experience: 15,
@@ -46,7 +46,7 @@ const specialistsData = [
   {
     id: 4,
     name: "Dr. James Wilson",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     credentials: "M.S., Licensed Marriage and Family Therapist",
     specializations: ["Couples Therapy", "Family Conflicts", "Parenting Issues"],
     experience: 10,

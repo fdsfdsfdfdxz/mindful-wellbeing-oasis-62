@@ -49,8 +49,8 @@ const Hero = () => {
           </div>
           <div className="lg:w-1/2 animate-fade-in" style={{ animationDelay: "0.6s" }}>
             <img 
-              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-              alt="Online therapy session" 
+              src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+              alt="Professional workspace representing mental health support" 
               className="rounded-lg shadow-2xl"
             />
           </div>
