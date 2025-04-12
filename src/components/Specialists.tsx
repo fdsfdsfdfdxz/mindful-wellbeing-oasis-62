@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,7 @@ const specialistsData = [
   {
     id: 1,
     name: "Dr. Sarah Johnson",
-    photo: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef",
     credentials: "Ph.D. in Clinical Psychology",
     specializations: ["Anxiety", "Depression", "Trauma"],
     experience: 8,
@@ -24,7 +23,7 @@ const specialistsData = [
   {
     id: 2,
     name: "Dr. Michael Chen",
-    photo: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1525134479264-6d10811941c4",
     credentials: "Psy.D., Licensed Psychologist",
     specializations: ["Stress Management", "Relationship Issues", "Work-Life Balance"],
     experience: 12,
@@ -35,7 +34,7 @@ const specialistsData = [
   {
     id: 3,
     name: "Dr. Aisha Rahman",
-    photo: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
     credentials: "M.D., Psychiatrist",
     specializations: ["Bipolar Disorder", "Anxiety", "ADHD"],
     experience: 15,
@@ -46,7 +45,7 @@ const specialistsData = [
   {
     id: 4,
     name: "Dr. James Wilson",
-    photo: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    photo: "https://images.unsplash.com/photo-1593104841215-4ff9dc50c759",
     credentials: "M.S., Licensed Marriage and Family Therapist",
     specializations: ["Couples Therapy", "Family Conflicts", "Parenting Issues"],
     experience: 10,

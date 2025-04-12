@@ -76,15 +76,15 @@ const MobileApp = () => {
           <div className="lg:w-1/2 relative">
             <div className={`relative z-10 transform ${isRTL ? '-translate-x-16' : 'translate-x-16'}`}>
               <img 
-                src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                alt="Mobile app on smartphone" 
+                src="https://images.unsplash.com/photo-1518005020951-eccb494ad742" 
+                alt="Modern minimalist technology workspace" 
                 className="rounded-xl shadow-2xl max-w-xs mx-auto"
               />
             </div>
             <div className={`absolute top-1/4 ${isRTL ? '-right-4' : '-left-4'} z-0`}>
               <img 
-                src="https://images.unsplash.com/photo-1581226338838-fc17de2d5bab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                alt="Mobile app interface" 
+                src="https://images.unsplash.com/photo-1496307653780-42ee777d4833" 
+                alt="Elegant technology and design interface" 
                 className="rounded-xl shadow-2xl max-w-xs opacity-70"
               />
             </div>
