@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Appointment } from "@/types/appointment";
+import { BackButton } from "@/components/navigation/BackButton";
 
 import AppointmentForm from "@/components/doctor-chat/AppointmentForm";
 import { DoctorChatTabs } from "@/components/doctor-chat/DoctorChatTabs";
@@ -84,7 +84,10 @@ const DoctorChat = () => {
 
   return (
     <div className="container-custom py-12">
-      <h1 className="text-3xl font-bold mb-6">Doctor Consultation</h1>
+      <div className="flex items-center gap-4 mb-4">
+        <BackButton />
+        <h1 className="text-3xl font-bold">Doctor Consultation</h1>
+      </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <DoctorChatTabs activeTab={activeTab} onTabChange={setActiveTab} />

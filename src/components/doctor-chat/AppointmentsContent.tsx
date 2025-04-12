@@ -1,8 +1,7 @@
 
-import React from "react";
-import { AppointmentList } from "@/components/doctor-chat/AppointmentList";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { AppointmentList } from "./AppointmentList";
 import { Appointment } from "@/types/appointment";
+import { BackButton } from "@/components/navigation/BackButton";
 
 interface AppointmentsContentProps {
   appointments: Appointment[];
@@ -10,19 +9,14 @@ interface AppointmentsContentProps {
   onScheduleAppointment: () => void;
 }
 
-export const AppointmentsContent: React.FC<AppointmentsContentProps> = ({
+export const AppointmentsContent = ({
   appointments,
   onJoinCall,
-  onScheduleAppointment
-}) => {
-  const { language } = useLanguage();
-  
+  onScheduleAppointment,
+}: AppointmentsContentProps) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-bold mb-6">
-        {language === 'ar' ? "مواعيدي" : "My Appointments"}
-      </h2>
-      <AppointmentList 
+    <div className="space-y-6">
+      <AppointmentList
         appointments={appointments}
         onJoinCall={onJoinCall}
         onScheduleAppointment={onScheduleAppointment}
