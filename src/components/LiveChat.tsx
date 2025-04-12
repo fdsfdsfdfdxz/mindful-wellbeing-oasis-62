@@ -5,11 +5,13 @@ import { useToast } from "@/hooks/use-toast";
 import { translate } from "@/utils/translations";
 import { LiveChatContainer } from "./live-chat/LiveChatContainer";
 import { ChatTriggerButton } from "./live-chat/ChatTriggerButton";
+import { useTheme } from "@/components/theme/ThemeProvider";
 
 const LiveChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { language, isRTL } = useLanguage();
   const { toast } = useToast();
+  const { theme } = useTheme();
   
   const toggleChat = () => {
     setIsOpen(!isOpen);

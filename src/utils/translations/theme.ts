@@ -25,5 +25,9 @@ export const ThemeTranslations: TranslationContent = {
   useSystemPreference: {
     en: "Use system preference",
     ar: "استخدام تفضيلات النظام"
+  },
+  toggleTheme: {
+    en: "Toggle theme",
+    ar: "تبديل المظهر"
   }
 };
