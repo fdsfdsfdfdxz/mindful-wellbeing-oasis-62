@@ -3,20 +3,29 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { AppointmentFormLayout } from "./appointment-form/AppointmentFormLayout";
-import { AppointmentTypeSelector } from "./appointment-form/AppointmentTypeSelector";
-import { DateTimeSelector } from "./appointment-form/DateTimeSelector";
-import { ReasonField } from "./appointment-form/ReasonField";
-import { ReminderToggle } from "./appointment-form/ReminderToggle";
-import { SubmitButton } from "./appointment-form/SubmitButton";
-import { isWaitlistNeeded, formatDisplayDate } from "./appointment-form/utils";
+import { 
+  AppointmentTypeSelector,
+  DateSelector,
+  TimeSelector,
+  ReasonField,
+  ReminderToggle,
+  AppointmentType
+} from "@/components/shared/appointments";
+import { Button } from "@/components/ui/button";
+import { formatDisplayDate } from "./appointment-form/utils";
 
-// Define the appointment type
+// Define unavailable time slots for demonstration
+const UNAVAILABLE_SLOTS = [
+  { date: "2025-04-12", times: ["09:00 AM", "09:30 AM", "02:00 PM"] },
+  { date: "2025-04-13", times: ["10:30 AM", "11:00 AM", "03:30 PM"] },
+  { date: "2025-04-15", times: ["01:00 PM", "01:30 PM", "04:00 PM"] },
+];
+
 interface AppointmentData {
   date: string;
   time: string;
   reason: string;
-  type: "video" | "phone" | "inPerson";
+  type: AppointmentType;
   timezone?: string;
   reminders?: boolean;
 }
@@ -26,13 +35,6 @@ interface AppointmentFormProps {
   onSubmit?: (appointment: AppointmentData) => void;
 }
 
-// Define unavailable time slots for demonstration
-const UNAVAILABLE_SLOTS = [
-  { date: "2025-04-12", times: ["09:00 AM", "09:30 AM", "02:00 PM"] },
-  { date: "2025-04-13", times: ["10:30 AM", "11:00 AM", "03:30 PM"] },
-  { date: "2025-04-15", times: ["01:00 PM", "01:30 PM", "04:00 PM"] },
-];
-
 const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -40,7 +42,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const [date, setDate] = useState<Date | undefined>();
   const [time, setTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
-  const [type, setType] = useState<AppointmentData["type"]>("video");
+  const [type, setType] = useState<AppointmentType>("video");
   const [timezone, setTimezone] = useState<string>("America/New_York"); // Use a default timezone instead of UTC
   const [reminders, setReminders] = useState<boolean>(true);
   const [isWaitlisted, setIsWaitlisted] = useState<boolean>(false);
@@ -54,17 +56,15 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   ];
   
   // Filter out unavailable time slots for the selected date
-  const getAvailableTimeSlots = () => {
-    if (!date) return timeSlots;
+  const isTimeSlotAvailable = (time: string): boolean => {
+    if (!date) return true;
     
     const formattedDate = formatDisplayDate(date, "yyyy-MM-dd");
     const unavailableDay = UNAVAILABLE_SLOTS.find(slot => slot.date === formattedDate);
     
-    if (!unavailableDay) return timeSlots;
-    return timeSlots.filter(slot => !unavailableDay.times.includes(slot));
+    if (!unavailableDay) return true;
+    return !unavailableDay.times.includes(time);
   };
-  
-  const availableTimeSlots = getAvailableTimeSlots();
   
   const handleDateChange = (newDate: Date | undefined) => {
     setDate(newDate);
@@ -118,23 +118,43 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
     }
   };
 
-  const needsWaitlist = isWaitlistNeeded(availableTimeSlots, date);
+  const getAvailableTimeSlots = () => {
+    return timeSlots.filter(time => isTimeSlotAvailable(time));
+  };
 
   return (
-    <AppointmentFormLayout>
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h2 className="text-xl font-bold mb-6">
+        {language === 'ar' ? "تحديد موعد" : "Schedule an Appointment"}
+      </h2>
+      
       <form onSubmit={handleSubmit}>
-        <DateTimeSelector
-          date={date}
-          time={time}
-          availableTimeSlots={availableTimeSlots}
-          onDateChange={handleDateChange}
-          onTimeChange={setTime}
-          isWaitlisted={isWaitlisted}
-          onJoinWaitlist={joinWaitlist}
-          language={language}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <DateSelector
+            label={language === 'ar' ? "تاريخ الموعد" : "Appointment Date"}
+            placeholder={language === 'ar' ? "اختر التاريخ" : "Select date"}
+            selectedDate={date}
+            onDateChange={handleDateChange}
+            disabledDates={(date) => {
+              // Disable weekends (0 = Sunday, 6 = Saturday)
+              const day = date.getDay();
+              return day === 0 || day === 6;
+            }}
+          />
+          
+          <TimeSelector
+            label={language === 'ar' ? "وقت الموعد" : "Appointment Time"}
+            placeholder={language === 'ar' ? "اختر الوقت" : "Select time"}
+            timeSlots={timeSlots}
+            selectedTime={time}
+            onTimeSelect={setTime}
+            isTimeSlotAvailable={isTimeSlotAvailable}
+            useButtons={false}
+            disabled={!date}
+          />
+        </div>
         
-        {/* Replace TimezoneField with a simple timezone display to avoid using the command component */}
+        {/* Replace TimezoneField with a simple timezone display */}
         <div className="mb-6">
           <label className="block text-sm font-medium mb-2">
             {language === 'ar' ? "المنطقة الزمنية الخاصة بك" : "Your Timezone"}
@@ -153,27 +173,35 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
           selectedType={type}
           onTypeChange={setType}
           language={language}
+          className="mb-6"
         />
         
         <ReasonField 
           reason={reason} 
-          onChange={setReason} 
-          language={language} 
+          onChange={setReason}
+          language={language}
+          className="mb-6"
         />
         
         <ReminderToggle
           reminders={reminders}
           onChange={setReminders}
           language={language}
+          className="mb-6"
         />
 
-        <SubmitButton
-          isDisabled={!date || !time || !reason || !type || isWaitlisted}
-          isWaitlisted={isWaitlisted}
-          language={language}
-        />
+        <Button 
+          type="submit" 
+          className="w-full"
+          disabled={!date || !time || !reason || !type || isWaitlisted}
+        >
+          {isWaitlisted 
+            ? (language === 'ar' ? "في قائمة الانتظار" : "On Waitlist")
+            : (language === 'ar' ? "حجز موعد" : "Book Appointment")
+          }
+        </Button>
       </form>
-    </AppointmentFormLayout>
+    </div>
   );
 };
 

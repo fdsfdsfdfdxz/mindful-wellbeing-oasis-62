@@ -3,12 +3,14 @@ import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import PractitionerCard from "@/components/appointment/PractitionerCard";
 import NavigationHeader from "@/components/appointment/NavigationHeader";
-import DateTimeSelectionCards from "@/components/appointment/DateTimeSelectionCards";
-import AppointmentSummary from "@/components/appointment/AppointmentSummary";
 import { usePractitionerData } from "@/hooks/usePractitionerData";
 import { useAppointmentBooking, TIME_SLOTS } from "@/hooks/useAppointmentBooking";
+import { 
+  PractitionerSummary, 
+  DateTimeSelector, 
+  AppointmentConfirmation 
+} from "@/components/shared/appointments";
 
 const BookAppointment = () => {
   const [searchParams] = useSearchParams();
@@ -50,18 +52,20 @@ const BookAppointment = () => {
           
           <h1 className="text-3xl font-bold mb-8 text-center">Book an Appointment</h1>
           
-          <PractitionerCard practitioner={practitioner} />
+          <PractitionerSummary 
+            practitioner={practitioner} 
+            className="mb-8"
+          />
           
           {bookingStep === 1 ? (
             <>
-              <DateTimeSelectionCards
+              <DateTimeSelector
                 selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
+                onDateChange={setSelectedDate}
                 selectedTime={selectedTime}
-                setSelectedTime={setSelectedTime}
-                handleTimeSelect={handleTimeSelect}
-                isTimeSlotAvailable={isTimeSlotAvailable}
+                onTimeChange={handleTimeSelect}
                 timeSlots={TIME_SLOTS}
+                isTimeSlotAvailable={isTimeSlotAvailable}
               />
               
               <div className="mt-8 flex justify-end">
@@ -75,13 +79,14 @@ const BookAppointment = () => {
               </div>
             </>
           ) : (
-            <AppointmentSummary
+            <AppointmentConfirmation
               practitioner={practitioner}
               selectedDate={selectedDate}
               selectedTime={selectedTime}
               isLoading={isLoading}
-              goBack={goBack}
-              handleBookAppointment={handleBookAppointment}
+              onCancel={goBack}
+              onConfirm={handleBookAppointment}
+              cancelLabel="Back to Selection"
             />
           )}
         </div>
