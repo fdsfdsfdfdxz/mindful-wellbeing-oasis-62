@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Check, Edit, Filter, MoreHorizontal, Package, Plus, Power, Search, Toggle, X } from "lucide-react";
+import { Check, Edit, Filter, MoreHorizontal, Package, Plus, Power, Search, Star, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -222,7 +221,7 @@ export default function ServicesPage() {
                 </p>
               </div>
               <div className="bg-purple-100 p-3 rounded-lg">
-                <Toggle className="h-6 w-6 text-purple-700" />
+                <Star className="h-6 w-6 text-purple-700" />
               </div>
             </div>
           </CardContent>
