@@ -1,10 +1,12 @@
 
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Star, MapPin, Languages, Award, Calendar, MessageSquare, ArrowLeft, User, Video, PhoneCall, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 import AppointmentForm from "@/components/doctor-chat/AppointmentForm";
+import DoctorReviews from "@/components/doctor-profile/DoctorReviews";
 
 interface Doctor {
   id: number;
@@ -102,6 +104,8 @@ const doctorsData: Doctor[] = [
 
 const DoctorProfile = () => {
   const { doctorId } = useParams();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [activeTab, setActiveTab] = useState("about");
   
@@ -126,6 +130,52 @@ const DoctorProfile = () => {
       </div>
     );
   }
+
+  const handleBookAppointment = () => {
+    setActiveTab("book");
+    // Scroll to the booking form
+    document.getElementById("appointment-section")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleSendMessage = () => {
+    toast({
+      title: "Message feature activated",
+      description: `Starting a conversation with ${doctor.name}`,
+    });
+    navigate(`/doctor-chat?id=${doctorId}`);
+  };
+
+  const handleVideoCall = () => {
+    toast({
+      title: "Video call initiated",
+      description: "Preparing your video consultation...",
+    });
+    navigate(`/services/video-consultation?doctorId=${doctorId}`);
+  };
+
+  const handleAudioCall = () => {
+    toast({
+      title: "Audio call initiated",
+      description: "Preparing your audio consultation...",
+    });
+    navigate(`/services/audio-consultation?doctorId=${doctorId}`);
+  };
+
+  const handleAnonymousConsultation = () => {
+    toast({
+      title: "Anonymous consultation",
+      description: "Setting up anonymous consultation mode...",
+    });
+    navigate(`/services/anonymous-consultation?doctorId=${doctorId}`);
+  };
+
+  const handleAssessment = () => {
+    toast({
+      title: "Assessment initiated",
+      description: "Starting your psychological assessment...",
+    });
+    navigate(`/services/psychological-assessment?doctorId=${doctorId}`);
+  };
 
   return (
     <div className="container-custom py-12">
@@ -197,49 +247,48 @@ const DoctorProfile = () => {
               )}
               
               <div className="flex flex-col space-y-3">
-                <Button className="w-full">
+                <Button className="w-full" onClick={handleBookAppointment}>
                   <Calendar className="mr-2 h-4 w-4" />
                   Book Appointment
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" onClick={handleSendMessage}>
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Send Message
                 </Button>
-                <Button variant="blue" className="w-full">
+                <Button variant="blue" className="w-full" onClick={() => setActiveTab("about")}>
                   <User className="mr-2 h-4 w-4" />
                   View Full Profile
                 </Button>
               </div>
               
               <div className="mt-4 grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="w-full" onClick={handleVideoCall}>
                   <Video className="mr-2 h-4 w-4" />
                   Video Call
                 </Button>
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="w-full" onClick={handleAudioCall}>
                   <PhoneCall className="mr-2 h-4 w-4" />
                   Audio Call
                 </Button>
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="w-full" onClick={handleAnonymousConsultation}>
                   <Shield className="mr-2 h-4 w-4" />
                   Anonymous Consultation
                 </Button>
-                <Link to="/services/psychological-assessment" className="w-full">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Award className="mr-2 h-4 w-4" />
-                    Assessment
-                  </Button>
-                </Link>
+                <Button variant="outline" size="sm" className="w-full" onClick={handleAssessment}>
+                  <Award className="mr-2 h-4 w-4" />
+                  Assessment
+                </Button>
               </div>
             </div>
           </div>
         </div>
         
         {/* Main Content */}
-        <div className="lg:w-2/3">
+        <div className="lg:w-2/3" id="appointment-section">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-2 mb-6">
+            <TabsList className="grid grid-cols-3 mb-6">
               <TabsTrigger value="about">About</TabsTrigger>
+              <TabsTrigger value="reviews">Reviews</TabsTrigger>
               <TabsTrigger value="book">Book Appointment</TabsTrigger>
             </TabsList>
             
@@ -274,6 +323,10 @@ const DoctorProfile = () => {
                   </div>
                 </div>
               </div>
+            </TabsContent>
+            
+            <TabsContent value="reviews">
+              <DoctorReviews doctorId={Number(doctorId)} />
             </TabsContent>
             
             <TabsContent value="book">

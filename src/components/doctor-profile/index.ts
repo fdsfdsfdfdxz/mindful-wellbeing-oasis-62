@@ -1,0 +1,2 @@
+
+export { default as DoctorReviews } from './DoctorReviews';
