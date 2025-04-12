@@ -70,10 +70,15 @@ const MarriageCounselingDetail = () => {
     }, 1500);
   };
 
+  // Get translated therapy method names
+  const getTherapyMethod = (key: string) => {
+    return translate('services', key, language) || key;
+  };
+
   return (
     <>
       <Navbar />
-      <div className="container-custom py-16">
+      <div className={`container-custom py-16 ${isRTL ? 'rtl text-right' : 'ltr text-left'}`}>
         <Button 
           variant="ghost" 
           onClick={() => navigate('/services/marriage-counseling')}
@@ -90,10 +95,12 @@ const MarriageCounselingDetail = () => {
             </h1>
             
             <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h2 className="text-xl font-bold mb-4">What to Expect</h2>
+              <h2 className="text-xl font-bold mb-4">
+                {translate('services', 'whatToExpect', language) || "What to Expect"}
+              </h2>
               <p className="text-gray-600 mb-6">
-                This consultation will help us understand your relationship needs and match you with the right specialist. 
-                After submission, a counselor will contact you to schedule your first session.
+                {translate('services', 'consultationDescription', language) || 
+                "This consultation will help us understand your relationship needs and match you with the right specialist. After submission, a counselor will contact you to schedule your first session."}
               </p>
               
               <div className="space-y-4">
@@ -102,8 +109,8 @@ const MarriageCounselingDetail = () => {
                     <CheckCircle2 className="h-4 w-4 text-warmNeutral-600" />
                   </div>
                   <div>
-                    <h3 className="font-medium">Initial Consultation</h3>
-                    <p className="text-sm text-gray-600">Meet with a specialist to discuss your relationship needs and goals</p>
+                    <h3 className="font-medium">{translate('services', 'initialConsultation', language) || "Initial Consultation"}</h3>
+                    <p className="text-sm text-gray-600">{translate('services', 'meetSpecialist', language) || "Meet with a specialist to discuss your relationship needs and goals"}</p>
                   </div>
                 </div>
                 
@@ -112,8 +119,8 @@ const MarriageCounselingDetail = () => {
                     <Users className="h-4 w-4 text-warmNeutral-600" />
                   </div>
                   <div>
-                    <h3 className="font-medium">Joint Sessions</h3>
-                    <p className="text-sm text-gray-600">Schedule convenient multi-participant video counseling sessions</p>
+                    <h3 className="font-medium">{translate('services', 'jointSessions', language) || "Joint Sessions"}</h3>
+                    <p className="text-sm text-gray-600">{translate('services', 'scheduleJointSessions', language) || "Schedule convenient multi-participant video counseling sessions"}</p>
                   </div>
                 </div>
                 
@@ -122,8 +129,8 @@ const MarriageCounselingDetail = () => {
                     <ClipboardList className="h-4 w-4 text-warmNeutral-600" />
                   </div>
                   <div>
-                    <h3 className="font-medium">Progress Tracking</h3>
-                    <p className="text-sm text-gray-600">Set and track relationship goals together</p>
+                    <h3 className="font-medium">{translate('services', 'progressTracking', language) || "Progress Tracking"}</h3>
+                    <p className="text-sm text-gray-600">{translate('services', 'trackRelationshipGoals', language) || "Set and track relationship goals together"}</p>
                   </div>
                 </div>
                 
@@ -132,8 +139,8 @@ const MarriageCounselingDetail = () => {
                     <Heart className="h-4 w-4 text-warmNeutral-600" />
                   </div>
                   <div>
-                    <h3 className="font-medium">Shared Exercises</h3>
-                    <p className="text-sm text-gray-600">Complete relationship-building exercises and homework together</p>
+                    <h3 className="font-medium">{translate('services', 'sharedExercises', language) || "Shared Exercises"}</h3>
+                    <p className="text-sm text-gray-600">{translate('services', 'completeExercises', language) || "Complete relationship-building exercises and homework together"}</p>
                   </div>
                 </div>
               </div>
@@ -146,12 +153,13 @@ const MarriageCounselingDetail = () => {
                   name="goals"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>What are your main goals for relationship counseling?</FormLabel>
+                      <FormLabel>{translate('services', 'counselingGoals', language) || "What are your main goals for relationship counseling?"}</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="E.g., Improve communication, resolve conflicts, rebuild trust..."
+                          placeholder={translate('services', 'goalsPlaceholder', language) || "E.g., Improve communication, resolve conflicts, rebuild trust..."}
                           className="min-h-[120px]"
                           {...field}
+                          dir={isRTL ? "rtl" : "ltr"}
                         />
                       </FormControl>
                       <FormMessage />
@@ -164,12 +172,13 @@ const MarriageCounselingDetail = () => {
                   name="concerns"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>What are your primary relationship concerns?</FormLabel>
+                      <FormLabel>{translate('services', 'relationshipConcerns', language) || "What are your primary relationship concerns?"}</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="Please share the key challenges you're currently facing..."
+                          placeholder={translate('services', 'concernsPlaceholder', language) || "Please share the key challenges you're currently facing..."}
                           className="min-h-[120px]"
                           {...field}
+                          dir={isRTL ? "rtl" : "ltr"}
                         />
                       </FormControl>
                       <FormMessage />
@@ -182,12 +191,13 @@ const MarriageCounselingDetail = () => {
                   name="previousTherapy"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Previous therapy experience (optional)</FormLabel>
+                      <FormLabel>{translate('services', 'previousTherapy', language) || "Previous therapy experience (optional)"}</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="Have you tried relationship counseling before? What worked or didn't work?"
+                          placeholder={translate('services', 'previousTherapyPlaceholder', language) || "Have you tried relationship counseling before? What worked or didn't work?"}
                           className="min-h-[100px]"
                           {...field}
+                          dir={isRTL ? "rtl" : "ltr"}
                         />
                       </FormControl>
                       <FormMessage />
@@ -195,9 +205,11 @@ const MarriageCounselingDetail = () => {
                   )}
                 />
                 
-                <div className="flex justify-end">
+                <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'}`}>
                   <Button type="submit" className="px-8" disabled={isSubmitting}>
-                    {isSubmitting ? "Submitting..." : "Submit Request"}
+                    {isSubmitting ? 
+                      (translate('common', 'submitting', language) || "Submitting...") : 
+                      (translate('services', 'submitRequest', language) || "Submit Request")}
                   </Button>
                 </div>
               </form>
@@ -206,43 +218,43 @@ const MarriageCounselingDetail = () => {
           
           <div className="md:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-              <h2 className="text-xl font-bold mb-4">Our Approach</h2>
+              <h2 className="text-xl font-bold mb-4">{translate('services', 'ourApproach', language) || "Our Approach"}</h2>
               
               <p className="text-gray-600 mb-4">
-                We use evidence-based methods including:
+                {translate('services', 'evidenceBasedMethods', language) || "We use evidence-based methods including:"}
               </p>
               
               <div className="space-y-3 mb-6">
-                <Badge variant="outline" className="bg-calmBlue-50 text-calmBlue-700 border-calmBlue-200 w-full justify-start py-1.5">
-                  Gottman Method
+                <Badge variant="outline" className={`bg-calmBlue-50 text-calmBlue-700 border-calmBlue-200 w-full justify-${isRTL ? 'end' : 'start'} py-1.5`}>
+                  {getTherapyMethod('gottmanMethod') || "Gottman Method"}
                 </Badge>
-                <Badge variant="outline" className="bg-sageGreen-50 text-sageGreen-700 border-sageGreen-200 w-full justify-start py-1.5">
-                  Emotionally Focused Therapy
+                <Badge variant="outline" className={`bg-sageGreen-50 text-sageGreen-700 border-sageGreen-200 w-full justify-${isRTL ? 'end' : 'start'} py-1.5`}>
+                  {getTherapyMethod('emotionallyFocusedTherapy') || "Emotionally Focused Therapy"}
                 </Badge>
-                <Badge variant="outline" className="bg-warmNeutral-50 text-warmNeutral-700 border-warmNeutral-200 w-full justify-start py-1.5">
-                  Imago Relationship Therapy
+                <Badge variant="outline" className={`bg-warmNeutral-50 text-warmNeutral-700 border-warmNeutral-200 w-full justify-${isRTL ? 'end' : 'start'} py-1.5`}>
+                  {getTherapyMethod('imagoTherapy') || "Imago Relationship Therapy"}
                 </Badge>
-                <Badge variant="outline" className="bg-violet-50 text-violet-700 border-violet-200 w-full justify-start py-1.5">
-                  Narrative Therapy
+                <Badge variant="outline" className={`bg-violet-50 text-violet-700 border-violet-200 w-full justify-${isRTL ? 'end' : 'start'} py-1.5`}>
+                  {getTherapyMethod('narrativeTherapy') || "Narrative Therapy"}
                 </Badge>
               </div>
               
               <Separator className="my-5" />
               
               <div className="mb-5">
-                <h3 className="font-medium mb-2">Session Format Options</h3>
+                <h3 className="font-medium mb-2">{translate('services', 'sessionFormatOptions', language) || "Session Format Options"}</h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex items-center">
-                    <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
-                    <span>Joint video sessions</span>
+                  <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <MessageSquare className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'} text-gray-500`} />
+                    <span>{translate('services', 'jointVideoSessions', language) || "Joint video sessions"}</span>
                   </div>
-                  <div className="flex items-center">
-                    <Users className="h-4 w-4 mr-2 text-gray-500" />
-                    <span>Family group sessions</span>
+                  <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Users className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'} text-gray-500`} />
+                    <span>{translate('services', 'familyGroupSessions', language) || "Family group sessions"}</span>
                   </div>
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-2 text-gray-500" />
-                    <span>Flexible scheduling</span>
+                  <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Calendar className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'} text-gray-500`} />
+                    <span>{translate('services', 'flexibleScheduling', language) || "Flexible scheduling"}</span>
                   </div>
                 </div>
               </div>
@@ -250,7 +262,7 @@ const MarriageCounselingDetail = () => {
               <Separator className="my-5" />
               
               <p className="text-sm text-gray-500 italic">
-                All communications and sessions are 100% confidential and secure.
+                {translate('services', 'confidentialityNotice', language) || "All communications and sessions are 100% confidential and secure."}
               </p>
             </div>
           </div>

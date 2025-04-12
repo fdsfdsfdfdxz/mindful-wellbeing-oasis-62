@@ -1,4 +1,3 @@
-
 import { TranslationContent } from './index';
 
 export const ServicesTranslations: TranslationContent = {
@@ -137,5 +136,129 @@ export const ServicesTranslations: TranslationContent = {
   redirecting: {
     en: "You're being redirected to the selected service page",
     ar: 'يتم إعادة توجيهك إلى صفحة الخدمة المحددة'
+  },
+  whatToExpect: {
+    en: "What to Expect",
+    ar: "ما يمكن توقعه"
+  },
+  consultationDescription: {
+    en: "This consultation will help us understand your relationship needs and match you with the right specialist. After submission, a counselor will contact you to schedule your first session.",
+    ar: "ستساعدنا هذه الاستشارة على فهم احتياجات علاقتك ومطابقتك مع المتخصص المناسب. بعد التقديم، سيتصل بك المستشار لجدولة جلستك الأولى."
+  },
+  initialConsultation: {
+    en: "Initial Consultation",
+    ar: "الاستشارة الأولية"
+  },
+  meetSpecialist: {
+    en: "Meet with a specialist to discuss your relationship needs and goals",
+    ar: "قابل متخصصًا لمناقشة احتياجات وأهداف علاقتك"
+  },
+  jointSessions: {
+    en: "Joint Sessions",
+    ar: "جلسات مشتركة"
+  },
+  scheduleJointSessions: {
+    en: "Schedule convenient multi-participant video counseling sessions",
+    ar: "جدولة جلسات استشارة فيديو متعددة المشاركين ومناسبة"
+  },
+  progressTracking: {
+    en: "Progress Tracking",
+    ar: "تتبع التقدم"
+  },
+  trackRelationshipGoals: {
+    en: "Set and track relationship goals together",
+    ar: "وضع وتتبع أهداف العلاقة معًا"
+  },
+  sharedExercises: {
+    en: "Shared Exercises",
+    ar: "تمارين مشتركة"
+  },
+  completeExercises: {
+    en: "Complete relationship-building exercises and homework together",
+    ar: "إكمال تمارين بناء العلاقات والواجبات المنزلية معًا"
+  },
+  counselingGoals: {
+    en: "What are your main goals for relationship counseling?",
+    ar: "ما هي أهدافك الرئيسية من استشارة العلاقات؟"
+  },
+  goalsPlaceholder: {
+    en: "E.g., Improve communication, resolve conflicts, rebuild trust...",
+    ar: "مثال: تحسين التواصل، حل النزاعات، إعادة بناء الثقة..."
+  },
+  relationshipConcerns: {
+    en: "What are your primary relationship concerns?",
+    ar: "ما هي المخاوف الرئيسية في علاقتك؟"
+  },
+  concernsPlaceholder: {
+    en: "Please share the key challenges you're currently facing...",
+    ar: "يرجى مشاركة التحديات الرئيسية التي تواجهها حاليًا..."
+  },
+  previousTherapy: {
+    en: "Previous therapy experience (optional)",
+    ar: "تجربة العلاج السابقة (اختياري)"
+  },
+  previousTherapyPlaceholder: {
+    en: "Have you tried relationship counseling before? What worked or didn't work?",
+    ar: "هل جربت استشارة العلاقات من قبل؟ ما الذي نجح أو لم ينجح؟"
+  },
+  submitRequest: {
+    en: "Submit Request",
+    ar: "إرسال الطلب"
+  },
+  ourApproach: {
+    en: "Our Approach",
+    ar: "منهجنا"
+  },
+  evidenceBasedMethods: {
+    en: "We use evidence-based methods including:",
+    ar: "نستخدم أساليب قائمة على الأدلة بما في ذلك:"
+  },
+  gottmanMethod: {
+    en: "Gottman Method",
+    ar: "طريقة غوتمان"
+  },
+  emotionallyFocusedTherapy: {
+    en: "Emotionally Focused Therapy",
+    ar: "العلاج المركز على العاطفة"
+  },
+  imagoTherapy: {
+    en: "Imago Relationship Therapy",
+    ar: "علاج العلاقة بأسلوب إيماغو"
+  },
+  narrativeTherapy: {
+    en: "Narrative Therapy",
+    ar: "العلاج السردي"
+  },
+  sessionFormatOptions: {
+    en: "Session Format Options",
+    ar: "خيارات تنسيق الجلسة"
+  },
+  jointVideoSessions: {
+    en: "Joint video sessions",
+    ar: "جلسات فيديو مشتركة"
+  },
+  familyGroupSessions: {
+    en: "Family group sessions",
+    ar: "جلسات جماعية عائلية"
+  },
+  flexibleScheduling: {
+    en: "Flexible scheduling",
+    ar: "جدولة مرنة"
+  },
+  confidentialityNotice: {
+    en: "All communications and sessions are 100% confidential and secure.",
+    ar: "جميع الاتصالات والجلسات سرية وآمنة بنسبة 100٪."
+  },
+  relationshipConsultation: {
+    en: "Relationship Consultation Intake",
+    ar: "نموذج استشارة العلاقات"
+  },
+  requestSubmitted: {
+    en: "Request Submitted",
+    ar: "تم تقديم الطلب"
+  },
+  counselorContact: {
+    en: "A relationship counselor will contact you within 24 hours to schedule your first session.",
+    ar: "سيتصل بك مستشار العلاقات في غضون 24 ساعة لجدولة جلستك الأولى."
   }
 };

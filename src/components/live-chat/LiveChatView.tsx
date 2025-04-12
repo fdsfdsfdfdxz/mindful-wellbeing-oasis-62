@@ -22,7 +22,7 @@ export const LiveChatView: React.FC<LiveChatViewProps> = ({
   return (
     <div className="transition-all duration-300">
       {isOpen ? (
-        <Card className="w-80 md:w-96 shadow-lg">
+        <Card className={cn("w-80 md:w-96 shadow-lg", isRTL ? "rtl" : "ltr")}>
           <LiveChatContainer onClose={onToggle} />
         </Card>
       ) : (
@@ -30,7 +30,7 @@ export const LiveChatView: React.FC<LiveChatViewProps> = ({
           onClick={onToggle}
           className={cn(
             "rounded-full w-12 h-12 bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg",
-            isRTL ? "rtl" : ""
+            isRTL ? "rtl" : "ltr"
           )}
           aria-label={translate('liveChat', 'openChat', language) || "Open chat"}
         >

@@ -1,4 +1,3 @@
-
 import { NavbarTranslations } from './navbar';
 import { HeroTranslations } from './hero';
 import { ServicesTranslations } from './services';
@@ -32,8 +31,38 @@ export interface TranslationContent {
   };
 }
 
-// Combine all translations
+// Add common translations for buttons if it doesn't exist already
 export const translations: Record<TranslationKey, TranslationContent> = {
+  common: {
+    back: {
+      en: "Back",
+      ar: "رجوع"
+    },
+    submitting: {
+      en: "Submitting...",
+      ar: "جارِ الإرسال..."
+    },
+    submit: {
+      en: "Submit",
+      ar: "إرسال"
+    },
+    save: {
+      en: "Save",
+      ar: "حفظ"
+    },
+    cancel: {
+      en: "Cancel",
+      ar: "إلغاء"
+    },
+    close: {
+      en: "Close",
+      ar: "إغلاق"
+    },
+    continue: {
+      en: "Continue",
+      ar: "متابعة"
+    }
+  },
   navbar: NavbarTranslations,
   hero: HeroTranslations,
   services: ServicesTranslations,
