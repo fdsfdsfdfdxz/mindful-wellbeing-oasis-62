@@ -1,6 +1,7 @@
 
 import DateSelector from "./DateSelector";
 import TimeSelector from "./TimeSelector";
+import { ReactNode } from "react";
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
@@ -17,7 +18,7 @@ interface DateTimeSelectorProps {
   timePlaceholder?: string;
   dateCardTitle?: string;
   timeCardTitle?: string;
-  timeCardDescription?: string;
+  timeCardDescription?: ReactNode;
   useButtons?: boolean;
   className?: string;
 }

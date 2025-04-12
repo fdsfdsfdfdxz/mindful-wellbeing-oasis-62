@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { ReactNode } from "react";
 
 interface AppointmentConfirmationProps {
   practitioner: {
@@ -14,9 +15,10 @@ interface AppointmentConfirmationProps {
   appointmentType?: string;
   isLoading?: boolean;
   cancelLabel?: string;
-  confirmLabel?: string;
+  confirmLabel?: ReactNode;
   onCancel: () => void;
   onConfirm: () => void;
+  className?: string;
 }
 
 const AppointmentConfirmation = ({
@@ -29,9 +31,10 @@ const AppointmentConfirmation = ({
   confirmLabel = "Confirm Booking",
   onCancel,
   onConfirm,
+  className,
 }: AppointmentConfirmationProps) => {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Appointment Summary</CardTitle>
         <CardDescription>Please review your appointment details</CardDescription>
