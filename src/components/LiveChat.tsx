@@ -1,31 +1,16 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useToast } from "@/hooks/use-toast";
-import { translate } from "@/utils/translations";
-import { LiveChatContainer } from "./live-chat/LiveChatContainer";
-import { ChatTriggerButton } from "./live-chat/ChatTriggerButton";
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { cn } from "@/lib/utils";
+import { useLiveChat } from "@/hooks/useLiveChat";
+import { LiveChatView } from "./live-chat/LiveChatView";
 
 const LiveChat = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { language, isRTL } = useLanguage();
-  const { toast } = useToast();
+  const { isOpen, toggleChat } = useLiveChat();
+  const { isRTL } = useLanguage();
   const { theme } = useTheme();
   
-  const toggleChat = () => {
-    setIsOpen(!isOpen);
-    
-    if (!isOpen) {
-      toast({
-        title: translate('liveChat', 'chatOpened', language) || "Live Chat Opened",
-        description: translate('liveChat', 'supportAvailable', language) || "Our support team is ready to assist you",
-        variant: theme === 'dark' ? 'destructive' : 'default'
-      });
-    }
-  };
-
   return (
     <div 
       className={cn(
@@ -34,11 +19,10 @@ const LiveChat = () => {
         theme === 'dark' ? "dark:text-gray-200" : "text-gray-800"
       )}
     >
-      {isOpen ? (
-        <LiveChatContainer onClose={toggleChat} />
-      ) : (
-        <ChatTriggerButton onClick={toggleChat} />
-      )}
+      <LiveChatView 
+        isOpen={isOpen}
+        onToggle={toggleChat}
+      />
     </div>
   );
 };

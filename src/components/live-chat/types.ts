@@ -4,10 +4,12 @@ export interface Message {
   content: string;
   sender: 'user' | 'agent';
   timestamp: Date;
-  status: 'sending' | 'sent' | 'delivered' | 'read';
+  status: MessageStatus;
   attachment?: {
     type: 'image' | 'file';
     url: string;
     name: string;
   };
 }
+
+export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'read';
