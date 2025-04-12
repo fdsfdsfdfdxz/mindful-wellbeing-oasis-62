@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';  // Correct import for v4 uuid generation
 import { CardContent, CardHeader } from '@/components/ui/card';
 import { ChatHeader, ChatHeaderProps } from './ChatHeader';
-import { MessageList, MessageListProps, Message } from './types';  // Importing from types file
+import { MessageList } from './MessageList';  // Import from the actual component file
+import { Message } from './types';  // Import the Message type from types.ts
 import { MessageForm, MessageFormProps } from './MessageForm';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -91,7 +93,7 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
   };
 
   // Message list props
-  const messageListProps: MessageListProps = {
+  const messageListProps = {
     messages,
     isTyping
   };
