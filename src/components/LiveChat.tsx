@@ -6,6 +6,7 @@ import { translate } from "@/utils/translations";
 import { LiveChatContainer } from "./live-chat/LiveChatContainer";
 import { ChatTriggerButton } from "./live-chat/ChatTriggerButton";
 import { useTheme } from "@/components/theme/ThemeProvider";
+import { cn } from "@/lib/utils";
 
 const LiveChat = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,12 +21,19 @@ const LiveChat = () => {
       toast({
         title: translate('liveChat', 'chatOpened', language) || "Live Chat Opened",
         description: translate('liveChat', 'supportAvailable', language) || "Our support team is ready to assist you",
+        variant: theme === 'dark' ? 'destructive' : 'default'
       });
     }
   };
 
   return (
-    <div className={`fixed ${isRTL ? 'left-6' : 'right-6'} bottom-6 z-50`}>
+    <div 
+      className={cn(
+        "fixed bottom-6 z-50 transition-all duration-300 ease-in-out",
+        isRTL ? "left-6" : "right-6",
+        theme === 'dark' ? "dark:text-gray-200" : "text-gray-800"
+      )}
+    >
       {isOpen ? (
         <LiveChatContainer onClose={toggleChat} />
       ) : (
