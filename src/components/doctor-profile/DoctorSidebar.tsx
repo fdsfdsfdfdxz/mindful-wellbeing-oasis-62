@@ -68,6 +68,15 @@ const DoctorSidebar = ({ doctor, onBookAppointment }: DoctorSidebarProps) => {
     navigate(`/services/psychological-assessment?doctorId=${doctor.id}`);
   };
 
+  const handleViewFullProfile = () => {
+    toast({
+      title: "Loading full profile",
+      description: `Viewing complete profile for ${doctor.name}`,
+    });
+    // Navigate to the practitioner profile using the doctor ID
+    navigate(`/practitioners/p${doctor.id}`);
+  };
+
   return (
     <div className="lg:w-1/3">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -138,7 +147,7 @@ const DoctorSidebar = ({ doctor, onBookAppointment }: DoctorSidebarProps) => {
               <MessageSquare className="mr-2 h-4 w-4" />
               Send Message
             </Button>
-            <Button variant="blue" className="w-full" onClick={() => navigate(`/doctor/${doctor.id}`)}>
+            <Button variant="blue" className="w-full" onClick={handleViewFullProfile}>
               <User className="mr-2 h-4 w-4" />
               View Full Profile
             </Button>
