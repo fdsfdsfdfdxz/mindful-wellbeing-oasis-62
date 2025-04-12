@@ -1,11 +1,15 @@
 
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import AppointmentForm from "@/components/doctor-chat/AppointmentForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AppointmentList } from "@/components/doctor-chat/AppointmentList";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Appointment } from "@/types/appointment";
+
+import AppointmentForm from "@/components/doctor-chat/AppointmentForm";
+import { DoctorChatTabs } from "@/components/doctor-chat/DoctorChatTabs";
+import { ChatContent } from "@/components/doctor-chat/ChatContent";
+import { AppointmentsContent } from "@/components/doctor-chat/AppointmentsContent";
+import { AppointmentSuccess } from "@/components/doctor-chat/AppointmentSuccess";
 
 // Sample appointments data - in a real app, this would come from an API
 const sampleAppointments: Appointment[] = [
@@ -38,6 +42,12 @@ const DoctorChat = () => {
   const doctorId = searchParams.get('doctor') || undefined;
   
   const [activeTab, setActiveTab] = useState<string>(appointmentType || "chat");
+  const [recentAppointment, setRecentAppointment] = useState<{
+    type: string;
+    date: string;
+    time: string;
+  } | undefined>(undefined);
+  
   const { toast } = useToast();
   
   const handleJoinCall = (appointmentId: number) => {
@@ -52,55 +62,51 @@ const DoctorChat = () => {
     setActiveTab("appointment");
   };
 
+  const handleAppointmentSubmit = (appointment: {
+    date: string;
+    time: string;
+    reason: string;
+    type: "video" | "phone" | "inPerson";
+  }) => {
+    toast({
+      title: "Appointment Scheduled",
+      description: `Your ${appointment.type} appointment has been booked for ${appointment.date} at ${appointment.time}.`,
+    });
+    
+    setRecentAppointment({
+      type: appointment.type,
+      date: appointment.date,
+      time: appointment.time
+    });
+    
+    setActiveTab("appointments");
+  };
+
   return (
     <div className="container-custom py-12">
       <h1 className="text-3xl font-bold mb-6">Doctor Consultation</h1>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-3 mb-8">
-          <TabsTrigger value="chat">Chat</TabsTrigger>
-          <TabsTrigger value="appointment">Book Appointment</TabsTrigger>
-          <TabsTrigger value="appointments">My Appointments</TabsTrigger>
-        </TabsList>
+        <DoctorChatTabs activeTab={activeTab} onTabChange={setActiveTab} />
         
         <TabsContent value="chat">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold mb-4">Chat with Doctor</h2>
-            <p className="text-gray-600 mb-4">
-              This feature is coming soon. You will be able to have secure text, audio, 
-              or video consultations with your healthcare provider.
-            </p>
-            <div className="bg-gray-100 rounded-lg p-8 text-center">
-              <div className="text-gray-500 mb-2">Chat Interface Placeholder</div>
-              <p className="text-sm text-gray-400">
-                The secure messaging platform will appear here
-              </p>
-            </div>
-          </div>
+          <ChatContent />
         </TabsContent>
         
         <TabsContent value="appointment">
           <AppointmentForm 
             doctorId={doctorId} 
-            onSubmit={(appointment) => {
-              toast({
-                title: "Appointment Scheduled",
-                description: `Your ${appointment.type} appointment has been booked for ${appointment.date} at ${appointment.time}.`,
-              });
-              setActiveTab("appointments");
-            }}
+            onSubmit={handleAppointmentSubmit}
           />
         </TabsContent>
         
         <TabsContent value="appointments">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold mb-6">My Appointments</h2>
-            <AppointmentList 
-              appointments={sampleAppointments}
-              onJoinCall={handleJoinCall}
-              onScheduleAppointment={handleScheduleAppointment}
-            />
-          </div>
+          {recentAppointment && <AppointmentSuccess appointmentData={recentAppointment} />}
+          <AppointmentsContent 
+            appointments={sampleAppointments}
+            onJoinCall={handleJoinCall}
+            onScheduleAppointment={handleScheduleAppointment}
+          />
         </TabsContent>
       </Tabs>
     </div>
