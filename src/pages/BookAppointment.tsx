@@ -50,7 +50,7 @@ const BookAppointment = () => {
     specialties: ["Cognitive Behavioral Therapy", "Anxiety", "Depression"],
     rating: 4.9,
     availabilityText: "Usually responds within 24 hours",
-    appointmentTypes: ["video", "phone", "inPerson"] as const
+    appointmentTypes: ["video", "phone", "inPerson"] as Array<"video" | "phone" | "inPerson">
   };
   
   return (

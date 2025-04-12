@@ -4,6 +4,7 @@ import { DateTimeSelector } from "@/components/shared/appointments";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Clock, Calendar, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 interface DateTimeSelectionCardsProps {
   selectedDate: Date | undefined;
@@ -71,10 +72,10 @@ const DateTimeSelectionCards = ({
         timeCardTitle="Select Appointment Time"
         timeCardDescription={
           isDateChanging ? (
-            <span className="flex items-center">
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <>
+              <Loader2 className="h-4 w-4 mr-2 animate-spin inline" />
               Loading available times...
-            </span>
+            </>
           ) : selectedDate ? (
             `Available times for ${selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`
           ) : (

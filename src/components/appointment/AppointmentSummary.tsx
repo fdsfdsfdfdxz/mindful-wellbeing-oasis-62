@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { Loader2, CalendarCheck, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 interface AppointmentSummaryProps {
   practitioner: {
@@ -84,10 +85,10 @@ const AppointmentSummary = ({
         cancelLabel="Back to Selection"
         confirmLabel={
           isConfirming ? (
-            <span className="flex items-center">
+            <>
               <Loader2 className={cn("h-4 w-4 mr-2 animate-spin")} />
               Confirming...
-            </span>
+            </>
           ) : (
             "Confirm Appointment"
           )
