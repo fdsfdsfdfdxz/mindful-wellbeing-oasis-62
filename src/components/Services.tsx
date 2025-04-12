@@ -1,4 +1,3 @@
-
 import { 
   MessageSquare, 
   PhoneCall, 
@@ -26,13 +25,39 @@ import { translate } from "@/utils/translations";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 
+const badgeTranslations: Record<string, { en: string; ar: string }> = {
+  "Secure Chat": { en: "Secure Chat", ar: "محادثة آمنة" },
+  "File Sharing": { en: "File Sharing", ar: "مشاركة الملفات" },
+  "Anonymous": { en: "Anonymous", ar: "مجهول الهوية" },
+  "No Registration": { en: "No Registration", ar: "بدون تسجيل" },
+  "Evidence-based": { en: "Evidence-based", ar: "قائم على الأدلة" },
+  "End-to-end encrypted": { en: "End-to-end encrypted", ar: "تشفير طرفي" },
+  "Low bandwidth": { en: "Low bandwidth", ar: "نطاق ترددي منخفض" },
+  "HD Quality": { en: "HD Quality", ar: "جودة عالية" },
+  "Screen Sharing": { en: "Screen Sharing", ar: "مشاركة الشاشة" },
+  "Couples": { en: "Couples", ar: "أزواج" },
+  "Family": { en: "Family", ar: "عائلة" },
+  "24/7": { en: "24/7", ar: "24/7" },
+  "Emergency": { en: "Emergency", ar: "طوارئ" },
+  "Encrypted": { en: "Encrypted", ar: "مشفر" },
+  "Read Receipts": { en: "Read Receipts", ar: "إشعارات القراءة" },
+  "Research-backed": { en: "Research-backed", ar: "مدعوم بالأبحاث" },
+  "Continuous Support": { en: "Continuous Support", ar: "دعم مستمر" },
+  "Moderated": { en: "Moderated", ar: "مُدار" }
+};
+
 const Services = () => {
   const { language, isRTL } = useLanguage();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
   
-  // Enhanced service data with more details
+  const translateBadge = (text: string) => {
+    return badgeTranslations[text] ? 
+      (language === 'ar' ? badgeTranslations[text].ar : badgeTranslations[text].en) : 
+      text;
+  };
+  
   const serviceData = [
     {
       title: translate('services', 'privateConsultations', language),
@@ -168,7 +193,6 @@ const Services = () => {
     }
   ];
 
-  // Additional service features
   const serviceFeatures = [
     {
       icon: <Lock className="h-6 w-6 text-calmBlue-500 flex-shrink-0" />,
@@ -192,7 +216,6 @@ const Services = () => {
     }
   ];
   
-  // New specialized service features
   const specializedFeatures = [
     {
       icon: <Users className="h-6 w-6 text-indigo-500 flex-shrink-0" />,
@@ -225,7 +248,6 @@ const Services = () => {
       duration: 1500,
     });
     
-    // Short delay for visual feedback before navigation
     setTimeout(() => {
       navigate(link);
     }, 300);
@@ -279,7 +301,7 @@ const Services = () => {
                   <div className="flex flex-wrap gap-2 mt-3">
                     {service.badges.map((badge, i) => (
                       <Badge key={i} className={`${badge.color} font-normal text-xs`}>
-                        {badge.text}
+                        {translateBadge(badge.text)}
                       </Badge>
                     ))}
                   </div>

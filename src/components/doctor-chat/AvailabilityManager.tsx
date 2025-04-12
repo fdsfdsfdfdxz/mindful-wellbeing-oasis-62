@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -24,6 +23,12 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { TimezoneSelect } from "./TimezoneSelect";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+const badgeTranslations: Record<string, { en: string; ar: string }> = {
+  "Available": { en: "Available", ar: "متاح" },
+  "Booked": { en: "Booked", ar: "محجوز" },
+  "Time Slot": { en: "Time Slot", ar: "فترة زمنية" }
+};
 
 interface TimeSlot {
   start: string;
@@ -51,7 +56,12 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
   const { toast } = useToast();
   const { language } = useLanguage();
   
-  // Time slots at 30-minute intervals
+  const translateBadge = (text: string) => {
+    return badgeTranslations[text] ? 
+      (language === 'ar' ? badgeTranslations[text].ar : badgeTranslations[text].en) : 
+      text;
+  };
+  
   const timeOptions = Array.from({ length: 24 * 2 }, (_, i) => {
     const hour = Math.floor(i / 2);
     const minute = (i % 2) * 30;
@@ -61,7 +71,6 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
   const handleAddTimeSlot = () => {
     if (!selectedDate) return;
     
-    // Convert times to 24-hour format for comparison
     if (startTime >= endTime) {
       toast({
         title: language === 'ar' ? "نطاق زمني غير صالح" : "Invalid time range",
@@ -71,7 +80,6 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
       return;
     }
     
-    // Add the new time slot
     const newSlot = { start: startTime, end: endTime };
     setSelectedTimeSlots([...selectedTimeSlots, newSlot]);
   };
@@ -85,7 +93,6 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
   const handleSaveAvailability = () => {
     if (!selectedDate || selectedTimeSlots.length === 0) return;
     
-    // Find if we already have availability for this date
     const dateExists = availability.findIndex(
       item => format(item.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
     );
@@ -93,13 +100,11 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
     const updatedAvailability = [...availability];
     
     if (dateExists >= 0) {
-      // Update existing date
       updatedAvailability[dateExists] = {
         date: selectedDate,
         slots: selectedTimeSlots
       };
     } else {
-      // Add new date
       updatedAvailability.push({
         date: selectedDate,
         slots: selectedTimeSlots
@@ -124,7 +129,6 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
     
-    // Find if we already have availability for this date
     if (date) {
       const existingAvailability = availability.find(
         item => format(item.date, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
@@ -164,7 +168,6 @@ export function AvailabilityManager({ doctorId, initialAvailability = [], onSave
               onSelect={handleDateSelect}
               className="p-3 pointer-events-auto"
               disabled={(date) => {
-                // Disable past dates
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 return date < today;

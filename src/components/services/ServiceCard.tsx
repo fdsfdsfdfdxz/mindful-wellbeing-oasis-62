@@ -8,6 +8,22 @@ import { translate } from "@/utils/translations";
 import { ServiceAccessMethod } from "@/services/paymentService";
 import { Form } from "@/components/ui/form";
 
+// Badge text translations
+const badgeTranslations: Record<string, { en: string; ar: string }> = {
+  "Unlimited Access": { en: "Unlimited Access", ar: "وصول غير محدود" },
+  "Priority Support": { en: "Priority Support", ar: "دعم ذو أولوية" },
+  "Progress Tracking": { en: "Progress Tracking", ar: "تتبع التقدم" },
+  "No Commitment": { en: "No Commitment", ar: "بدون التزام" },
+  "Choose Specialist": { en: "Choose Specialist", ar: "اختيار المتخصص" },
+  "Session Recording": { en: "Session Recording", ar: "تسجيل الجلسة" },
+  "Free Sessions": { en: "Free Sessions", ar: "جلسات مجانية" },
+  "Friend Discount": { en: "Friend Discount", ar: "خصم للأصدقاء" },
+  "Unlimited Referrals": { en: "Unlimited Referrals", ar: "إحالات غير محدودة" },
+  "Service Discounts": { en: "Service Discounts", ar: "خصومات على الخدمات" },
+  "Stackable Offers": { en: "Stackable Offers", ar: "عروض قابلة للتراكم" },
+  "Special Promotions": { en: "Special Promotions", ar: "عروض خاصة" }
+};
+
 interface ServiceCardProps {
   id: ServiceAccessMethod;
   title: string;
@@ -39,6 +55,13 @@ const ServiceCard = ({
 }: ServiceCardProps) => {
   const { language, isRTL } = useLanguage();
 
+  // Function to translate badge text
+  const translateBenefit = (text: string) => {
+    return badgeTranslations[text] ? 
+      (language === 'ar' ? badgeTranslations[text].ar : badgeTranslations[text].en) : 
+      text;
+  };
+
   return (
     <Card 
       className={`card-hover border border-gray-100 h-full transition-all duration-300 ${(isSelected || isActive) ? 'ring-2 ring-calmBlue-500 shadow-lg' : ''}`}
@@ -55,7 +78,7 @@ const ServiceCard = ({
           {benefits.map((benefit, index) => (
             <li key={index} className={`flex items-start ${isRTL ? 'flex-row-reverse text-right' : ''}`}>
               <Check className={`h-5 w-5 text-green-500 shrink-0 mt-0.5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-              <span className="text-sm text-gray-600">{benefit}</span>
+              <span className="text-sm text-gray-600">{translateBenefit(benefit)}</span>
             </li>
           ))}
         </ul>

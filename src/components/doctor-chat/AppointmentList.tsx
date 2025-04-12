@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Video, Calendar, FileText, Check, X, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Appointment } from "@/types/appointment";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+const badgeTranslations: Record<string, { en: string; ar: string }> = {
+  "confirmed": { en: "Confirmed", ar: "مؤكد" },
+  "pending": { en: "Pending", ar: "قيد الانتظار" },
+  "completed": { en: "Completed", ar: "مكتمل" },
+  "cancelled": { en: "Cancelled", ar: "ملغى" },
+  "video": { en: "Video Call", ar: "مكالمة فيديو" },
+  "phone": { en: "Phone Call", ar: "مكالمة هاتفية" },
+  "inPerson": { en: "In Person", ar: "حضور شخصي" }
+};
 
 interface AppointmentListProps {
   appointments: Appointment[];
@@ -37,22 +46,9 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
   
   const getStatusBadge = (status: string) => {
     const getStatusText = (status: string) => {
-      if (language !== 'ar') {
-        return status.charAt(0).toUpperCase() + status.slice(1);
-      }
-      
-      switch (status) {
-        case "confirmed":
-          return "مؤكد";
-        case "pending":
-          return "قيد الانتظار";
-        case "completed":
-          return "مكتمل";
-        case "cancelled":
-          return "ملغى";
-        default:
-          return status;
-      }
+      return badgeTranslations[status] ? 
+        (language === 'ar' ? badgeTranslations[status].ar : badgeTranslations[status].en) : 
+        status.charAt(0).toUpperCase() + status.slice(1);
     };
     
     switch (status) {
@@ -107,23 +103,11 @@ export const AppointmentList = ({ appointments, onJoinCall, onScheduleAppointmen
   };
   
   const getAppointmentTypeText = (type: string) => {
-    if (language !== 'ar') {
-      return type === "inPerson" ? "In Person" : `${type} Call`;
-    }
-    
-    switch (type) {
-      case "video":
-        return "مكالمة فيديو";
-      case "phone":
-        return "مكالمة هاتفية";
-      case "inPerson":
-        return "حضور شخصي";
-      default:
-        return type;
-    }
+    return badgeTranslations[type] ? 
+      (language === 'ar' ? badgeTranslations[type].ar : badgeTranslations[type].en) : 
+      type === "inPerson" ? "In Person" : `${type} Call`;
   };
   
-  // CheckCircleIcon component
   const CheckCircleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       {...props}
