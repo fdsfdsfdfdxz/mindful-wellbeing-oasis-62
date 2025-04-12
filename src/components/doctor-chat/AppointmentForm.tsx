@@ -6,7 +6,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { AppointmentFormLayout } from "./appointment-form/AppointmentFormLayout";
 import { AppointmentTypeSelector } from "./appointment-form/AppointmentTypeSelector";
 import { DateTimeSelector } from "./appointment-form/DateTimeSelector";
-import { TimezoneField } from "./appointment-form/TimezoneField";
 import { ReasonField } from "./appointment-form/ReasonField";
 import { ReminderToggle } from "./appointment-form/ReminderToggle";
 import { SubmitButton } from "./appointment-form/SubmitButton";
@@ -42,7 +41,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const [time, setTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [type, setType] = useState<AppointmentData["type"]>("video");
-  const [timezone, setTimezone] = useState<string>("UTC");
+  const [timezone, setTimezone] = useState<string>("America/New_York"); // Use a default timezone instead of UTC
   const [reminders, setReminders] = useState<boolean>(true);
   const [isWaitlisted, setIsWaitlisted] = useState<boolean>(false);
   
@@ -135,11 +134,20 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
           language={language}
         />
         
-        <TimezoneField 
-          timezone={timezone} 
-          onChange={setTimezone} 
-          language={language} 
-        />
+        {/* Replace TimezoneField with a simple timezone display to avoid using the command component */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-2">
+            {language === 'ar' ? "المنطقة الزمنية الخاصة بك" : "Your Timezone"}
+          </label>
+          <div className="border border-input rounded-md p-2">
+            {timezone}
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            {language === 'ar' 
+              ? "سيتم عرض أوقات المواعيد بهذه المنطقة الزمنية" 
+              : "Appointment times will be displayed in this timezone"}
+          </p>
+        </div>
         
         <AppointmentTypeSelector
           selectedType={type}
