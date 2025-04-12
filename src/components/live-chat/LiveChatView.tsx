@@ -17,7 +17,7 @@ export const LiveChatView: React.FC<LiveChatViewProps> = ({
   isOpen,
   onToggle
 }) => {
-  const { language } = useLanguage();
+  const { language, isRTL } = useLanguage();
   
   return (
     <div className="transition-all duration-300">
@@ -28,7 +28,10 @@ export const LiveChatView: React.FC<LiveChatViewProps> = ({
       ) : (
         <Button 
           onClick={onToggle}
-          className="rounded-full w-12 h-12 bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
+          className={cn(
+            "rounded-full w-12 h-12 bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg",
+            isRTL ? "rtl" : ""
+          )}
           aria-label={translate('liveChat', 'openChat', language) || "Open chat"}
         >
           <MessageSquare className="h-6 w-6" />

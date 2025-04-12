@@ -12,7 +12,7 @@ import { translate } from '@/utils/translations';
 
 export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { toast } = useToast();
-  const { language } = useLanguage();
+  const { language, isRTL } = useLanguage();
   
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -27,6 +27,7 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
   const [isTyping, setIsTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,12 +90,27 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
       });
     }
   };
+  
+  // Toggle anonymous mode
+  const toggleAnonymous = () => {
+    setIsAnonymous(prev => !prev);
+    
+    toast({
+      title: isAnonymous 
+        ? translate('liveChat', 'anonymousModeOff', language) || "Anonymous Mode Deactivated"
+        : translate('liveChat', 'anonymousModeOn', language) || "Anonymous Mode Activated",
+      description: isAnonymous
+        ? translate('liveChat', 'identityVisible', language) || "Your identity is now visible to support agents"
+        : translate('liveChat', 'anonymousModeDesc', language) || "Your identity is now hidden from support agents",
+    });
+  };
 
   // Header props
   const headerProps: ChatHeaderProps = {
     isEncrypted: true,
-    isAnonymous: false,
-    onClose: onClose
+    isAnonymous: isAnonymous,
+    onClose: onClose,
+    onToggleAnonymous: toggleAnonymous
   };
 
   // Message list props
@@ -106,7 +122,8 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
       timestamp: msg.timestamp,
       status: msg.status as 'sent' | 'delivered' | 'read'
     })),
-    isTyping
+    isTyping,
+    isRTL
   };
 
   // Message form props
@@ -125,7 +142,7 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
       <CardHeader className="p-0">
         <ChatHeader {...headerProps} />
       </CardHeader>
-      <CardContent className="p-0 flex flex-col h-[400px]">
+      <CardContent className={`p-0 flex flex-col h-[400px] ${isRTL ? 'rtl' : ''}`}>
         <MessageList {...messageListProps} />
         <MessageForm {...messageFormProps} />
       </CardContent>

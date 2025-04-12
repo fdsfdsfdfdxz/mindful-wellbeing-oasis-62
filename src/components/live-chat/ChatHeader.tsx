@@ -12,12 +12,14 @@ export interface ChatHeaderProps {
   isEncrypted: boolean;
   isAnonymous: boolean;
   onClose: () => void;
+  onToggleAnonymous?: () => void;
 }
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
   isEncrypted,
   isAnonymous,
-  onClose
+  onClose,
+  onToggleAnonymous
 }) => {
   const { language, isRTL } = useLanguage();
   
@@ -32,8 +34,8 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge variant="outline" className="ml-2">
-                  <Lock className="h-3 w-3 mr-1" />
+                <Badge variant="outline" className={isRTL ? "mr-2" : "ml-2"}>
+                  <Lock className={`h-3 w-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
                   {translate('liveChat', 'encrypted', language) || "Encrypted"}
                 </Badge>
               </TooltipTrigger>
@@ -46,24 +48,27 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
       </div>
       
       <div className="flex items-center">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Toggle 
-                aria-label={translate('liveChat', 'anonymousToggle', language) || "Toggle anonymous mode"}
-                pressed={isAnonymous}
-                className="mr-2"
-              >
-                <UserRound className="h-4 w-4" />
-              </Toggle>
-            </TooltipTrigger>
-            <TooltipContent>
-              {isAnonymous ? 
-                (translate('liveChat', 'anonymousModeOn', language) || "Anonymous mode is on") : 
-                (translate('liveChat', 'goAnonymous', language) || "Go anonymous")}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        {onToggleAnonymous && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Toggle 
+                  aria-label={translate('liveChat', 'anonymousToggle', language) || "Toggle anonymous mode"}
+                  pressed={isAnonymous}
+                  className={isRTL ? "ml-2" : "mr-2"}
+                  onClick={onToggleAnonymous}
+                >
+                  <UserRound className="h-4 w-4" />
+                </Toggle>
+              </TooltipTrigger>
+              <TooltipContent>
+                {isAnonymous ? 
+                  (translate('liveChat', 'anonymousModeOn', language) || "Anonymous mode is on") : 
+                  (translate('liveChat', 'goAnonymous', language) || "Go anonymous")}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
         
         <Button 
           size="icon" 
