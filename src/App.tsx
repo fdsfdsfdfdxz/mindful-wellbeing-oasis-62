@@ -39,6 +39,13 @@ import SelfHelpResources from "./pages/therapy/SelfHelpResources";
 import PractitionerDirectory from "./pages/practitioners/PractitionerDirectory";
 import PractitionerProfile from "./pages/practitioners/PractitionerProfile";
 
+// Admin Routes
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/Dashboard";
+import PractitionersPage from "./pages/admin/PractitionersPage";
+import ServicesPage from "./pages/admin/ServicesPage";
+import AdminNotFound from "./pages/admin/NotFound";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -85,6 +92,22 @@ const App = () => (
                   {/* Practitioner Directory Routes */}
                   <Route path="/practitioners" element={<PractitionerDirectory />} />
                   <Route path="/practitioners/:practitionerId" element={<PractitionerProfile />} />
+
+                  {/* Admin Routes */}
+                  <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="practitioners" element={<PractitionersPage />} />
+                    <Route path="clients" element={<AdminNotFound />} />
+                    <Route path="services" element={<ServicesPage />} />
+                    <Route path="services/add" element={<AdminNotFound />} />
+                    <Route path="services/categories" element={<AdminNotFound />} />
+                    <Route path="appointments" element={<AdminNotFound />} />
+                    <Route path="assessments" element={<AdminNotFound />} />
+                    <Route path="communications" element={<AdminNotFound />} />
+                    <Route path="content" element={<AdminNotFound />} />
+                    <Route path="settings" element={<AdminNotFound />} />
+                    <Route path="*" element={<AdminNotFound />} />
+                  </Route>
                   
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
