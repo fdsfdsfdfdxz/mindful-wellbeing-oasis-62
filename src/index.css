@@ -89,6 +89,32 @@
   .hero-gradient {
     @apply bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900;
   }
+  
+  /* Animation utilities */
+  .fade-in {
+    @apply animate-fade-in;
+  }
+  
+  .scale-in {
+    @apply animate-scale-in;
+  }
+  
+  .bounce-in {
+    @apply animate-bounce-in;
+  }
+  
+  .pulse-ring {
+    @apply animate-pulse-ring;
+  }
+  
+  /* Card variations */
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-md;
+  }
+  
+  .card-highlight {
+    @apply border-l-4 border-l-primary;
+  }
 }
 
 /* RTL Support */
