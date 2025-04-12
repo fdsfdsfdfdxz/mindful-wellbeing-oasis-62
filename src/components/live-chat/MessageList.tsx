@@ -7,7 +7,7 @@ export interface Message {
   content: string;
   sender: 'user' | 'agent';
   timestamp: Date;
-  status?: 'sent' | 'delivered' | 'read';
+  status: 'sent' | 'delivered' | 'read';
 }
 
 export interface MessageListProps {

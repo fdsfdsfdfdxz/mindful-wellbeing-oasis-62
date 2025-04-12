@@ -94,7 +94,13 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
 
   // Message list props
   const messageListProps = {
-    messages,
+    messages: messages.map(msg => ({
+      id: msg.id,
+      content: msg.content,
+      sender: msg.sender,
+      timestamp: msg.timestamp,
+      status: msg.status as 'sent' | 'delivered' | 'read'
+    })),
     isTyping
   };
 
