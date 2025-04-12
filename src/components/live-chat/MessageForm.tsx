@@ -1,8 +1,11 @@
 
-import React, { useRef } from 'react';
+import React from 'react';
+import { Send, Paperclip, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Paperclip, Send, Mic, Image } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translate } from '@/utils/translations';
 
 export interface MessageFormProps {
   newMessage: string;
@@ -23,65 +26,54 @@ export const MessageForm: React.FC<MessageFormProps> = ({
   toggleRecording,
   isSubmitting
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { language, isRTL } = useLanguage();
   
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      if (newMessage.trim()) {
-        handleSendMessage(e as unknown as React.FormEvent);
-      }
-    }
-  };
-
   return (
-    <form onSubmit={handleSendMessage} className="border-t p-3">
-      <div className="flex items-end gap-2">
-        <div className="flex-1 relative">
-          <Textarea
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message..."
-            className="resize-none min-h-[60px] pr-10"
-            disabled={isSubmitting}
-          />
-          <button
-            type="button"
+    <form onSubmit={handleSendMessage} className="p-4 border-t">
+      <Textarea
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        placeholder={translate('liveChat', 'typePlaceholder', language) || "Type your message..."}
+        className="w-full resize-none mb-2"
+        rows={3}
+        disabled={isSubmitting}
+      />
+      
+      <div className={cn("flex", isRTL ? "flex-row-reverse" : "")}>
+        <div className="flex-1 flex items-center space-x-2">
+          <Button 
+            type="button" 
+            variant="ghost" 
+            size="icon"
             onClick={handleFileButtonClick}
-            className="absolute bottom-2 right-2 text-gray-400 hover:text-gray-600"
-            aria-label="Attach file"
+            disabled={isSubmitting}
+            title={translate('liveChat', 'attachment', language) || "Attach file"}
           >
-            <Paperclip className="h-5 w-5" />
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            accept="image/*,application/pdf"
-          />
-        </div>
-        <div className="flex gap-2">
-          <Button
-            type="button"
+            <Paperclip className="h-4 w-4" />
+          </Button>
+          
+          <Button 
+            type="button" 
+            variant={isRecording ? "destructive" : "ghost"}
             size="icon"
-            variant={isRecording ? "destructive" : "secondary"}
             onClick={toggleRecording}
-            className="rounded-full h-10 w-10"
-            aria-label={isRecording ? "Stop recording" : "Start recording"}
+            disabled={isSubmitting}
+            title={isRecording ? 
+              (translate('liveChat', 'recordingStopped', language) || "Stop recording") : 
+              (translate('liveChat', 'recording', language) || "Start recording")}
           >
-            <Mic className="h-5 w-5" />
-          </Button>
-          <Button
-            type="submit"
-            size="icon"
-            disabled={!newMessage.trim() || isSubmitting}
-            className="rounded-full h-10 w-10"
-            aria-label="Send message"
-          >
-            <Send className="h-5 w-5" />
+            <Mic className="h-4 w-4" />
           </Button>
         </div>
+        
+        <Button 
+          type="submit" 
+          disabled={!newMessage.trim() || isSubmitting}
+          className={cn(isRTL ? "ml-0 mr-auto" : "mr-0 ml-auto")}
+        >
+          {translate('liveChat', 'send', language) || "Send"}
+          <Send className={cn("h-4 w-4", isRTL ? "mr-2" : "ml-2")} />
+        </Button>
       </div>
     </form>
   );

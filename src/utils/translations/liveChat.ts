@@ -62,6 +62,10 @@ export const LiveChatTranslations: TranslationContent = {
     en: "Encrypted",
     ar: "مشفر"
   },
+  encryptedDesc: {
+    en: "Your conversation is end-to-end encrypted",
+    ar: "محادثتك مشفرة من طرف إلى طرف"
+  },
   anonymous: {
     en: "Anonymous",
     ar: "مجهول"
@@ -110,17 +114,33 @@ export const LiveChatTranslations: TranslationContent = {
     en: "Go Anonymous",
     ar: "الذهاب إلى وضع مجهول"
   },
+  recording: {
+    en: "Start recording",
+    ar: "بدء التسجيل"
+  },
+  recordingDesc: {
+    en: "Voice recording functionality will be available soon",
+    ar: "ستتوفر وظيفة التسجيل الصوتي قريبًا"
+  },
+  recordingStopped: {
+    en: "Recording stopped",
+    ar: "توقف التسجيل"
+  },
+  anonymousToggle: {
+    en: "Toggle anonymous mode",
+    ar: "تبديل الوضع المجهول"
+  },
   supportResponse1: {
-    en: "Thank you for your message! How can I help you today?",
-    ar: "شكرًا على رسالتك! كيف يمكنني مساعدتك اليوم؟"
+    en: "Thank you for your message. One of our mental health professionals will respond shortly. Is there anything specific you'd like to discuss today?",
+    ar: "شكرًا على رسالتك. سيرد أحد متخصصي الصحة النفسية لدينا قريبًا. هل هناك شيء محدد ترغب في مناقشته اليوم؟"
   },
   supportResponse2: {
     en: "I understand. Could you please provide more details?",
-    ar: "أفهم. هل يمكنك تقديم المزيد من التفاصيل؟"
+    ar: "أتفهم. هل يمكنك تقديم المزيد من التفاصيل؟"
   },
   supportResponse3: {
     en: "Our specialist will contact you shortly. Is there anything else you'd like to know?",
-    ar: "سيتصل بك أخصائينا قريبًا. هل هناك أي شيء آخر ترغب في معرفته؟"
+    ar: "سيتصل بك المتخصص لدينا قريبًا. هل هناك أي شيء آخر ترغب في معرفته؟"
   },
   supportResponse4: {
     en: "We're here to support you. Would you prefer to speak with a doctor directly?",

@@ -7,13 +7,17 @@ import { MessageList } from './MessageList';  // Import from the actual componen
 import { Message } from './types';  // Import the Message type from types.ts
 import { MessageForm, MessageFormProps } from './MessageForm';
 import { useToast } from '@/components/ui/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translate } from '@/utils/translations';
 
 export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { toast } = useToast();
+  const { language } = useLanguage();
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: uuidv4(), // Use uuidv4() here
-      content: 'Hello! How can I help you today?',
+      content: translate('liveChat', 'greeting', language) || 'Hello! How can I help you today?',
       sender: 'agent',
       timestamp: new Date(),
       status: 'read'
@@ -50,7 +54,8 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
       
       const agentMessage: Message = {
         id: uuidv4(),
-        content: "Thank you for your message. One of our mental health professionals will respond shortly. Is there anything specific you'd like to discuss today?",
+        content: translate('liveChat', 'supportResponse1', language) || 
+          "Thank you for your message. One of our mental health professionals will respond shortly. Is there anything specific you'd like to discuss today?",
         sender: 'agent',
         timestamp: new Date(),
         status: 'sent'
@@ -64,8 +69,8 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
   // Handle file uploads
   const handleFileButtonClick = () => {
     toast({
-      title: "File uploads",
-      description: "File upload functionality will be available soon.",
+      title: translate('liveChat', 'attachment', language) || "File uploads",
+      description: translate('liveChat', 'fileUploaded', language) || "File upload functionality will be available soon.",
     });
   };
 
@@ -75,12 +80,12 @@ export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }
     
     if (!isRecording) {
       toast({
-        title: "Recording started",
-        description: "Voice recording functionality will be available soon.",
+        title: translate('liveChat', 'recording', language) || "Recording started",
+        description: translate('liveChat', 'recordingDesc', language) || "Voice recording functionality will be available soon.",
       });
     } else {
       toast({
-        title: "Recording stopped",
+        title: translate('liveChat', 'recordingStopped', language) || "Recording stopped",
       });
     }
   };

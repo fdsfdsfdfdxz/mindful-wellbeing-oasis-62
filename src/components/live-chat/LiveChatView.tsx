@@ -1,10 +1,12 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { MessageSquare, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { LiveChatContainer } from './LiveChatContainer';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translate } from '@/utils/translations';
 
 interface LiveChatViewProps {
   isOpen: boolean;
@@ -15,6 +17,8 @@ export const LiveChatView: React.FC<LiveChatViewProps> = ({
   isOpen,
   onToggle
 }) => {
+  const { language } = useLanguage();
+  
   return (
     <div className="transition-all duration-300">
       {isOpen ? (
@@ -25,7 +29,7 @@ export const LiveChatView: React.FC<LiveChatViewProps> = ({
         <Button 
           onClick={onToggle}
           className="rounded-full w-12 h-12 bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg"
-          aria-label="Open chat"
+          aria-label={translate('liveChat', 'openChat', language) || "Open chat"}
         >
           <MessageSquare className="h-6 w-6" />
         </Button>
