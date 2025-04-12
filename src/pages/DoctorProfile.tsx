@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Star, MapPin, Languages, Award, Calendar, MessageSquare, ArrowLeft } from "lucide-react";
+import { Star, MapPin, Languages, Award, Calendar, MessageSquare, ArrowLeft, User, Video, PhoneCall, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppointmentForm from "@/components/doctor-chat/AppointmentForm";
@@ -205,6 +205,31 @@ const DoctorProfile = () => {
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Send Message
                 </Button>
+                <Button variant="blue" className="w-full">
+                  <User className="mr-2 h-4 w-4" />
+                  View Full Profile
+                </Button>
+              </div>
+              
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <Button variant="outline" size="sm" className="w-full">
+                  <Video className="mr-2 h-4 w-4" />
+                  Video Call
+                </Button>
+                <Button variant="outline" size="sm" className="w-full">
+                  <PhoneCall className="mr-2 h-4 w-4" />
+                  Audio Call
+                </Button>
+                <Button variant="outline" size="sm" className="w-full">
+                  <Shield className="mr-2 h-4 w-4" />
+                  Anonymous Consultation
+                </Button>
+                <Link to="/services/psychological-assessment" className="w-full">
+                  <Button variant="outline" size="sm" className="w-full">
+                    <Award className="mr-2 h-4 w-4" />
+                    Assessment
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
