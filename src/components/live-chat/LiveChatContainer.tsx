@@ -1,21 +1,16 @@
-
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';  // Correct import for v4 uuid generation
 import { CardContent, CardHeader } from '@/components/ui/card';
 import { ChatHeader, ChatHeaderProps } from './ChatHeader';
-import { MessageList, MessageListProps, Message } from './MessageList';
+import { MessageList, MessageListProps, Message } from './types';  // Importing from types file
 import { MessageForm, MessageFormProps } from './MessageForm';
 import { useToast } from '@/components/ui/use-toast';
-import { v4 as uuidv4 } from 'uuid';
 
-interface LiveChatContainerProps {
-  onClose: () => void;
-}
-
-export const LiveChatContainer: React.FC<LiveChatContainerProps> = ({ onClose }) => {
+export const LiveChatContainer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
+      id: uuidv4(), // Use uuidv4() here
       content: 'Hello! How can I help you today?',
       sender: 'agent',
       timestamp: new Date(),
@@ -27,20 +22,6 @@ export const LiveChatContainer: React.FC<LiveChatContainerProps> = ({ onClose })
   const [isRecording, setIsRecording] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Header props
-  const headerProps: ChatHeaderProps = {
-    isEncrypted: true,
-    isAnonymous: false,
-    onClose: onClose
-  };
-
-  // Message list props
-  const messageListProps: MessageListProps = {
-    messages,
-    isTyping
-  };
-
-  // Handle sending messages
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -100,6 +81,19 @@ export const LiveChatContainer: React.FC<LiveChatContainerProps> = ({ onClose })
         title: "Recording stopped",
       });
     }
+  };
+
+  // Header props
+  const headerProps: ChatHeaderProps = {
+    isEncrypted: true,
+    isAnonymous: false,
+    onClose: onClose
+  };
+
+  // Message list props
+  const messageListProps: MessageListProps = {
+    messages,
+    isTyping
   };
 
   // Message form props
