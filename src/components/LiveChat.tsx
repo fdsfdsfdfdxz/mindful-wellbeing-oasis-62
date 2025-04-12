@@ -8,7 +8,7 @@ import { ChatTriggerButton } from "./live-chat/ChatTriggerButton";
 
 const LiveChat = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isRTL } = useLanguage();
+  const { language, isRTL } = useLanguage();
   const { toast } = useToast();
   
   const toggleChat = () => {
