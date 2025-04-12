@@ -1,40 +1,18 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  CalendarIcon, 
-  Clock, 
-  MessageSquare, 
-  VideoIcon, 
-  Phone, 
-  UserRound,
-  Calendar,
-  BellRing
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { format, addDays, isEqual, isBefore, addMinutes } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
-import { Switch } from "@/components/ui/switch";
-import { TimezoneSelect } from "./TimezoneSelect";
-import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { AppointmentFormLayout } from "./appointment-form/AppointmentFormLayout";
+import { AppointmentTypeSelector } from "./appointment-form/AppointmentTypeSelector";
+import { DateTimeSelector } from "./appointment-form/DateTimeSelector";
+import { TimezoneField } from "./appointment-form/TimezoneField";
+import { ReasonField } from "./appointment-form/ReasonField";
+import { ReminderToggle } from "./appointment-form/ReminderToggle";
+import { SubmitButton } from "./appointment-form/SubmitButton";
+import { isWaitlistNeeded, formatDisplayDate } from "./appointment-form/utils";
 
-// Define the appointment type using non-optional properties since they're required
+// Define the appointment type
 interface AppointmentData {
   date: string;
   time: string;
@@ -64,7 +42,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const [time, setTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [type, setType] = useState<AppointmentData["type"]>("video");
-  const [timezone, setTimezone] = useState<string>("UTC");  // Default to UTC
+  const [timezone, setTimezone] = useState<string>("UTC");
   const [reminders, setReminders] = useState<boolean>(true);
   const [isWaitlisted, setIsWaitlisted] = useState<boolean>(false);
   
@@ -80,7 +58,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
   const getAvailableTimeSlots = () => {
     if (!date) return timeSlots;
     
-    const formattedDate = format(date, "yyyy-MM-dd");
+    const formattedDate = formatDisplayDate(date, "yyyy-MM-dd");
     const unavailableDay = UNAVAILABLE_SLOTS.find(slot => slot.date === formattedDate);
     
     if (!unavailableDay) return timeSlots;
@@ -118,7 +96,7 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
 
     // Create appointment data with all required fields
     const appointmentData: AppointmentData = {
-      date: format(date, "yyyy-MM-dd"),
+      date: formatDisplayDate(date, "yyyy-MM-dd"),
       time,
       reason, 
       type,
@@ -134,231 +112,61 @@ const AppointmentForm = ({ doctorId, onSubmit }: AppointmentFormProps) => {
       toast({
         title: language === 'ar' ? "تم تحديد الموعد" : "Appointment Scheduled",
         description: language === 'ar' 
-          ? `تم حجز موعد ${type === 'video' ? 'الفيديو' : type === 'phone' ? 'المكالمة الهاتفية' : 'الحضور الشخصي'} الخاص بك ليوم ${format(date, "MMMM d, yyyy")} في ${time}.`
-          : `Your ${type} appointment has been booked for ${format(date, "MMMM d, yyyy")} at ${time}.`,
+          ? `تم حجز موعد ${type === 'video' ? 'الفيديو' : type === 'phone' ? 'المكالمة الهاتفية' : 'الحضور الشخصي'} الخاص بك ليوم ${formatDisplayDate(date, "MMMM d, yyyy")} في ${time}.`
+          : `Your ${type} appointment has been booked for ${formatDisplayDate(date, "MMMM d, yyyy")} at ${time}.`,
       });
       navigate(`/doctor-chat?appointment=${type}`);
     }
   };
 
-  // Translations for badge texts
-  const getBadgeText = (text: string) => {
-    if (language !== 'ar') return text;
-    
-    switch (text) {
-      case "No available slots":
-        return "لا توجد مواعيد متاحة";
-      case "Join waitlist":
-        return "الانضمام إلى قائمة الانتظار";
-      case "Added to waitlist":
-        return "تمت الإضافة إلى قائمة الانتظار";
-      default:
-        return text;
-    }
-  };
+  const needsWaitlist = isWaitlistNeeded(availableTimeSlots, date);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-bold mb-6">{language === 'ar' ? "تحديد موعد" : "Schedule an Appointment"}</h2>
-      
+    <AppointmentFormLayout>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {/* Date Selection */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium">
-              {language === 'ar' ? "تاريخ الموعد" : "Appointment Date"} <span className="text-red-500">*</span>
-            </label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : language === 'ar' ? "اختر التاريخ" : "Select date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <CalendarComponent
-                  mode="single"
-                  selected={date}
-                  onSelect={handleDateChange}
-                  initialFocus
-                  className="p-3 pointer-events-auto"
-                  disabled={(date) => {
-                    // Disable past dates and weekends
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const day = date.getDay();
-                    return isBefore(date, today) || day === 0 || day === 6 || isEqual(date, addDays(today, 60));
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
+        <DateTimeSelector
+          date={date}
+          time={time}
+          availableTimeSlots={availableTimeSlots}
+          onDateChange={handleDateChange}
+          onTimeChange={setTime}
+          isWaitlisted={isWaitlisted}
+          onJoinWaitlist={joinWaitlist}
+          language={language}
+        />
+        
+        <TimezoneField 
+          timezone={timezone} 
+          onChange={setTimezone} 
+          language={language} 
+        />
+        
+        <AppointmentTypeSelector
+          selectedType={type}
+          onTypeChange={setType}
+          language={language}
+        />
+        
+        <ReasonField 
+          reason={reason} 
+          onChange={setReason} 
+          language={language} 
+        />
+        
+        <ReminderToggle
+          reminders={reminders}
+          onChange={setReminders}
+          language={language}
+        />
 
-          {/* Time Selection */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium">
-              {language === 'ar' ? "وقت الموعد" : "Appointment Time"} <span className="text-red-500">*</span>
-            </label>
-            <Select
-              value={time}
-              onValueChange={setTime}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={language === 'ar' ? "اختر الوقت" : "Select time"}>
-                  {time ? (
-                    <div className="flex items-center">
-                      <Clock className="mr-2 h-4 w-4" />
-                      {time}
-                    </div>
-                  ) : language === 'ar' ? "اختر الوقت" : "Select time"}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {availableTimeSlots.length > 0 ? (
-                  availableTimeSlots.map((slot) => (
-                    <SelectItem key={slot} value={slot}>{slot}</SelectItem>
-                  ))
-                ) : (
-                  <div className="py-2 px-2 text-center">
-                    <p className="text-sm text-muted-foreground">{getBadgeText("No available slots")}</p>
-                    {date && !isWaitlisted && (
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="mt-1 text-xs"
-                        type="button"
-                        onClick={joinWaitlist}
-                      >
-                        {getBadgeText("Join waitlist")}
-                      </Button>
-                    )}
-                    {isWaitlisted && (
-                      <Badge className="mt-1 bg-amber-100 text-amber-800 border-amber-300">
-                        {getBadgeText("Added to waitlist")}
-                      </Badge>
-                    )}
-                  </div>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Timezone Selection */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-2">
-            {language === 'ar' ? "المنطقة الزمنية الخاصة بك" : "Your Timezone"}
-          </label>
-          <TimezoneSelect value={timezone} onChange={setTimezone} />
-          <p className="text-xs text-muted-foreground mt-1">
-            {language === 'ar' 
-              ? "سيتم عرض أوقات المواعيد بهذه المنطقة الزمنية" 
-              : "Appointment times will be displayed in this timezone"}
-          </p>
-        </div>
-
-        {/* Appointment Type */}
-        <div className="mb-6 space-y-2">
-          <label className="block text-sm font-medium">
-            {language === 'ar' ? "نوع الموعد" : "Appointment Type"} <span className="text-red-500">*</span>
-          </label>
-          <div className="grid grid-cols-3 gap-3">
-            <Button
-              type="button"
-              variant={type === "video" ? "default" : "outline"}
-              className="flex flex-col items-center justify-center h-24"
-              onClick={() => setType("video")}
-            >
-              <VideoIcon className="h-6 w-6 mb-2" />
-              <span>{language === 'ar' ? "مكالمة فيديو" : "Video Call"}</span>
-            </Button>
-            <Button
-              type="button"
-              variant={type === "phone" ? "default" : "outline"}
-              className="flex flex-col items-center justify-center h-24"
-              onClick={() => setType("phone")}
-            >
-              <Phone className="h-6 w-6 mb-2" />
-              <span>{language === 'ar' ? "مكالمة هاتفية" : "Phone Call"}</span>
-            </Button>
-            <Button
-              type="button"
-              variant={type === "inPerson" ? "default" : "outline"}
-              className="flex flex-col items-center justify-center h-24"
-              onClick={() => setType("inPerson")}
-            >
-              <UserRound className="h-6 w-6 mb-2" />
-              <span>{language === 'ar' ? "حضور شخصي" : "In Person"}</span>
-            </Button>
-          </div>
-        </div>
-
-        {/* Reason for Visit */}
-        <div className="mb-6 space-y-2">
-          <label className="block text-sm font-medium">
-            {language === 'ar' ? "سبب الزيارة" : "Reason for Visit"} <span className="text-red-500">*</span>
-          </label>
-          <Textarea 
-            placeholder={language === 'ar' 
-              ? "يرجى وصف مخاوفك أو ما تود مناقشته..." 
-              : "Please describe your concerns or what you would like to discuss..."
-            }
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            rows={4}
-            className="resize-none"
-          />
-        </div>
-
-        {/* Reminder Preferences */}
-        <div className="mb-6 space-y-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="block text-sm font-medium">
-                {language === 'ar' ? "تذكيرات المواعيد" : "Appointment Reminders"}
-              </label>
-              <p className="text-xs text-muted-foreground">
-                {language === 'ar' 
-                  ? "تلقي تذكيرات قبل 24 ساعة وساعة واحدة من الموعد" 
-                  : "Receive reminders 24h and 1h before appointment"
-                }
-              </p>
-            </div>
-            <Switch 
-              checked={reminders} 
-              onCheckedChange={setReminders} 
-              className="data-[state=checked]:bg-green-500" 
-            />
-          </div>
-        </div>
-
-        <Button 
-          type="submit" 
-          className="w-full"
-          disabled={!date || !time || !reason || !type || isWaitlisted}
-        >
-          {isWaitlisted ? (
-            <>
-              <BellRing className="mr-2 h-4 w-4" />
-              {language === 'ar' ? "في قائمة الانتظار" : "On Waitlist"}
-            </>
-          ) : (
-            <>
-              <Calendar className="mr-2 h-4 w-4" />
-              {language === 'ar' ? "حجز موعد" : "Book Appointment"}
-            </>
-          )}
-        </Button>
+        <SubmitButton
+          isDisabled={!date || !time || !reason || !type || isWaitlisted}
+          isWaitlisted={isWaitlisted}
+          language={language}
+        />
       </form>
-    </div>
+    </AppointmentFormLayout>
   );
 };
 
 export default AppointmentForm;
-

@@ -1,45 +1,29 @@
 
 import React from "react";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { translate } from "@/utils/translations";
-import { UseFormReturn } from "react-hook-form";
-import { AppointmentFormValues } from "../schemas/appointmentFormSchema";
-
-// Ensure Language type matches translations utility
-type Language = 'en' | 'ar';
 
 interface ReasonFieldProps {
-  form: UseFormReturn<AppointmentFormValues>;
+  reason: string;
+  onChange: (reason: string) => void;
   language: string;
 }
 
-export const ReasonField = ({ form, language }: ReasonFieldProps) => {
-  // Ensure language is a valid Language type
-  const safeLanguage = (language === 'en' || language === 'ar') ? language as Language : 'en';
-  
+export const ReasonField: React.FC<ReasonFieldProps> = ({ reason, onChange, language }) => {
   return (
-    <FormField
-      control={form.control}
-      name="reason"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>
-            {translate("doctorChat", "appointmentReason", safeLanguage) || "Reason for Appointment"}
-          </FormLabel>
-          <FormControl>
-            <Textarea
-              placeholder={
-                translate("doctorChat", "reasonPlaceholder", safeLanguage) ||
-                "Briefly describe the reason for your appointment..."
-              }
-              className="min-h-[100px]"
-              {...field}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <div className="mb-6 space-y-2">
+      <label className="block text-sm font-medium">
+        {language === 'ar' ? "سبب الزيارة" : "Reason for Visit"} <span className="text-red-500">*</span>
+      </label>
+      <Textarea 
+        placeholder={language === 'ar' 
+          ? "يرجى وصف مخاوفك أو ما تود مناقشته..." 
+          : "Please describe your concerns or what you would like to discuss..."
+        }
+        value={reason}
+        onChange={(e) => onChange(e.target.value)}
+        rows={4}
+        className="resize-none"
+      />
+    </div>
   );
 };
