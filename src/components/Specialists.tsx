@@ -11,45 +11,45 @@ import { translate } from "@/utils/translations";
 const specialistsData = [
   {
     id: 1,
-    name: "Dr. Sarah Johnson",
-    photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef",
+    name: "Dr. Ahmed Ibrahim",
+    photo: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
     credentials: "Ph.D. in Clinical Psychology",
     specializations: ["Anxiety", "Depression", "Trauma"],
     experience: 8,
-    languages: ["English", "Spanish"],
+    languages: ["Arabic", "English"],
     rating: 4.9,
     reviewCount: 127
   },
   {
     id: 2,
-    name: "Dr. Michael Chen",
-    photo: "https://images.unsplash.com/photo-1525134479264-6d10811941c4",
+    name: "Dr. Mohammed Al-Fayed",
+    photo: "https://images.unsplash.com/photo-1493962853295-0fd70327578a",
     credentials: "Psy.D., Licensed Psychologist",
     specializations: ["Stress Management", "Relationship Issues", "Work-Life Balance"],
     experience: 12,
-    languages: ["English", "Mandarin"],
+    languages: ["Arabic", "English"],
     rating: 4.8,
     reviewCount: 205
   },
   {
     id: 3,
-    name: "Dr. Aisha Rahman",
-    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+    name: "Dr. Khalid Mahmoud",
+    photo: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d",
     credentials: "M.D., Psychiatrist",
     specializations: ["Bipolar Disorder", "Anxiety", "ADHD"],
     experience: 15,
-    languages: ["English", "Arabic", "French"],
+    languages: ["Arabic", "English", "French"],
     rating: 4.9,
     reviewCount: 189
   },
   {
     id: 4,
-    name: "Dr. James Wilson",
-    photo: "https://images.unsplash.com/photo-1593104841215-4ff9dc50c759",
+    name: "Dr. Omar Youssef",
+    photo: "https://images.unsplash.com/photo-1469041797191-50ace28483c3",
     credentials: "M.S., Licensed Marriage and Family Therapist",
     specializations: ["Couples Therapy", "Family Conflicts", "Parenting Issues"],
     experience: 10,
-    languages: ["English"],
+    languages: ["Arabic", "English"],
     rating: 4.7,
     reviewCount: 156
   }

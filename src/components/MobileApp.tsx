@@ -1,3 +1,4 @@
+
 import { Apple, PlaySquare, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -76,15 +77,15 @@ const MobileApp = () => {
           <div className="lg:w-1/2 relative">
             <div className={`relative z-10 transform ${isRTL ? '-translate-x-16' : 'translate-x-16'}`}>
               <img 
-                src="https://images.unsplash.com/photo-1518005020951-eccb494ad742" 
-                alt="Modern minimalist technology workspace" 
+                src="https://images.unsplash.com/photo-1482938289607-e9573fc25ebb" 
+                alt="Serene river landscape with mountains" 
                 className="rounded-xl shadow-2xl max-w-xs mx-auto"
               />
             </div>
             <div className={`absolute top-1/4 ${isRTL ? '-right-4' : '-left-4'} z-0`}>
               <img 
-                src="https://images.unsplash.com/photo-1496307653780-42ee777d4833" 
-                alt="Elegant technology and design interface" 
+                src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07" 
+                alt="Vibrant natural landscape" 
                 className="rounded-xl shadow-2xl max-w-xs opacity-70"
               />
             </div>

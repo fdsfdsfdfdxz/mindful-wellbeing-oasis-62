@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MessageSquare } from "lucide-react";
@@ -48,8 +49,8 @@ const Hero = () => {
           </div>
           <div className="lg:w-1/2 animate-fade-in" style={{ animationDelay: "0.6s" }}>
             <img 
-              src="https://images.unsplash.com/photo-1487958449943-2429e8be8625" 
-              alt="Peaceful professional workspace symbolizing mental wellness" 
+              src="https://images.unsplash.com/photo-1492321936769-b49830bc1d1e" 
+              alt="Beautiful white building symbolizing serenity and Islamic architecture" 
               className="rounded-lg shadow-2xl"
             />
           </div>
