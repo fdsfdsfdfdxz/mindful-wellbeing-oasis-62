@@ -60,26 +60,26 @@ export const MobileMenu = () => {
     <div className="block md:hidden mobile-menu-container" ref={menuRef}>
       <div className="flex items-center">
         <Link to="/" className="mr-auto">
-          <span className="text-xl font-bold text-calmBlue-600 dark:text-calmBlue-400">MindfulCare</span>
+          <span className="text-xl font-bold text-calmBlue-600 dark:text-calmBlue-400 hover:scale-105 transition-transform duration-300">MindfulCare</span>
         </Link>
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={toggleMenu}
-          className="p-1 rounded-full"
+          className="p-1 rounded-full hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/30 transition-colors"
           aria-label="Toggle menu"
         >
           {isMenuOpen ? 
-            <X className="h-6 w-6 transition-transform duration-300 rotate-90" /> : 
-            <Menu className="h-6 w-6 transition-transform duration-300" />
+            <X className="h-6 w-6 transition-transform duration-300 rotate-90 animate-in" /> : 
+            <Menu className="h-6 w-6 transition-transform duration-300 hover:scale-110" />
           }
         </Button>
       </div>
 
       {isMenuOpen && (
         <>
-          <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm z-40" aria-hidden="true" onClick={toggleMenu}></div>
-          <div className={`fixed top-16 ${isRTL ? 'right-0' : 'left-0'} bottom-0 w-4/5 max-w-sm bg-background dark:bg-background/95 p-4 shadow-lg border-r border-border z-50 animate-slide-in-right transform transition duration-300 ${isRTL ? '-translate-x-12' : 'translate-x-0'}`}>
+          <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm z-40 animate-fade-in" aria-hidden="true" onClick={toggleMenu}></div>
+          <div className={`fixed top-16 ${isRTL ? 'right-0' : 'left-0'} bottom-0 w-4/5 max-w-sm bg-background/98 dark:bg-background/95 p-4 shadow-lg border-r border-border z-50 animate-slide-in-right transform transition-all duration-300 ease-in-out ${isRTL ? '-translate-x-0' : 'translate-x-0'}`}>
             <div className={`flex flex-col h-full overflow-y-auto py-4 ${isRTL ? 'rtl' : ''}`}>
               <NavLinks setIsMenuOpen={setIsMenuOpen} isMobile />
               

@@ -38,17 +38,17 @@ const Hero = () => {
               >
                 <span className="absolute inset-0 w-full h-full transition-transform duration-500 ease-out transform translate-x-0 -skew-x-12 bg-calmBlue-600 group-hover:translate-x-full group-hover:scale-102"></span>
                 <span className="relative flex items-center">
-                  <CalendarDays className={`${isRTL ? 'ml-2' : 'mr-2'} h-5 w-5`} /> 
+                  <CalendarDays className={`${isRTL ? 'ml-2' : 'mr-2'} h-5 w-5 transition-transform group-hover:scale-110`} /> 
                   {translate('hero', 'bookConsultation', language)}
                 </span>
               </Button>
               <Button 
                 variant="outline"
-                className="w-full sm:w-auto border-calmBlue-400 text-calmBlue-600 dark:text-calmBlue-400 hover:bg-calmBlue-50 dark:hover:bg-calmBlue-950/30 transition-all duration-300"
+                className="w-full sm:w-auto border-calmBlue-400 text-calmBlue-600 dark:text-calmBlue-400 hover:bg-calmBlue-50 dark:hover:bg-calmBlue-950/30 transition-all duration-300 hover:shadow-md"
                 size="lg"
                 onClick={handleFreeAssessment}
               >
-                <MessageSquare className={`${isRTL ? 'ml-2' : 'mr-2'} h-5 w-5`} /> 
+                <MessageSquare className={`${isRTL ? 'ml-2' : 'mr-2'} h-5 w-5 transition-transform group-hover:rotate-12`} /> 
                 {translate('hero', 'freeAssessment', language)}
               </Button>
             </div>
@@ -63,7 +63,7 @@ const Hero = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
-            <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-sageGreen-500 dark:bg-sageGreen-700 rounded-full opacity-30 blur-xl"></div>
+            <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-sageGreen-500 dark:bg-sageGreen-700 rounded-full opacity-30 blur-xl animate-pulse-soft animation-delay-300"></div>
           </div>
         </div>
       </div>
