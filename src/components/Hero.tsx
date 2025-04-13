@@ -5,11 +5,19 @@ import { CalendarDays, MessageSquare } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translate } from "@/utils/translations";
 import { useTheme } from "@/components/theme/ThemeProvider";
+import { useEffect, useState } from "react";
 
 const Hero = () => {
   const { language, isRTL } = useLanguage();
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Set visibility after a short delay for the animation sequence
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleBookConsultation = () => {
     navigate("/services/book-session");
@@ -24,13 +32,19 @@ const Hero = () => {
       <div className="container-custom">
         <div className={`flex flex-col lg:flex-row items-center ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
           <div className={`lg:w-1/2 ${isRTL ? 'lg:pl-16' : 'lg:pr-16'} mb-16 lg:mb-0 text-center lg:text-${isRTL ? 'right' : 'left'}`}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-8 leading-tight animate-[fade-in_0.6s_ease-out] motion-reduce:animate-none">
+            <h1 
+              className={`text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-8 leading-tight opacity-0 ${isVisible ? 'animate-[fade-in_0.6s_ease-out_forwards]' : ''} motion-reduce:animate-none`}
+            >
               {translate('hero', 'title', language)}
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 animate-[fade-in_0.8s_ease-out] motion-reduce:animate-none">
+            <p 
+              className={`text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 opacity-0 ${isVisible ? 'animate-[fade-in_0.8s_ease-out_forwards]' : ''} motion-reduce:animate-none`}
+            >
               {translate('hero', 'description', language)}
             </p>
-            <div className={`flex flex-col sm:flex-row items-center justify-center lg:justify-${isRTL ? 'end' : 'start'} ${isRTL ? 'sm:space-x-reverse' : ''} space-y-4 sm:space-y-0 sm:space-x-6 animate-[fade-in_1s_ease-out] motion-reduce:animate-none`}>
+            <div 
+              className={`flex flex-col sm:flex-row items-center justify-center lg:justify-${isRTL ? 'end' : 'start'} ${isRTL ? 'sm:space-x-reverse' : ''} space-y-4 sm:space-y-0 sm:space-x-6 opacity-0 ${isVisible ? 'animate-[fade-in_1s_ease-out_forwards]' : ''} motion-reduce:animate-none`}
+            >
               <Button 
                 className="relative w-full sm:w-auto overflow-hidden group transition-all duration-300 hover:scale-105"
                 size="lg"
@@ -53,7 +67,9 @@ const Hero = () => {
               </Button>
             </div>
           </div>
-          <div className="lg:w-1/2 relative animate-[fade-in_1.2s_ease-out] motion-reduce:animate-none">
+          <div 
+            className={`lg:w-1/2 relative opacity-0 ${isVisible ? 'animate-[fade-in_1.2s_ease-out_forwards]' : ''} motion-reduce:animate-none`}
+          >
             <div className="absolute -inset-4 bg-calmBlue-200 dark:bg-calmBlue-900/50 rounded-full blur-3xl opacity-20 animate-pulse-soft"></div>
             <div className="overflow-hidden rounded-2xl shadow-2xl relative z-10 group">
               <img 

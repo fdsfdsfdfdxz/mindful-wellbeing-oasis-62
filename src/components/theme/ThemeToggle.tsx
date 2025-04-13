@@ -10,21 +10,40 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translate } from "@/utils/translations";
+import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const { language, isRTL } = useLanguage();
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Only show the theme toggle after it's mounted on the client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return <div className="w-9 h-9"></div>; // Placeholder to prevent layout shift
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="w-9 h-9 px-0 rounded-full transition-all duration-300 hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/30 hover:scale-110">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="w-9 h-9 px-0 rounded-full transition-all duration-300 hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/30 hover:scale-110"
+          aria-label={translate("theme", "toggleTheme", language)}
+        >
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all duration-500 dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all duration-500 dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">{translate("theme", "toggleTheme", language)}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align={isRTL ? "start" : "end"} className="animate-in zoom-in-90 backdrop-blur-sm bg-background/95 dark:bg-background/90 border-calmBlue-100 dark:border-gray-700">
+      <DropdownMenuContent 
+        align={isRTL ? "start" : "end"} 
+        className="animate-in zoom-in-90 backdrop-blur-sm bg-background/95 dark:bg-background/90 border-calmBlue-100 dark:border-gray-700"
+      >
         <DropdownMenuItem 
           onClick={() => setTheme("light")} 
           className={`cursor-pointer ${theme === 'light' ? 'bg-muted text-foreground' : ''} transition-colors hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/40 animate-fade-in animation-delay-100`}

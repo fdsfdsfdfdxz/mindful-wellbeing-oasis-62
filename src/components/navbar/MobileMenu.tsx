@@ -13,17 +13,27 @@ import { Link } from 'react-router-dom';
 
 export const MobileMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const { isLoggedIn } = useAuth();
   const { isRTL } = useLanguage();
   const menuRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    // When opening the menu, prevent body scroll
-    if (!isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
+    setIsAnimating(true);
+    if (isMenuOpen) {
+      // Start closing animation
       document.body.style.overflow = 'auto';
+      setTimeout(() => {
+        setIsMenuOpen(false);
+        setIsAnimating(false);
+      }, 300); // Match with CSS transition duration
+    } else {
+      // Open immediately and animate in
+      setIsMenuOpen(true);
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 300);
     }
   };
 
@@ -31,8 +41,7 @@ export const MobileMenu = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node) && isMenuOpen) {
-        setIsMenuOpen(false);
-        document.body.style.overflow = 'auto';
+        toggleMenu();
       }
     };
 
@@ -47,8 +56,7 @@ export const MobileMenu = () => {
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isMenuOpen) {
-        setIsMenuOpen(false);
-        document.body.style.overflow = 'auto';
+        toggleMenu();
       }
     };
 
@@ -70,7 +78,7 @@ export const MobileMenu = () => {
           aria-label="Toggle menu"
         >
           {isMenuOpen ? 
-            <X className="h-6 w-6 transition-transform duration-300 rotate-90 animate-in" /> : 
+            <X className="h-6 w-6 transition-transform duration-300 rotate-0 animate-in" /> : 
             <Menu className="h-6 w-6 transition-transform duration-300 hover:scale-110" />
           }
         </Button>
@@ -78,8 +86,20 @@ export const MobileMenu = () => {
 
       {isMenuOpen && (
         <>
-          <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm z-40 animate-fade-in" aria-hidden="true" onClick={toggleMenu}></div>
-          <div className={`fixed top-16 ${isRTL ? 'right-0' : 'left-0'} bottom-0 w-4/5 max-w-sm bg-background/98 dark:bg-background/95 p-4 shadow-lg border-r border-border z-50 animate-slide-in-right transform transition-all duration-300 ease-in-out ${isRTL ? '-translate-x-0' : 'translate-x-0'}`}>
+          <div 
+            className={`fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm z-40 ${isAnimating ? 'animate-fade-in' : ''}`} 
+            aria-hidden="true" 
+            onClick={toggleMenu}
+          ></div>
+          <div 
+            className={`fixed top-16 ${isRTL ? 'right-0' : 'left-0'} bottom-0 w-4/5 max-w-sm bg-background/98 dark:bg-background/95 p-4 shadow-lg border-r border-border z-50 transform transition-all duration-300 ease-in-out ${
+              isAnimating 
+                ? isRTL 
+                  ? 'animate-slide-in-left' 
+                  : 'animate-slide-in-right' 
+                : ''
+            }`}
+          >
             <div className={`flex flex-col h-full overflow-y-auto py-4 ${isRTL ? 'rtl' : ''}`}>
               <NavLinks setIsMenuOpen={setIsMenuOpen} isMobile />
               
