@@ -15,7 +15,7 @@ const Navbar = () => {
   }, [language, isRTL]);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-50 animate-fade-in">
       <nav className={`bg-background/95 dark:bg-background/90 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-sm transition-all duration-500 ${theme === 'dark' ? 'shadow-calmBlue-900/10' : ''}`}>
         <div className="container-custom py-2 md:py-0">
           <div className="flex justify-between items-center">

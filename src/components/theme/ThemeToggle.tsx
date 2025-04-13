@@ -27,21 +27,21 @@ export function ThemeToggle() {
       <DropdownMenuContent align={isRTL ? "start" : "end"} className="animate-in zoom-in-90 backdrop-blur-sm bg-background/95 dark:bg-background/90 border-calmBlue-100 dark:border-gray-700">
         <DropdownMenuItem 
           onClick={() => setTheme("light")} 
-          className={`cursor-pointer ${theme === 'light' ? 'bg-muted text-foreground' : ''} transition-colors hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/40`}
+          className={`cursor-pointer ${theme === 'light' ? 'bg-muted text-foreground' : ''} transition-colors hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/40 animate-fade-in animation-delay-100`}
         >
-          <Sun className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+          <Sun className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4 transition-transform hover:rotate-12`} />
           <span>{translate('theme', 'light', language) || "Light"}</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={() => setTheme("dark")} 
-          className={`cursor-pointer ${theme === 'dark' ? 'bg-muted text-foreground' : ''} transition-colors hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/40`}
+          className={`cursor-pointer ${theme === 'dark' ? 'bg-muted text-foreground' : ''} transition-colors hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/40 animate-fade-in animation-delay-200`}
         >
-          <Moon className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+          <Moon className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4 transition-transform hover:rotate-12`} />
           <span>{translate('theme', 'dark', language) || "Dark"}</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={() => setTheme("system")} 
-          className={`cursor-pointer ${theme === 'system' ? 'bg-muted text-foreground' : ''} transition-colors hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/40`}
+          className={`cursor-pointer ${theme === 'system' ? 'bg-muted text-foreground' : ''} transition-colors hover:bg-calmBlue-50 dark:hover:bg-calmBlue-900/40 animate-fade-in animation-delay-300`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ export function ThemeToggle() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4`}
+            className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4 transition-transform hover:rotate-12`}
           >
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
             <line x1="8" y1="21" x2="16" y2="21" />
