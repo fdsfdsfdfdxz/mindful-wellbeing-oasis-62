@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const testimonialData = [
@@ -52,6 +52,27 @@ const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
+  const [animateSlide, setAnimateSlide] = useState(false);
+  const testimonialsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setAnimateSlide(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    
+    if (testimonialsRef.current) {
+      observer.observe(testimonialsRef.current);
+    }
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   // For larger screens, show 3 testimonials at a time
   // For medium screens, show 2
@@ -78,6 +99,15 @@ const Testimonials = () => {
       prevIndex <= 0 ? maxIndex : prevIndex - 1
     );
   };
+
+  // Auto advance slides
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [currentIndex]);
 
   // Touch handlers for swipe functionality
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -108,14 +138,14 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-24 bg-gray-50 overflow-hidden" ref={testimonialsRef}>
       <div className="container-custom">
-        <h2 className="section-title text-center">What Our Clients Say</h2>
-        <p className="section-subtitle text-center">
+        <h2 className="section-title text-center animate-fade-in">What Our Clients Say</h2>
+        <p className="section-subtitle text-center animate-fade-in animation-delay-200">
           Read about the experiences of people who have found support and healing through our platform.
         </p>
         
-        <div className="relative mt-12">
+        <div className="relative mt-16">
           <div 
             className="overflow-hidden"
             onTouchStart={handleTouchStart}
@@ -123,19 +153,20 @@ const Testimonials = () => {
             onTouchEnd={handleTouchEnd}
           >
             <div 
-              className="flex transition-transform duration-500 ease-in-out"
+              className={`flex transition-all duration-700 ease-in-out ${animateSlide ? 'opacity-100' : 'opacity-0'}`}
               style={{ transform: `translateX(-${currentIndex * (100 / visibleCount)}%)` }}
             >
-              {testimonialData.map((testimonial) => (
+              {testimonialData.map((testimonial, index) => (
                 <div 
                   key={testimonial.id} 
                   className="min-w-full md:min-w-[50%] lg:min-w-[33.333%] px-4"
                 >
-                  <div className="bg-white p-6 rounded-lg shadow-md h-full flex flex-col">
+                  <div className={`bg-white p-6 rounded-xl shadow-smooth h-full flex flex-col relative transform transition-all duration-500 hover:shadow-lg hover:-translate-y-1 ${index === currentIndex ? 'ring-1 ring-calmBlue-200' : ''}`}>
+                    <Quote className="text-calmBlue-100 h-10 w-10 absolute top-4 right-4" />
                     <div className="flex items-center mb-4">
                       {renderStars(testimonial.rating)}
                     </div>
-                    <p className="text-gray-700 italic mb-4 flex-grow">"{testimonial.content}"</p>
+                    <p className="text-gray-700 italic mb-4 flex-grow relative z-10">{testimonial.content}</p>
                     <div className="mt-auto">
                       <div className="inline-block bg-calmBlue-100 text-calmBlue-800 text-sm py-1 px-3 rounded-full mb-2">
                         {testimonial.issue}
@@ -152,28 +183,28 @@ const Testimonials = () => {
             variant="outline" 
             size="icon" 
             onClick={prevSlide} 
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-white shadow-md z-10 rounded-full hidden md:flex"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm shadow-md z-10 rounded-full hidden md:flex hover:bg-calmBlue-50 border-calmBlue-200 transition-transform hover:scale-110"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 text-calmBlue-600" />
           </Button>
           
           <Button 
             variant="outline" 
             size="icon" 
             onClick={nextSlide} 
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2 bg-white shadow-md z-10 rounded-full hidden md:flex"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2 bg-white/90 backdrop-blur-sm shadow-md z-10 rounded-full hidden md:flex hover:bg-calmBlue-50 border-calmBlue-200 transition-transform hover:scale-110"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4 text-calmBlue-600" />
           </Button>
         </div>
         
-        <div className="flex justify-center mt-6 space-x-2 md:hidden">
+        <div className="flex justify-center mt-8 space-x-2 md:hidden">
           {Array.from({ length: testimonialData.length - visibleCount + 1 }).map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`h-2 w-2 rounded-full ${
-                currentIndex === index ? 'bg-calmBlue-500' : 'bg-gray-300'
+              className={`h-2 w-8 rounded-full transition-all duration-300 ${
+                currentIndex === index ? 'bg-calmBlue-500 w-10' : 'bg-gray-300'
               }`}
             />
           ))}

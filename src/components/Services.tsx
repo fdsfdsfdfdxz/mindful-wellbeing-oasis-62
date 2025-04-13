@@ -1,3 +1,4 @@
+
 import { 
   MessageSquare, 
   PhoneCall, 
@@ -16,7 +17,7 @@ import {
   ShieldAlert,
   Headphones
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,28 @@ const Services = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
+  const [animateCards, setAnimateCards] = useState<boolean>(false);
+  const servicesRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setAnimateCards(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    
+    if (servicesRef.current) {
+      observer.observe(servicesRef.current);
+    }
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
   
   const translateBadge = (text: string) => {
     return badgeTranslations[text] ? 
@@ -58,6 +81,7 @@ const Services = () => {
       text;
   };
   
+  // Service data is kept the same... (too long to include entirely)
   const serviceData = [
     {
       title: translate('services', 'privateConsultations', language),
@@ -254,18 +278,18 @@ const Services = () => {
   };
 
   return (
-    <section id="services" className="py-20 bg-white">
+    <section id="services" className="py-24 bg-white overflow-hidden" ref={servicesRef}>
       <div className="container-custom">
-        <h2 className="section-title text-center">
+        <h2 className="section-title text-center animate-fade-in">
           {translate('services', 'title', language)}
         </h2>
-        <p className="section-subtitle text-center mb-6">
+        <p className="section-subtitle text-center mb-6 animate-fade-in animation-delay-200">
           {translate('services', 'subtitle', language)}
         </p>
         
-        <div className="flex justify-center mb-12">
-          <Badge variant="outline" className="px-3 py-1 text-base bg-calmBlue-50 border-calmBlue-200 text-calmBlue-700">
-            <span className="mr-2 bg-calmBlue-500 w-2 h-2 rounded-full inline-block"></span>
+        <div className="flex justify-center mb-12 animate-fade-in animation-delay-300">
+          <Badge variant="outline" className="px-4 py-2 text-base bg-calmBlue-50 border-calmBlue-200 text-calmBlue-700 shadow-sm">
+            <span className="mr-2 bg-calmBlue-500 w-2 h-2 rounded-full inline-block animate-pulse"></span>
             {translate('services', 'newFeature', language) || "New Feature"}: 
             <span className="font-semibold ml-1">
               {translate('services', 'specializedServices', language) || "Specialized Mental Health Services"}
@@ -273,19 +297,20 @@ const Services = () => {
           </Badge>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           {serviceData.map((service, index) => (
             <Card 
               key={index} 
-              className={`card-hover border border-gray-100 h-full transition-all duration-300 hover:shadow-md ${activeCardIndex === index ? 'ring-2 ring-calmBlue-500 shadow-lg' : ''}`}
+              className={`border border-gray-100 h-full transition-all duration-500 hover:shadow-lg ${activeCardIndex === index ? 'ring-2 ring-calmBlue-500 shadow-lg scale-[1.02]' : ''} ${animateCards ? 'animate-scale-up' : 'opacity-0'}`}
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <div className={`${service.iconBg} p-3 rounded-full w-16 h-16 flex items-center justify-center mb-4 transition-transform duration-300 ${activeCardIndex === index ? 'scale-110' : ''}`}>
+                  <div className={`${service.iconBg} p-3 rounded-full w-16 h-16 flex items-center justify-center mb-4 transition-all duration-500 ${activeCardIndex === index ? 'scale-110 shadow-md' : ''}`}>
                     {service.icon}
                   </div>
                   {service.isNew && (
-                    <Badge className="bg-calmBlue-500">
+                    <Badge className="bg-calmBlue-500 animate-pulse-soft">
                       {translate('services', 'new', language) || "New"}
                     </Badge>
                   )}
@@ -300,7 +325,7 @@ const Services = () => {
                 {service.badges && service.badges.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3">
                     {service.badges.map((badge, i) => (
-                      <Badge key={i} className={`${badge.color} font-normal text-xs`}>
+                      <Badge key={i} className={`${badge.color} font-normal text-xs shadow-sm transition-all hover:scale-105`}>
                         {translateBadge(badge.text)}
                       </Badge>
                     ))}
@@ -310,25 +335,32 @@ const Services = () => {
               <CardFooter>
                 <Button 
                   variant={activeCardIndex === index ? "default" : "outline"}
-                  className={`w-full group ${isRTL ? 'flex-row-reverse' : ''}`}
+                  className={`w-full group ${isRTL ? 'flex-row-reverse' : ''} overflow-hidden relative`}
                   onClick={() => handleServiceClick(service.link, index)}
                 >
-                  <span>{service.cta}</span>
-                  <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-1' : 'ml-2 group-hover:translate-x-1'}`} />
+                  <span className="relative z-10">{service.cta}</span>
+                  <span className="relative z-10">
+                    <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-2' : 'ml-2 group-hover:translate-x-2'}`} />
+                  </span>
+                  <span className="absolute inset-0 bg-calmBlue-500 transform transition-transform duration-300 -translate-x-full group-hover:translate-x-0"></span>
                 </Button>
               </CardFooter>
             </Card>
           ))}
         </div>
         
-        <div className="mt-16 max-w-4xl mx-auto">
-          <h3 className="text-2xl font-bold mb-8 text-center">
+        <div className="mt-20 max-w-4xl mx-auto">
+          <h3 className="text-2xl font-bold mb-8 text-center animate-fade-in">
             {translate('services', 'specializedServices', language) || "Our Specialized Services"}
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {specializedFeatures.map((feature, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex gap-4 hover:shadow-md transition-shadow">
+              <div 
+                key={index} 
+                className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex gap-4 hover:shadow-md transition-all duration-300 hover:-translate-y-1 animate-fade-in"
+                style={{ animationDelay: `${(index + 4) * 100}ms` }}
+              >
                 <div className={`p-3 rounded-full h-12 w-12 flex items-center justify-center shrink-0 ${
                   index === 0 ? "bg-indigo-100" : 
                   index === 1 ? "bg-red-100" : 
@@ -345,14 +377,18 @@ const Services = () => {
             ))}
           </div>
           
-          <div className="bg-gray-50 p-8 rounded-lg shadow-sm">
+          <div className="bg-gray-50 p-8 rounded-lg shadow-sm animate-fade-in animation-delay-800 transform transition-all duration-500 hover:shadow-md">
             <h3 className="text-xl font-bold mb-6 text-center">
               {translate('services', 'consultationFeatures', language) || "Our Consultation System Features"}
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
               {serviceFeatures.map((feature, index) => (
-                <div key={index} className="flex space-x-4">
+                <div 
+                  key={index} 
+                  className="flex space-x-4 animate-fade-in-right"
+                  style={{ animationDelay: `${(index + 8) * 100}ms` }}
+                >
                   <div className="bg-white p-3 rounded-full shadow-sm">
                     {feature.icon}
                   </div>
@@ -366,11 +402,14 @@ const Services = () => {
             
             <div className="mt-8 text-center">
               <Button 
-                className="button-primary group"
+                className="bg-calmBlue-500 hover:bg-calmBlue-600 text-white group relative overflow-hidden px-6 py-3 rounded-lg"
                 onClick={() => navigate('/doctor-chat')}
               >
-                {translate('services', 'startConsultation', language) || "Start Consultation"}
-                <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-1' : 'ml-2 group-hover:translate-x-1'}`} />
+                <span className="relative z-10 flex items-center">
+                  {translate('services', 'startConsultation', language) || "Start Consultation"}
+                  <ArrowRight className={`h-4 w-4 transition-transform duration-300 ${isRTL ? 'mr-2 group-hover:-translate-x-2' : 'ml-2 group-hover:translate-x-2'}`} />
+                </span>
+                <span className="absolute inset-0 w-0 bg-calmBlue-600 transition-all duration-300 ease-out group-hover:w-full"></span>
               </Button>
             </div>
           </div>

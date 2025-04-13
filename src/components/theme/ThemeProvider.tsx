@@ -15,7 +15,7 @@ type ThemeProviderState = {
 };
 
 const initialState: ThemeProviderState = {
-  theme: "light", // Changed from "system" to "light"
+  theme: "system",
   setTheme: () => null,
 };
 
@@ -23,7 +23,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light", // Updated default theme to light
+  defaultTheme = "system",
   storageKey = "mindfulcare-ui-theme",
   ...props
 }: ThemeProviderProps) {
@@ -33,7 +33,6 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement;
-
     root.classList.remove("light", "dark");
 
     if (theme === "system") {
@@ -72,4 +71,3 @@ export const useTheme = () => {
 
   return context;
 };
-
