@@ -23,8 +23,8 @@ import {
 import { ThemeToggle } from "../theme/ThemeToggle";
 
 export const DesktopNavbar = () => {
-  const { language, changeLanguage, isRTL } = useLanguage();
-  const { isLoggedIn, userInfo, logout } = useAuth();
+  const { language, switchLanguage, isRTL } = useLanguage();
+  const { isLoggedIn, userEmail, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   
   // Track scroll position to change navbar style
@@ -109,10 +109,10 @@ export const DesktopNavbar = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="animate-in zoom-in-90 backdrop-blur-sm bg-white/95 border-calmBlue-100">
-            <DropdownMenuItem onClick={() => changeLanguage('en')} className={`${language === 'en' ? 'bg-calmBlue-50 text-calmBlue-600' : ''}`}>
+            <DropdownMenuItem onClick={() => switchLanguage('en')} className={`${language === 'en' ? 'bg-calmBlue-50 text-calmBlue-600' : ''}`}>
               English
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => changeLanguage('ar')} className={`${language === 'ar' ? 'bg-calmBlue-50 text-calmBlue-600' : ''}`}>
+            <DropdownMenuItem onClick={() => switchLanguage('ar')} className={`${language === 'ar' ? 'bg-calmBlue-50 text-calmBlue-600' : ''}`}>
               العربية
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -130,7 +130,7 @@ export const DesktopNavbar = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 animate-in zoom-in-90 backdrop-blur-sm bg-white/95 border-calmBlue-100">
               <div className="px-3 py-2 text-sm font-medium text-gray-700">
-                {userInfo?.name || translate("nav", "account", language)}
+                {userEmail || translate("nav", "account", language)}
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
