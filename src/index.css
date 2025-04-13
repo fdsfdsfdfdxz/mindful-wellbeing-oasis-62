@@ -63,6 +63,10 @@
   html {
     scroll-behavior: smooth;
   }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
 }
 
 @layer utilities {
@@ -71,23 +75,23 @@
   }
   
   .section-title {
-    @apply text-3xl md:text-4xl font-bold mb-2 text-gray-800;
+    @apply text-3xl md:text-4xl font-bold mb-2 text-foreground;
   }
   
   .section-subtitle {
-    @apply text-lg text-gray-600 max-w-3xl mx-auto;
+    @apply text-lg text-muted-foreground max-w-3xl mx-auto;
   }
   
   .button-primary {
-    @apply bg-calmBlue-500 hover:bg-calmBlue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+    @apply bg-calmBlue-500 hover:bg-calmBlue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-300;
   }
   
   .button-secondary {
-    @apply bg-white border border-calmBlue-500 text-calmBlue-600 hover:bg-calmBlue-50 px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+    @apply bg-background border border-calmBlue-500 text-calmBlue-600 dark:text-calmBlue-400 hover:bg-calmBlue-50 dark:hover:bg-calmBlue-950/30 px-6 py-3 rounded-lg font-medium transition-colors duration-300;
   }
   
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-md;
+    @apply transition-all duration-300 hover:shadow-md dark:hover:shadow-calmBlue-900/20;
   }
   
   .hero-gradient {
@@ -108,7 +112,11 @@
   }
   
   .backdrop-blur-element {
-    @apply backdrop-blur-md bg-white/70;
+    @apply backdrop-blur-md bg-background/70 dark:bg-background/50;
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/70 dark:bg-black/30 border border-white/20 dark:border-white/10;
   }
 }
 
@@ -152,10 +160,57 @@
   transform: translateY(-2px);
 }
 
-/* Glass effect */
-.glass-effect {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* Enhanced animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
+
+/* Reveal animations */
+@keyframes reveal-right {
+  0% {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-reveal-right {
+  animation: reveal-right 0.5s ease-out forwards;
+}
+
+/* Staggered animations for lists */
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 100ms; }
+.stagger-item:nth-child(3) { animation-delay: 200ms; }
+.stagger-item:nth-child(4) { animation-delay: 300ms; }
+.stagger-item:nth-child(5) { animation-delay: 400ms; }
+
+/* Custom dark mode transitions */
+.dark-transition {
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }

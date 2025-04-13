@@ -20,8 +20,14 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: "hsl(var(--primary))",
-        secondary: "hsl(var(--secondary))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -54,6 +60,7 @@ export default {
           700: "#1254B5",
           800: "#0D4293",
           900: "#072C66",
+          950: "#051D44",
         },
         sageGreen: {
           50: "#F0F9F0",
@@ -66,6 +73,7 @@ export default {
           700: "#2E6830",
           800: "#254D25",
           900: "#1B371C",
+          950: "#102410",
         },
         warmNeutral: {
           50: "#FAF7F5",
@@ -78,6 +86,7 @@ export default {
           700: "#6B5141",
           800: "#4D3A2F",
           900: "#30241D",
+          950: "#1A1310",
         }
       },
       borderRadius: {
@@ -147,10 +156,34 @@ export default {
         },
         "pulse-soft": {
           "0%, 100%": {
-            opacity: "1"
+            opacity: "0.8"
           },
           "50%": {
-            opacity: "0.8"
+            opacity: "0.4"
+          }
+        },
+        "spin-slow": {
+          "0%": {
+            transform: "rotate(0deg)"
+          },
+          "100%": {
+            transform: "rotate(360deg)"
+          }
+        },
+        "slide-in-right": {
+          "0%": {
+            transform: "translateX(-100%)"
+          },
+          "100%": {
+            transform: "translateX(0)"
+          }
+        },
+        "slide-in-left": {
+          "0%": {
+            transform: "translateX(100%)"
+          },
+          "100%": {
+            transform: "translateX(0)"
           }
         }
       },
@@ -162,7 +195,10 @@ export default {
         "fade-in-left": "fade-in-left 0.6s ease-out",
         "scale-up": "scale-up 0.5s ease-out",
         "float": "float 5s ease-in-out infinite",
-        "pulse-soft": "pulse-soft 3s ease-in-out infinite"
+        "pulse-soft": "pulse-soft 3s ease-in-out infinite",
+        "spin-slow": "spin-slow 8s linear infinite",
+        "slide-in-right": "slide-in-right 0.3s ease-out",
+        "slide-in-left": "slide-in-left 0.3s ease-out"
       },
     },
   },

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { NavLinks } from './NavLinks';
@@ -9,60 +9,101 @@ import { UserMenu } from './UserMenu';
 import { AuthButtons } from './AuthButtons';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Link } from 'react-router-dom';
 
 export const MobileMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isLoggedIn } = useAuth();
   const { isRTL } = useLanguage();
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    // When opening the menu, prevent body scroll
+    if (!isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
   };
 
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (isMenuOpen && !target.closest('.mobile-menu-container')) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node) && isMenuOpen) {
         setIsMenuOpen(false);
+        document.body.style.overflow = 'auto';
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'auto';
     };
   }, [isMenuOpen]);
 
+  // Handle escape key press
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+        document.body.style.overflow = 'auto';
+      }
+    };
+
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, [isMenuOpen]);
+
   return (
-    <div className="md:hidden mobile-menu-container">
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        onClick={toggleMenu}
-        className="p-1"
-      >
-        {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-      </Button>
+    <div className="block md:hidden mobile-menu-container" ref={menuRef}>
+      <div className="flex items-center">
+        <Link to="/" className="mr-auto">
+          <span className="text-xl font-bold text-calmBlue-600 dark:text-calmBlue-400">MindfulCare</span>
+        </Link>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={toggleMenu}
+          className="p-1 rounded-full"
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? 
+            <X className="h-6 w-6 transition-transform duration-300 rotate-90" /> : 
+            <Menu className="h-6 w-6 transition-transform duration-300" />
+          }
+        </Button>
+      </div>
 
       {isMenuOpen && (
-        <div className={`md:hidden py-4 animate-fade-in ${isRTL ? 'rtl' : ''}`}>
-          <NavLinks setIsMenuOpen={setIsMenuOpen} isMobile />
-          
-          <div className="border-t border-border my-2"></div>
-          
-          <ThemeToggleButton setIsMenuOpen={setIsMenuOpen} isMobile />
+        <>
+          <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm z-40" aria-hidden="true" onClick={toggleMenu}></div>
+          <div className={`fixed top-16 ${isRTL ? 'right-0' : 'left-0'} bottom-0 w-4/5 max-w-sm bg-background dark:bg-background/95 p-4 shadow-lg border-r border-border z-50 animate-slide-in-right transform transition duration-300 ${isRTL ? '-translate-x-12' : 'translate-x-0'}`}>
+            <div className={`flex flex-col h-full overflow-y-auto py-4 ${isRTL ? 'rtl' : ''}`}>
+              <NavLinks setIsMenuOpen={setIsMenuOpen} isMobile />
+              
+              <div className="border-t border-border my-4"></div>
+              
+              <ThemeToggleButton setIsMenuOpen={setIsMenuOpen} isMobile />
+              <LanguageSelector setIsMenuOpen={setIsMenuOpen} isMobile />
 
-          <LanguageSelector setIsMenuOpen={setIsMenuOpen} isMobile />
+              <div className="border-t border-border my-4"></div>
 
-          <div className="border-t border-border my-2"></div>
-
-          {isLoggedIn ? (
-            <UserMenu setIsMenuOpen={setIsMenuOpen} isMobile />
-          ) : (
-            <AuthButtons setIsMenuOpen={setIsMenuOpen} isMobile />
-          )}
-        </div>
+              {isLoggedIn ? (
+                <UserMenu setIsMenuOpen={setIsMenuOpen} isMobile />
+              ) : (
+                <AuthButtons setIsMenuOpen={setIsMenuOpen} isMobile />
+              )}
+              
+              <div className="mt-auto pt-6">
+                <div className="text-xs text-muted-foreground text-center">
+                  © 2025 MindfulCare. All rights reserved.
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

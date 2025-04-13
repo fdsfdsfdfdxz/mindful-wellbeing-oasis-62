@@ -28,14 +28,19 @@ export const ThemeToggleButton = ({
   if (isMobile) {
     return (
       <button 
-        className="flex items-center justify-between py-2 px-4 rounded-md hover:bg-muted w-full text-left"
+        className="flex items-center justify-between py-3 px-4 rounded-md hover:bg-muted w-full text-left transition-colors group"
         onClick={toggleTheme}
       >
-        <span>{translate("theme", theme === "dark" ? "switchToLight" : "switchToDark", language)}</span>
-        {theme === "dark" ? 
-          <Sun className="h-4 w-4" /> : 
-          <MoonStar className="h-4 w-4" />
-        }
+        <span className="font-medium">
+          {translate("theme", theme === "dark" ? "switchToLight" : "switchToDark", language)}
+        </span>
+        <div className="relative">
+          {theme === "dark" ? (
+            <Sun className="h-5 w-5 animate-spin-slow group-hover:animate-pulse" />
+          ) : (
+            <MoonStar className="h-5 w-5 group-hover:animate-pulse" />
+          )}
+        </div>
       </button>
     );
   }
