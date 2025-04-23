@@ -73,8 +73,8 @@ const Hero = () => {
             <div className="absolute -inset-4 bg-calmBlue-200 dark:bg-calmBlue-900/50 rounded-full blur-3xl opacity-20 animate-pulse-soft"></div>
             <div className="overflow-hidden rounded-2xl shadow-2xl relative z-10 group">
               <img 
-                src="https://images.unsplash.com/photo-1487958449943-2429e8be8625" 
-                alt="Majestic Islamic architecture symbolizing peace and spiritual healing" 
+                src="https://images.unsplash.com/photo-1526392060635-9d6019884377" 
+                alt="A beautiful butterfly with vibrant colors resting on a delicate flower petal" 
                 className="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
