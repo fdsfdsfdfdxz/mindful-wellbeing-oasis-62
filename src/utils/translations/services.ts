@@ -141,6 +141,30 @@ export const ServicesTranslations: TranslationContent = {
     en: "What to Expect",
     ar: "ما يمكن توقعه"
   },
+  consultationTitle: {
+    en: 'Professional Consultations',
+    ar: 'استشارات مهنية'
+  },
+  consultationDesc: {
+    en: 'Connect with our mental health professionals through various consultation formats',
+    ar: 'تواصل مع متخصصي الصحة النفسية من خلال أشكال مختلفة من الاستشارات'
+  },
+  specializedTitle: {
+    en: 'Specialized Care',
+    ar: 'رعاية متخصصة'
+  },
+  specializedDesc: {
+    en: 'Targeted support for specific needs and situations',
+    ar: 'دعم مستهدف للاحتياجات والحالات الخاصة'
+  },
+  assessmentTitle: {
+    en: 'Assessment & Resources',
+    ar: 'التقييم والموارد'
+  },
+  assessmentDesc: {
+    en: 'Tools and resources for understanding and improving your mental health',
+    ar: 'أدوات وموارد لفهم وتحسين صحتك النفسية'
+  },
   consultationDescription: {
     en: "This consultation will help us understand your relationship needs and match you with the right specialist. After submission, a counselor will contact you to schedule your first session.",
     ar: "ستساعدنا هذه الاستشارة على فهم احتياجات علاقتك ومطابقتك مع المتخصص المناسب. بعد التقديم، سيتصل بك المستشار لجدولة جلستك الأولى."
