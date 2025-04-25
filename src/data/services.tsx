@@ -12,7 +12,7 @@ export const servicesData: ServiceCategoryData[] = [
     description: "Connect with our mental health professionals through various consultation formats",
     services: [
       {
-        id: "private",
+        id: "PRIVATE_CONSULTATION",
         title: "Private Consultations",
         description: "One-on-one sessions with experienced therapists.",
         icon: <MessageSquare className="h-10 w-10 text-calmBlue-500" />,
@@ -22,7 +22,7 @@ export const servicesData: ServiceCategoryData[] = [
         benefits: ["Secure Chat", "File Sharing"]
       },
       {
-        id: "anonymous",
+        id: "ANONYMOUS_CONSULTATION",
         title: "Anonymous Consultations",
         description: "Get support without revealing your identity.",
         icon: <Lock className="h-10 w-10 text-calmBlue-500" />,
@@ -32,7 +32,7 @@ export const servicesData: ServiceCategoryData[] = [
         benefits: ["Anonymous", "No Registration"]
       },
       {
-        id: "audio",
+        id: "AUDIO_CONSULTATION",
         title: "Audio Consultations",
         description: "Voice-based therapy sessions for your comfort.",
         icon: <PhoneCall className="h-10 w-10 text-sageGreen-500" />,
