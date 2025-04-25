@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -64,7 +65,8 @@ const Services = () => {
       icon: <MessageSquare className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
       link: "/services/book-session",
-      badges: ["Secure Chat", "File Sharing"]
+      badges: ["Secure Chat", "File Sharing"],
+      benefits: ["Secure Chat", "File Sharing"]
     },
     {
       id: "anonymous",
@@ -73,7 +75,8 @@ const Services = () => {
       icon: <Lock className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
       link: "/services/anonymous-consultation",
-      badges: ["Anonymous", "No Registration"]
+      badges: ["Anonymous", "No Registration"],
+      benefits: ["Anonymous", "No Registration"]
     },
     {
       id: "audio",
@@ -82,7 +85,8 @@ const Services = () => {
       icon: <PhoneCall className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
       link: "/doctor-chat?appointment=audio",
-      badges: ["End-to-end encrypted", "Low bandwidth"]
+      badges: ["End-to-end encrypted", "Low bandwidth"],
+      benefits: ["End-to-end encrypted", "Low bandwidth"]
     }
   ];
 
@@ -95,6 +99,7 @@ const Services = () => {
       iconBg: "bg-red-100",
       link: "/services/marriage-counseling",
       badges: ["Couples", "Family"],
+      benefits: ["Couples", "Family"],
       isNew: true
     },
     {
@@ -105,6 +110,7 @@ const Services = () => {
       iconBg: "bg-indigo-100",
       link: "/services/support-groups",
       badges: ["Anonymous", "Moderated"],
+      benefits: ["Anonymous", "Moderated"],
       isNew: true
     },
     {
@@ -115,6 +121,7 @@ const Services = () => {
       iconBg: "bg-red-100",
       link: "/services/crisis-intervention",
       badges: ["24/7", "Emergency"],
+      benefits: ["24/7", "Emergency"],
       isNew: true
     }
   ];
@@ -127,7 +134,8 @@ const Services = () => {
       icon: <FileText className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
       link: "/services/psychological-assessment",
-      badges: ["Evidence-based"]
+      badges: ["Evidence-based"],
+      benefits: ["Evidence-based"]
     },
     {
       id: "educational",
@@ -136,7 +144,8 @@ const Services = () => {
       icon: <BookOpen className="h-10 w-10 text-calmBlue-500" />,
       iconBg: "bg-calmBlue-100",
       link: "/services/educational-resources",
-      badges: ["Research-backed"]
+      badges: ["Research-backed"],
+      benefits: ["Research-backed"]
     },
     {
       id: "followup",
@@ -145,7 +154,8 @@ const Services = () => {
       icon: <Clock className="h-10 w-10 text-sageGreen-500" />,
       iconBg: "bg-sageGreen-100",
       link: "/services/followup-care",
-      badges: ["Continuous Support"]
+      badges: ["Continuous Support"],
+      benefits: ["Continuous Support"]
     }
   ];
 
